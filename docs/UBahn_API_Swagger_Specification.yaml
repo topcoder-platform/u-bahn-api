@@ -1,0 +1,3717 @@
+swagger: '2.0'
+info:
+  description: 'API for an employee management system to determine employees that are no longer working on active projects and to understand their qualifications and expertise for suitability in other projects'
+  version: '1.0.0'
+  title: 'UBahn API'
+  
+tags:
+- name: 'Users'
+  description: Users registered in the system
+- name: 'Users Skills'
+  description: Skills of users
+- name: 'Skills'
+  description: Skills registered in the system
+- name: 'Skills Provider'
+  description: Skill providers registered in the system
+- name: 'Roles'
+  description: Roles registered in the system
+- name: 'User Roles'
+  description: Roles of users
+- name: 'External Profiles'
+  description: External profiles of users w.r.t an organization
+- name: 'Achievements'
+  description: Achievements of users
+- name: 'Achievements Provider'
+  description: Achievement providers registered in the system
+- name: 'Organizations'
+  description: Organizations registered in the system
+- name: 'User Attributes'
+  description: Attributes of users
+- name: 'Attributes'
+  description: Attributes registered in the system
+- name: 'Attribute Groups'
+  description: Attribute groups registered in the system
+  
+schemes:
+- 'https'
+
+securityDefinitions:
+  Bearer:
+    type: apiKey
+    name: Authorization
+    in: header
+
+produces:
+  - application/json
+consumes:
+  - application/json
+
+paths:
+  /users:
+    get:
+      tags:
+        - 'Users'
+      description: '**Point to note** - For non-admin users, this endpoint will only return entities that the user has created.'
+      security:
+        - Bearer: []
+      parameters:
+        - name: handle
+          type: string
+          description: Filter by user handle
+          in: query
+          required: false
+        - name: isAvailable
+          type: boolean
+          description: Filter by user availability
+          in: query
+          required: false
+        - name: groupId
+          type: string
+          format: UUID
+          description: Filter by user group Id
+          in: query
+          required: false
+        - name: roleId
+          type: string
+          format: UUID
+          description: Filter by user roleId
+          in: query
+          required: false
+      responses:
+        200:
+          description: OK - the request was successful
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        500:
+          $ref: '#/definitions/ServerError'
+    head:
+      description: |
+        Retrieve header information for a search operation on users in the application.
+        
+        **Security** - Note that for non-admin users, this endpoint will only return entities that
+        the user has created.
+      tags:
+        - Users
+      security:
+        - Bearer: []
+      parameters:
+        - name: handle
+          type: string
+          description: Filter by user handle
+          in: query
+          required: false
+        - name: isAvailable
+          type: boolean
+          description: Filter by user availability
+          in: query
+          required: false
+        - name: groupId
+          type: string
+          format: UUID
+          description: Filter by user group Id
+          in: query
+          required: false
+        - name: roleId
+          type: string
+          format: UUID
+          description: Filter by user roleId
+          in: query
+          required: false
+      responses:
+        200:
+          description: Success response
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        500:
+          $ref: '#/definitions/ServerError'          
+    post:
+      description: | 
+        Create a new User.
+        
+        **Security** - This endpoint is accessible by all authenticated users.        
+      tags:
+        - Users
+      security:
+        - Bearer: []
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/UserRequestBody'
+      responses:
+        200:
+          description: OK - the request was successful
+          schema:
+            $ref: '#/definitions/User'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        409:
+          $ref: '#/definitions/Conflict'
+        500:
+          $ref: '#/definitions/ServerError'    
+
+  /users/{userId}:
+    get:
+      description: |
+        Get User with given id.
+        
+        **Security** - Note that for non-admin users, this endpoint will only return entities that
+        the user has created.        
+      tags:
+        - Users
+      security:
+        - Bearer: []
+      parameters:
+        - name: userId
+          type: string
+          description: The user id
+          format: UUID
+          in: path
+          required: true
+      responses:
+        200:
+          description: OK - the request was successful
+          schema:
+            $ref: '#/definitions/User'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        500:
+          $ref: '#/definitions/ServerError'
+    head:
+      description: |
+        Get User with given id, but only header information is returned.
+        
+        **Security** - Note that for non-admin users, this endpoint will only return entities that
+        the user has created.        
+      tags:
+        - Users
+      security:
+        - Bearer: []
+      parameters:
+        - name: userId
+          type: string
+          description: The user id
+          format: UUID
+          in: path
+          required: true
+      responses:
+        200:
+          description: OK - the request was successful
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        500:
+          $ref: '#/definitions/ServerError'
+    patch:
+      description: |
+        Update an existing User with given id.
+        
+        **Security** - Note that for non-admin users, this endpoint will only allow updates on entities that the
+        calling user has created.
+      tags:
+        - Users
+      security:
+        - Bearer: []
+      parameters:
+        - name: userId
+          type: string
+          description: The user id
+          format: UUID
+          in: path
+          required: true
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/UserUpdateRequestBody'
+      responses:
+        200:
+          description: OK - the request was successful
+          schema:
+            $ref: '#/definitions/User'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        409:
+          $ref: '#/definitions/Conflict'
+        500:
+          $ref: '#/definitions/ServerError'
+    delete:
+      description: |
+        Remove an existing User with given id.
+        
+        **Security** - Note that this endpoint is only available for admin users.  
+      tags:
+        - Users
+      security:
+        - Bearer: []
+      parameters:
+        - name: userId
+          type: string
+          description: The user id
+          format: UUID
+          in: path
+          required: true
+      responses:
+        204:
+          description: OK - the request was successful
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        409:
+          $ref: '#/definitions/Conflict'
+        500:
+          $ref: '#/definitions/ServerError'
+  
+  /users/{userId}/skills:
+    get:
+      description: |
+        Filter skills by its name given an user id.  If no results, then empty array is returned.
+        
+        **Security** - Note that for non-admin users, this endpoint will only return entities that
+        the user has created.
+      tags:
+        - 'Users Skills'
+      security:
+        - Bearer: []
+      parameters:
+        - name: userId
+          type: string
+          description: The user id
+          format: UUID
+          in: path
+          required: true
+        - name: skillName
+          type: string
+          description: Filter by skill name (through skill id)
+          in: query
+          required: false
+      responses:
+        200:
+          description: OK - the request was successful
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/UserSkill'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        500:
+          $ref: '#/definitions/ServerError'
+    head:
+      description: |
+        Retrieve header information for a search operation on users skills in the application.
+        
+        **Security** - Note that for non-admin users, this endpoint will only return entities that
+        the user has created.
+      tags:
+        - 'Users Skills'
+      security:
+        - Bearer: []
+      parameters:
+        - name: userId
+          type: string
+          description: The user id
+          format: UUID
+          in: path
+          required: true
+        - name: skillName
+          type: string
+          description: Filter by skill name (through skill id)
+          in: query
+          required: false
+      responses:
+        200:
+          description: Success response
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        500:
+          $ref: '#/definitions/ServerError'          
+    post:
+      description: | 
+        Create a new User Skill.
+        
+        **Security** - This endpoint is accessible by all authenticated users.        
+      tags:
+        - 'Users Skills'
+      security:
+        - Bearer: []
+      parameters:
+        - name: userId
+          type: string
+          description: The user id
+          format: UUID
+          in: path
+          required: true
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/UserSkillRequestBody'
+      responses:
+        200:
+          description: OK - the request was successful
+          schema:
+            $ref: '#/definitions/UserSkill'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        409:
+          $ref: '#/definitions/Conflict'
+        500:
+          $ref: '#/definitions/ServerError'    
+
+  /users/{userId}/skills/{skillId}:
+    get:
+      description: |
+        Get User Skills with given user and skill id.
+        
+        **Security** - Note that for non-admin users, this endpoint will only return entities that
+        the user has created.        
+      tags:
+        - 'Users Skills'
+      security:
+        - Bearer: []
+      parameters:
+        - name: userId
+          type: string
+          description: The user id
+          format: UUID
+          in: path
+          required: true
+        - name: skillId
+          type: string
+          description: The skill id
+          format: UUID
+          in: path
+          required: true
+      responses:
+        200:
+          description: OK - the request was successful
+          schema:
+            $ref: '#/definitions/UserSkill'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        500:
+          $ref: '#/definitions/ServerError'
+    head:
+      description: |
+        Get User Skills with given ids, but only header information is returned.
+        
+        **Security** - Note that for non-admin users, this endpoint will only return entities that
+        the user has created.        
+      tags:
+        - 'Users Skills'
+      security:
+        - Bearer: []
+      parameters:
+        - name: userId
+          type: string
+          description: The user id
+          format: UUID
+          in: path
+          required: true
+        - name: skillId
+          type: string
+          description: The skill id
+          format: UUID
+          in: path
+          required: true
+      responses:
+        200:
+          description: OK - the request was successful
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        500:
+          $ref: '#/definitions/ServerError'
+    patch:
+      description: |
+        Update an existing skill with given ids.
+        
+        **Security** - Note that for non-admin users, this endpoint will only allow updates on entities that the
+        calling user has created.
+      tags:
+        - 'Users Skills'
+      security:
+        - Bearer: []
+      parameters:
+        - name: userId
+          type: string
+          description: The user id
+          format: UUID
+          in: path
+          required: true
+        - name: skillId
+          type: string
+          description: The skill id
+          format: UUID
+          in: path
+          required: true
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/UserSkillUpdateRequestBody'
+      responses:
+        200:
+          description: OK - the request was successful
+          schema:
+            $ref: '#/definitions/UserSkill'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        409:
+          $ref: '#/definitions/Conflict'
+        500:
+          $ref: '#/definitions/ServerError'
+    delete:
+      description: |
+        Remove an existing User Skill with given ids.
+        
+        **Security** - Note that this endpoint is only available for admin users.  
+      tags:
+        - 'Users Skills'
+      security:
+        - Bearer: []
+      parameters:
+        - name: userId
+          type: string
+          description: The user id
+          format: UUID
+          in: path
+          required: true
+        - name: skillId
+          type: string
+          description: The skill id
+          format: UUID
+          in: path
+          required: true
+      responses:
+        204:
+          description: OK - the request was successful
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        409:
+          $ref: '#/definitions/Conflict'
+        500:
+          $ref: '#/definitions/ServerError'
+  
+  /skills:
+    get:
+      description: |
+        Get list of skills in the application.  If no results, then empty array is returned.  Multiple filters are
+        supported.
+        
+        **Security** - Note that for non-admin users, this endpoint will only return entities that
+        the user has created.
+      tags:
+        - 'Skills'
+      security:
+        - Bearer: []
+      responses:
+        200:
+          description: OK - the request was successful
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Skill'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        500:
+          $ref: '#/definitions/ServerError'
+    head:
+      description: |
+        Retrieve header information for get operation on Skills in the application.
+        
+        **Security** - Note that for non-admin users, this endpoint will only return entities that
+        the user has created.
+      tags:
+        - 'Skills'
+      security:
+        - Bearer: []
+      responses:
+        200:
+          description: Success response
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        500:
+          $ref: '#/definitions/ServerError'          
+    post:
+      description: | 
+        Create a new Skill.
+        
+        **Security** - This endpoint is accessible by all authenticated users.        
+      tags:
+        - 'Skills'
+      security:
+        - Bearer: []
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/SkillRequestBody'
+      responses:
+        200:
+          description: OK - the request was successful
+          schema:
+            $ref: '#/definitions/Skill'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        409:
+          $ref: '#/definitions/Conflict'
+        500:
+          $ref: '#/definitions/ServerError'
+  
+  /skills/{skillId}:
+    get:
+      description: |
+        Get Skill by given skill id.
+        
+        **Security** - Note that for non-admin users, this endpoint will only return entities that
+        the user has created.        
+      tags:
+        - 'Skills'
+      security:
+        - Bearer: []
+      parameters:
+        - name: skillId
+          type: string
+          description: The skill id
+          format: UUID
+          in: path
+          required: true
+      responses:
+        200:
+          description: OK - the request was successful
+          schema:
+            $ref: '#/definitions/Skill'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        500:
+          $ref: '#/definitions/ServerError'
+    head:
+      description: |
+        Retrieve header information for get operation on Skill by its Id in the application.
+        
+        **Security** - Note that for non-admin users, this endpoint will only return entities that
+        the user has created.       
+      tags:
+        - 'Skills'
+      security:
+        - Bearer: []
+      parameters:
+        - name: skillId
+          type: string
+          description: The user id
+          format: UUID
+          in: path
+          required: true
+      responses:
+        200:
+          description: OK - the request was successful
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        500:
+          $ref: '#/definitions/ServerError'
+    patch:
+      description: |
+        Update an existing skill with given id.
+        
+        **Security** - Note that for non-admin users, this endpoint will only allow updates on entities that the
+        calling user has created.
+      tags:
+        - Skills
+      security:
+        - Bearer: []
+      parameters:
+        - name: skillId
+          type: string
+          description: The skill id
+          format: UUID
+          in: path
+          required: true
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/SkillUpdateRequestBody'
+      responses:
+        200:
+          description: OK - the request was successful
+          schema:
+            $ref: '#/definitions/Skill'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        409:
+          $ref: '#/definitions/Conflict'
+        500:
+          $ref: '#/definitions/ServerError'
+    delete:
+      description: |
+        Remove an existing skill with given id.
+        
+        **Security** - Note that this endpoint is only available for admin users.  
+      tags:
+        - Skills
+      security:
+        - Bearer: []
+      parameters:
+        - name: skillId
+          type: string
+          description: The skill id
+          format: UUID
+          in: path
+          required: true
+      responses:
+        204:
+          description: OK - the request was successful
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        409:
+          $ref: '#/definitions/Conflict'
+        500:
+          $ref: '#/definitions/ServerError'       
+  
+  /skillsProviders:
+    get:
+      description: |
+        Search Skills Provider in the application.  If no results, then empty array is returned.
+        
+        **Security** - Note that for non-admin users, this endpoint will only return entities that
+        the user has created.
+      tags:
+        - 'Skills Provider'
+      security:
+        - Bearer: []
+      parameters:
+        - name: name
+          type: string
+          description: Filter by provider name
+          in: query
+          required: false
+      responses:
+        200:
+          description: OK - the request was successful
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/SkillsProvider'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        500:
+          $ref: '#/definitions/ServerError'
+    head:
+      description: |
+        Retrieve header information for a search operation on skills providers in the application.
+        
+        **Security** - Note that for non-admin users, this endpoint will only return entities that
+        the user has created.
+      tags:
+        - 'Skills Provider'
+      security:
+        - Bearer: []
+      parameters:
+        - name: name
+          type: string
+          description: Filter by provider name
+          in: query
+          required: false
+      responses:
+        200:
+          description: Success response
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        500:
+          $ref: '#/definitions/ServerError'        
+    post:
+      description: | 
+        Create a new Skills Provider.
+        
+        **Security** - This endpoint is accessible by all authenticated users.        
+      tags:
+        - 'Skills Provider'
+      security:
+        - Bearer: []
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/NameRequestBody'
+      responses:
+        200:
+          description: OK - the request was successful
+          schema:
+            $ref: '#/definitions/SkillsProvider'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        409:
+          $ref: '#/definitions/Conflict'
+        500:
+          $ref: '#/definitions/ServerError'    
+
+  /skillsProviders/{providerId}:
+    get:
+      description: |
+        Get skills provider with given id.
+        
+        **Security** - Note that for non-admin users, this endpoint will only return entities that
+        the user has created.        
+      tags:
+        - 'Skills Provider'
+      security:
+        - Bearer: []
+      parameters:
+        - name: providerId
+          type: string
+          description: The provider id
+          format: UUID
+          in: path
+          required: true
+      responses:
+        200:
+          description: OK - the request was successful
+          schema:
+            $ref: '#/definitions/SkillsProvider'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        500:
+          $ref: '#/definitions/ServerError'
+    head:
+      description: |
+        Get skills provider with given id, but only header information is returned.
+        
+        **Security** - Note that for non-admin users, this endpoint will only return entities that
+        the user has created.        
+      tags:
+        - 'Skills Provider'
+      security:
+        - Bearer: []
+      parameters:
+        - name: providerId
+          type: string
+          description: The provider id
+          format: UUID
+          in: path
+          required: true
+      responses:
+        200:
+          description: OK - the request was successful
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        500:
+          $ref: '#/definitions/ServerError'
+    patch:
+      description: |
+        Update an existing skills provider with given id.
+        
+        **Security** - Note that for non-admin users, this endpoint will only allow updates on entities that the
+        calling user has created.
+      tags:
+        - 'Skills Provider'
+      security:
+        - Bearer: []
+      parameters:
+        - name: providerId
+          type: string
+          description: The provider id
+          format: UUID
+          in: path
+          required: true
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/NameRequestBody'
+      responses:
+        200:
+          description: OK - the request was successful
+          schema:
+            $ref: '#/definitions/SkillsProvider'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        409:
+          $ref: '#/definitions/Conflict'
+        500:
+          $ref: '#/definitions/ServerError'
+    delete:
+      description: |
+        Remove an existing skills provider with given id.
+        
+        **Security** - Note that this endpoint is only available for admin users.  
+      tags:
+        - 'Skills Provider'
+      security:
+        - Bearer: []
+      parameters:
+        - name: providerId
+          type: string
+          description: The provider id
+          format: UUID
+          in: path
+          required: true
+      responses:
+        204:
+          description: OK - the request was successful
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        409:
+          $ref: '#/definitions/Conflict'
+        500:
+          $ref: '#/definitions/ServerError'
+
+  /roles:
+    get:
+      description: |
+        Search Roles in the application.  If no results, then empty array is returned.
+        
+        **Security** - Note that for non-admin users, this endpoint will only return entities that
+        the user has created.
+      tags:
+        - Roles
+      security:
+        - Bearer: []
+      parameters:
+        - name: name
+          type: string
+          description: Filter by role name
+          in: query
+          required: false
+      responses:
+        200:
+          description: OK - the request was successful
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Role'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        500:
+          $ref: '#/definitions/ServerError'
+    head:
+      description: |
+        Retrieve header information for a search operation on Roles in the application.
+        
+        **Security** - Note that for non-admin users, this endpoint will only return entities that
+        the user has created.
+      tags:
+        - Roles
+      security:
+        - Bearer: []
+      parameters:
+        - name: name
+          type: string
+          description: Filter by role name
+          in: query
+          required: false
+      responses:
+        200:
+          description: Success response
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        500:
+          $ref: '#/definitions/ServerError'        
+    post:
+      description: | 
+        Create a new Role.
+        
+        **Security** - This endpoint is accessible by all authenticated users.        
+      tags:
+        - Roles
+      security:
+        - Bearer: []
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/NameRequestBody'
+      responses:
+        200:
+          description: OK - the request was successful
+          schema:
+            $ref: '#/definitions/Role'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        409:
+          $ref: '#/definitions/Conflict'
+        500:
+          $ref: '#/definitions/ServerError'
+
+  /roles/{roleId}:
+    get:
+      description: |
+        Get role with given id.
+        
+        **Security** - Note that for non-admin users, this endpoint will only return entities that
+        the user has created.        
+      tags:
+        - Roles
+      security:
+        - Bearer: []
+      parameters:
+        - name: roleId
+          type: string
+          description: The role id
+          format: UUID
+          in: path
+          required: true
+      responses:
+        200:
+          description: OK - the request was successful
+          schema:
+            $ref: '#/definitions/Role'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        500:
+          $ref: '#/definitions/ServerError'
+    head:
+      description: |
+        Get role with given id, but only header information is returned.
+        
+        **Security** - Note that for non-admin users, this endpoint will only return entities that
+        the user has created.        
+      tags:
+        - Roles
+      security:
+        - Bearer: []
+      parameters:
+        - name: roleId
+          type: string
+          description: The role id
+          format: UUID
+          in: path
+          required: true
+      responses:
+        200:
+          description: OK - the request was successful
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        500:
+          $ref: '#/definitions/ServerError'
+    patch:
+      description: |
+        Update an existing role with given id.
+        
+        **Security** - Note that for non-admin users, this endpoint will only allow updates on entities that the
+        calling user has created.
+      tags:
+        - Roles
+      security:
+        - Bearer: []
+      parameters:
+        - name: roleId
+          type: string
+          description: The role id
+          format: UUID
+          in: path
+          required: true
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/NameRequestBody'
+      responses:
+        200:
+          description: OK - the request was successful
+          schema:
+            $ref: '#/definitions/Role'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        409:
+          $ref: '#/definitions/Conflict'
+        500:
+          $ref: '#/definitions/ServerError'
+    delete:
+      description: |
+        Remove an existing role with given id.
+        
+        **Security** - Note that this endpoint is only available for admin users.  
+      tags:
+        - Roles
+      security:
+        - Bearer: []
+      parameters:
+        - name: roleId
+          type: string
+          description: The role id
+          format: UUID
+          in: path
+          required: true
+      responses:
+        204:
+          description: OK - the request was successful
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        409:
+          $ref: '#/definitions/Conflict'
+        500:
+          $ref: '#/definitions/ServerError' 
+
+  /users/{userId}/roles:
+    get:
+      description: |
+        Get User Roles that belong to given user id.
+        
+        **Security** - Note that for non-admin users, this endpoint will only return entities that
+        the user has created.        
+      tags:
+        - 'User Roles'
+      security:
+        - Bearer: []
+      parameters:
+        - name: userId
+          type: string
+          description: The user id
+          format: UUID
+          in: path
+          required: true
+      responses:
+        200:
+          description: OK - the request was successful
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/UserRole'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        500:
+          $ref: '#/definitions/ServerError'
+    head:
+      description: |
+        Get User Roles that belong to given user id, but only header information is returned.
+        
+        **Security** - Note that for non-admin users, this endpoint will only return entities that
+        the user has created.        
+      tags:
+        - 'User Roles'
+      security:
+        - Bearer: []
+      parameters:
+        - name: userId
+          type: string
+          description: The user id
+          format: UUID
+          in: path
+          required: true
+      responses:
+        200:
+          description: OK - the request was successful
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        500:
+          $ref: '#/definitions/ServerError'
+    post:
+      description: | 
+        Create a new User Role.
+        
+        **Security** - This endpoint is accessible by all authenticated users.        
+      tags:
+        - 'User Roles'
+      security:
+        - Bearer: []
+      parameters:
+        - name: userId
+          type: string
+          description: The user id
+          format: UUID
+          in: path
+          required: true
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/UserRoleRequestBody'
+      responses:
+        200:
+          description: OK - the request was successful
+          schema:
+            $ref: '#/definitions/UserRole'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        409:
+          $ref: '#/definitions/Conflict'
+        500:
+          $ref: '#/definitions/ServerError'
+
+  /users/{userId}/roles/{roleId}:
+    get:
+      description: |
+        Get role by its id.
+        
+        **Security** - Note that for non-admin users, this endpoint will only return entities that
+        the user has created.
+      tags:
+        - 'User Roles'
+      security:
+        - Bearer: []
+      parameters:
+        - name: userId
+          type: string
+          description: The user id
+          format: UUID
+          in: path
+          required: true
+        - name: roleId
+          type: string
+          description: The role id
+          format: UUID
+          in: path
+          required: true          
+      responses:
+        200:
+          description: OK - the request was successful
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/UserRole'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        500:
+          $ref: '#/definitions/ServerError'
+    head:
+      description: |
+        Retrieve header information for a search operation on User Roles in the application.
+        
+        **Security** - Note that for non-admin users, this endpoint will only return entities that
+        the user has created.
+      tags:
+        - 'User Roles'
+      security:
+        - Bearer: []
+      parameters:
+        - name: userId
+          type: string
+          description: The user id
+          format: UUID
+          in: path
+          required: true
+        - name: roleId
+          type: string
+          description: The role id
+          format: UUID
+          in: path
+          required: true
+      responses:
+        200:
+          description: Success response
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        500:
+          $ref: '#/definitions/ServerError'          
+    delete:
+      description: |
+        Remove an existing user role with given user and role id.
+        
+        **Security** - Note that this endpoint is only available for admin users.  
+      tags:
+        - 'User Roles'
+      security:
+        - Bearer: []
+      parameters:
+        - name: userId
+          type: string
+          description: The user id
+          format: UUID
+          in: path
+          required: true
+        - name: roleId
+          type: string
+          description: The role id
+          format: UUID
+          in: path
+          required: true
+      responses:
+        204:
+          description: OK - the request was successful
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        409:
+          $ref: '#/definitions/Conflict'
+        500:
+          $ref: '#/definitions/ServerError' 
+  
+  /users/{userId}/externalProfiles:
+    get:
+      description: |
+        Get External Profiles with given user id.
+        
+        **Security** - Note that for non-admin users, this endpoint will only return entities that
+        the user has created.        
+      tags:
+        - 'External Profiles'
+      security:
+        - Bearer: []
+      parameters:
+        - name: userId
+          type: string
+          description: The user id
+          format: UUID
+          in: path
+          required: true
+        - name: organizationName
+          type: string
+          description: The organization name
+          in: query
+          required: false
+      responses:
+        200:
+          description: OK - the request was successful
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ExternalProfile'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        500:
+          $ref: '#/definitions/ServerError'
+    head:
+      description: |
+        Get External Profiles with given user id, but only header information is returned.
+        
+        **Security** - Note that for non-admin users, this endpoint will only return entities that
+        the user has created.        
+      tags:
+        - 'External Profiles'
+      security:
+        - Bearer: []
+      parameters:
+        - name: userId
+          type: string
+          description: The user id
+          format: UUID
+          in: path
+          required: true
+      responses:
+        200:
+          description: OK - the request was successful
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        500:
+          $ref: '#/definitions/ServerError'
+    post:
+      description: | 
+        Create a new External Profile for given user id.
+        
+        **Security** - This endpoint is accessible by all authenticated users.        
+      tags:
+        - 'External Profiles'
+      security:
+        - Bearer: []
+      parameters:
+        - name: userId
+          type: string
+          description: The user id
+          format: UUID
+          in: path
+          required: true
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/ExternalProfileRequestBody'
+      responses:
+        200:
+          description: OK - the request was successful
+          schema:
+            $ref: '#/definitions/ExternalProfile'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        409:
+          $ref: '#/definitions/Conflict'
+        500:
+          $ref: '#/definitions/ServerError'
+  
+  /users/{userId}/externalProfiles/{organizationId}:
+    get:
+      description: |
+        Get external profile with given user id and organization id.
+        
+        **Security** - Note that for non-admin users, this endpoint will only return entities that
+        the user has created.        
+      tags:
+        - 'External Profiles'
+      security:
+        - Bearer: []
+      parameters:
+        - name: userId
+          type: string
+          description: The user id
+          format: UUID
+          in: path
+          required: true
+        - name: organizationId
+          type: string
+          description: The organization id
+          format: UUID
+          in: path
+          required: true          
+      responses:
+        200:
+          description: OK - the request was successful
+          schema:
+            $ref: '#/definitions/ExternalProfile'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        500:
+          $ref: '#/definitions/ServerError'
+    head:
+      description: |
+        Get external profile with given user id and organization id, but only header information is returned.
+        
+        **Security** - Note that for non-admin users, this endpoint will only return entities that
+        the user has created.        
+      tags:
+        - 'External Profiles'
+      security:
+        - Bearer: []
+      parameters:
+        - name: userId
+          type: string
+          description: The user id
+          format: UUID
+          in: path
+          required: true
+        - name: organizationId
+          type: string
+          description: The organization id
+          format: UUID
+          in: path
+          required: true   
+      responses:
+        200:
+          description: OK - the request was successful
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        500:
+          $ref: '#/definitions/ServerError'
+    patch:
+      description: |
+        Update an existing external profile with given user id and organization id.
+        
+        **Security** - Note that for non-admin users, this endpoint will only allow updates on entities that the
+        calling user has created.
+      tags:
+        - 'External Profiles'
+      security:
+        - Bearer: []
+      parameters:
+        - name: userId
+          type: string
+          description: The user id
+          format: UUID
+          in: path
+          required: true
+        - name: organizationId
+          type: string
+          description: The organization id
+          format: UUID
+          in: path
+          required: true
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/ExternalProfileUpdateRequestBody'
+      responses:
+        200:
+          description: OK - the request was successful
+          schema:
+            $ref: '#/definitions/ExternalProfile'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        409:
+          $ref: '#/definitions/Conflict'
+        500:
+          $ref: '#/definitions/ServerError'
+    delete:
+      description: |
+        Remove an existing external profile with given user id and organization id.
+        
+        **Security** - Note that this endpoint is only available for admin users.  
+      tags:
+        - 'External Profiles'
+      security:
+        - Bearer: []
+      parameters:
+        - name: userId
+          type: string
+          description: The user id
+          format: UUID
+          in: path
+          required: true
+        - name: organizationId
+          type: string
+          description: The organization id
+          format: UUID
+          in: path
+          required: true
+      responses:
+        204:
+          description: OK - the request was successful
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        409:
+          $ref: '#/definitions/Conflict'
+        500:
+          $ref: '#/definitions/ServerError' 
+
+  /users/{userId}/achievements:
+    get:
+      description: |
+        Get Achievements for given user id.
+        
+        **Security** - Note that for non-admin users, this endpoint will only return entities that
+        the user has created.        
+      tags:
+        - 'Achievements'
+      security:
+        - Bearer: []
+      parameters:
+        - name: userId
+          type: string
+          description: The user id
+          format: UUID
+          in: path
+          required: true
+        - name: achievementsproviderName
+          type: string
+          description: The achievement provider name
+          in: query
+          required: false
+      responses:
+        200:
+          description: OK - the request was successful
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Achievement'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        500:
+          $ref: '#/definitions/ServerError'
+    head:
+      description: |
+        Get Achievements for given user id, but only header information is returned.
+        
+        **Security** - Note that for non-admin users, this endpoint will only return entities that
+        the user has created.        
+      tags:
+        - 'Achievements'
+      security:
+        - Bearer: []
+      parameters:
+        - name: userId
+          type: string
+          description: The user id
+          format: UUID
+          in: path
+          required: true
+        - name: achievementsproviderName
+          type: string
+          description: The achievement provider name
+          in: query
+          required: false
+      responses:
+        200:
+          description: OK - the request was successful
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        500:
+          $ref: '#/definitions/ServerError'
+    post:
+      description: | 
+        Create a new Achievement.
+        
+        **Security** - This endpoint is accessible by all authenticated users.        
+      tags:
+        - 'Achievements'
+      security:
+        - Bearer: []
+      parameters:
+        - name: userId
+          type: string
+          description: The user id
+          format: UUID
+          in: path
+          required: true
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/AchievementRequestBody'
+      responses:
+        200:
+          description: OK - the request was successful
+          schema:
+            $ref: '#/definitions/Achievement'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        409:
+          $ref: '#/definitions/Conflict'
+        500:
+          $ref: '#/definitions/ServerError'
+        
+  /users/{userId}/achievements/{achievementsProviderId}:
+    get:
+      description: |
+        Get Achievements for given user id and provider id.
+        
+        **Security** - Note that for non-admin users, this endpoint will only return entities that
+        the user has created.
+      tags:
+        - 'Achievements'
+      security:
+        - Bearer: []
+      parameters:
+        - name: userId
+          type: string
+          description: The user id
+          format: UUID
+          in: path
+          required: true
+        - name: achievementsProviderId
+          type: string
+          description: The provider id
+          format: UUID
+          in: path
+          required: true          
+      responses:
+        200:
+          description: OK - the request was successful
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Achievement'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        500:
+          $ref: '#/definitions/ServerError'
+    head:
+      description: |
+        Get Achievements for given user id and provider id, but only header information is returned.
+        
+        **Security** - Note that for non-admin users, this endpoint will only return entities that
+        the user has created.        
+      tags:
+        - 'Achievements'
+      security:
+        - Bearer: []
+      parameters:
+        - name: userId
+          type: string
+          description: The user id
+          format: UUID
+          in: path
+          required: true
+        - name: achievementsProviderId
+          type: string
+          description: The provider id
+          format: UUID
+          in: path
+          required: true           
+      responses:
+        200:
+          description: OK - the request was successful
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        500:
+          $ref: '#/definitions/ServerError'
+    patch:
+      description: |
+        Update an existing Achievement with given userId and achievement providerId.  Only the fields in the request body are updated.
+        
+        **Security** - Note that for non-admin users, this endpoint will only allow updates on entities that the
+        calling user has created.
+      tags:
+        - 'Achievements'
+      security:
+        - Bearer: []
+      parameters:
+        - name: userId
+          type: string
+          description: The user id
+          format: UUID
+          in: path
+          required: true
+        - name: achievementsProviderId
+          type: string
+          description: The provider id
+          format: UUID
+          in: path
+          required: true 
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/AchievementUpdateRequestBody'
+      responses:
+        200:
+          description: OK - the request was successful
+          schema:
+            $ref: '#/definitions/Achievement'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        409:
+          $ref: '#/definitions/Conflict'
+        500:
+          $ref: '#/definitions/ServerError'
+    delete:
+      description: |
+        Remove an existing Achievement with given userId and achievement providerId.
+        
+        **Security** - Note that this endpoint is only available for admin users.  
+      tags:
+        - 'Achievements'
+      security:
+        - Bearer: []
+      parameters:
+        - name: userId
+          type: string
+          description: The user id
+          format: UUID
+          in: path
+          required: true
+        - name: achievementsProviderId
+          type: string
+          description: The provider id
+          format: UUID
+          in: path
+          required: true
+      responses:
+        204:
+          description: OK - the request was successful
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        409:
+          $ref: '#/definitions/Conflict'
+        500:
+          $ref: '#/definitions/ServerError'           
+
+  /achievementsProviders:
+    get:
+      description: |
+        Search Achievements Provider in the application.  If no results, then empty array is returned.
+        
+        **Security** - Note that for non-admin users, this endpoint will only return entities that
+        the user has created.
+      tags:
+        - 'Achievements Provider'
+      security:
+        - Bearer: []
+      parameters:
+        - name: name
+          type: string
+          description: Filter by provider name
+          in: query
+          required: false
+      responses:
+        200:
+          description: OK - the request was successful
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/AchievementsProvider'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        500:
+          $ref: '#/definitions/ServerError'
+    head:
+      description: |
+        Retrieve header information for a search operation on achivements provider in the application.
+        
+        **Security** - Note that for non-admin users, this endpoint will only return entities that
+        the user has created.
+      tags:
+        - 'Achievements Provider'
+      security:
+        - Bearer: []
+      parameters:
+        - name: name
+          type: string
+          description: Filter by provider name
+          in: query
+          required: false
+      responses:
+        200:
+          description: Success response
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        500:
+          $ref: '#/definitions/ServerError'        
+    post:
+      description: | 
+        Create a new Achievements Provider.
+        
+        **Security** - This endpoint is accessible by all authenticated users.        
+      tags:
+        - 'Achievements Provider'
+      security:
+        - Bearer: []
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/NameRequestBody'
+      responses:
+        200:
+          description: OK - the request was successful
+          schema:
+            $ref: '#/definitions/AchievementsProvider'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        409:
+          $ref: '#/definitions/Conflict'
+        500:
+          $ref: '#/definitions/ServerError'
+  
+  /achievementsProviders/{providerId}:
+    get:
+      description: |
+        Get achievements provider with given id.
+        
+        **Security** - Note that for non-admin users, this endpoint will only return entities that
+        the user has created.        
+      tags:
+        - 'Achievements Provider'
+      security:
+        - Bearer: []
+      parameters:
+        - name: providerId
+          type: string
+          description: The provider id
+          format: UUID
+          in: path
+          required: true
+      responses:
+        200:
+          description: OK - the request was successful
+          schema:
+            $ref: '#/definitions/AchievementsProvider'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        500:
+          $ref: '#/definitions/ServerError'
+    head:
+      description: |
+        Get achivements provider with given id, but only header information is returned.
+        
+        **Security** - Note that for non-admin users, this endpoint will only return entities that
+        the user has created.        
+      tags:
+        - 'Achievements Provider'
+      security:
+        - Bearer: []
+      parameters:
+        - name: providerId
+          type: string
+          description: The provider id
+          format: UUID
+          in: path
+          required: true
+      responses:
+        200:
+          description: OK - the request was successful
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        500:
+          $ref: '#/definitions/ServerError'
+    patch:
+      description: |
+        Update an existing achivements provider with given id.
+        
+        **Security** - Note that for non-admin users, this endpoint will only allow updates on entities that the
+        calling user has created.
+      tags:
+        - 'Achievements Provider'
+      security:
+        - Bearer: []
+      parameters:
+        - name: providerId
+          type: string
+          description: The provider id
+          format: UUID
+          in: path
+          required: true
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/NameRequestBody'
+      responses:
+        200:
+          description: OK - the request was successful
+          schema:
+            $ref: '#/definitions/AchievementsProvider'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        409:
+          $ref: '#/definitions/Conflict'
+        500:
+          $ref: '#/definitions/ServerError'
+    delete:
+      description: |
+        Remove an existing achiements provider with given id.
+        
+        **Security** - Note that this endpoint is only available for admin users.  
+      tags:
+        - 'Achievements Provider'
+      security:
+        - Bearer: []
+      parameters:
+        - name: providerId
+          type: string
+          description: The provider id
+          format: UUID
+          in: path
+          required: true
+      responses:
+        204:
+          description: OK - the request was successful
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        409:
+          $ref: '#/definitions/Conflict'
+        500:
+          $ref: '#/definitions/ServerError'
+
+  /organizations:
+    get:
+      description: |
+        Search organizations in the application.  If no results, then empty array is returned.
+        
+        **Security** - Note that for non-admin users, this endpoint will only return entities that
+        the user has created.
+      tags:
+        - Organizations
+      security:
+        - Bearer: []
+      parameters:
+        - name: name
+          type: string
+          description: Filter by organization name
+          in: query
+          required: false
+      responses:
+        200:
+          description: OK - the request was successful
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Organization'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        500:
+          $ref: '#/definitions/ServerError'
+    head:
+      description: |
+        Retrieve header information for a search operation on organizations in the application.
+        
+        **Security** - Note that for non-admin users, this endpoint will only return entities that
+        the user has created.
+      tags:
+        - Organizations
+      security:
+        - Bearer: []
+      parameters:
+        - name: name
+          type: string
+          description: Filter by organization name
+          in: query
+          required: false
+      responses:
+        200:
+          description: success response
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        500:
+          $ref: '#/definitions/ServerError'          
+    post:
+      description: | 
+        Create a new Organization.
+        
+        **Security** - This endpoint is accessible by all authenticated users.        
+      tags:
+        - Organizations
+      security:
+        - Bearer: []
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/NameRequestBody'
+      responses:
+        200:
+          description: OK - the request was successful
+          schema:
+            $ref: '#/definitions/Organization'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        409:
+          $ref: '#/definitions/Conflict'
+        500:
+          $ref: '#/definitions/ServerError'
+    
+  /organizations/{organizationId}:
+    get:
+      description: |
+        Get organization with given id.
+        
+        **Security** - Note that for non-admin users, this endpoint will only return entities that
+        the user has created.        
+      tags:
+        - Organizations
+      security:
+        - Bearer: []
+      parameters:
+        - name: organizationId
+          type: string
+          description: The organization id
+          format: UUID
+          in: path
+          required: true
+      responses:
+        200:
+          description: OK - the request was successful
+          schema:
+            $ref: '#/definitions/Organization'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        500:
+          $ref: '#/definitions/ServerError'
+    head:
+      description: |
+        Get organization with given id, but only header information is returned.
+        
+        **Security** - Note that for non-admin users, this endpoint will only return entities that
+        the user has created.        
+      tags:
+        - Organizations
+      security:
+        - Bearer: []
+      parameters:
+        - name: organizationId
+          type: string
+          description: The organization id
+          format: UUID
+          in: path
+          required: true
+      responses:
+        200:
+          description: OK - the request was successful
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        500:
+          $ref: '#/definitions/ServerError'
+    patch:
+      description: |
+        Update an existing organization with given id.
+        
+        **Security** - Note that for non-admin users, this endpoint will only allow updates on entities that the
+        calling user has created.
+      tags:
+        - Organizations
+      security:
+        - Bearer: []
+      parameters:
+        - name: organizationId
+          type: string
+          description: The organization id
+          format: UUID
+          in: path
+          required: true
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/NameRequestBody'
+      responses:
+        200:
+          description: OK - the request was successful
+          schema:
+            $ref: '#/definitions/Organization'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        409:
+          $ref: '#/definitions/Conflict'
+        500:
+          $ref: '#/definitions/ServerError'
+    delete:
+      description: |
+        Remove an existing organization with given id.
+        
+        **Security** - Note that this endpoint is only available for admin users.  
+      tags:
+        - Organizations
+      security:
+        - Bearer: []
+      parameters:
+        - name: organizationId
+          type: string
+          description: The organization id
+          format: UUID
+          in: path
+          required: true
+      responses:
+        204:
+          description: OK - the request was successful
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        409:
+          $ref: '#/definitions/Conflict'
+        500:
+          $ref: '#/definitions/ServerError'
+
+  /users/{userId}/attributes:
+    get:
+      description: |
+        Get attributes for the given user.
+        Optionally, filter attributes by the attribute name, attribute group name and attribute group id, given an user id.  If no results, then empty array is returned.
+        
+        **Security** - Note that for non-admin users, this endpoint will only return entities that
+        the user has created.
+      tags:
+        - 'User Attributes'
+      security:
+        - Bearer: []
+      parameters:
+        - name: userId
+          type: string
+          description: The user id
+          format: UUID
+          in: path
+          required: true
+        - name: attributeName
+          type: string
+          description: Filter by the attribute name
+          in: query
+          required: false
+        - name: attributeGroupName
+          type: string
+          description: Filter by the attribute group name
+          in: query
+          required: false
+        - name: attributeGroupId
+          type: string
+          description: Filter by the attribute group id
+          in: query
+          format: UUID
+          required: false
+      responses:
+        200:
+          description: OK - the request was successful
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/UserAttribute'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        500:
+          $ref: '#/definitions/ServerError'
+    head:
+      description: |
+        Retrieve header information for a search operation on users attributes in the application.
+        
+        **Security** - Note that for non-admin users, this endpoint will only return entities that
+        the user has created.
+      tags:
+        - 'User Attributes'
+      security:
+        - Bearer: []
+      parameters:
+        - name: userId
+          type: string
+          description: The user id
+          format: UUID
+          in: path
+          required: true
+        - name: attributeName
+          type: string
+          description: Filter by the attribute name
+          in: query
+          required: false
+        - name: attributeGroupName
+          type: string
+          description: Filter by the attribute group name
+          in: query
+          required: false
+        - name: attributeGroupId
+          type: string
+          description: Filter by the attribute group id
+          in: query
+          format: UUID
+          required: false
+      responses:
+        200:
+          description: Success response
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        500:
+          $ref: '#/definitions/ServerError'          
+    post:
+      description: | 
+        Create a new User Attribute.
+        
+        **Security** - This endpoint is accessible by all authenticated users.        
+      tags:
+        - 'User Attributes'
+      security:
+        - Bearer: []
+      parameters:
+        - name: userId
+          type: string
+          description: The user id
+          format: UUID
+          in: path
+          required: true
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/UserAttributeRequestBody'
+      responses:
+        200:
+          description: OK - the request was successful
+          schema:
+            $ref: '#/definitions/UserAttribute'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        409:
+          $ref: '#/definitions/Conflict'
+        500:
+          $ref: '#/definitions/ServerError'    
+
+  /users/{userId}/attributes/{attributeId}:
+    get:
+      description: |
+        Get User Attributes with given user and attribute id.
+        
+        **Security** - Note that for non-admin users, this endpoint will only return entities that
+        the user has created.        
+      tags:
+        - 'User Attributes'
+      security:
+        - Bearer: []
+      parameters:
+        - name: userId
+          type: string
+          description: The user id
+          format: UUID
+          in: path
+          required: true
+        - name: attributeId
+          type: string
+          description: The attribute id
+          format: UUID
+          in: path
+          required: true
+      responses:
+        200:
+          description: OK - the request was successful
+          schema:
+            $ref: '#/definitions/UserAttribute'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        500:
+          $ref: '#/definitions/ServerError'
+    head:
+      description: |
+        Get User Attributes with given ids, but only header information is returned.
+        
+        **Security** - Note that for non-admin users, this endpoint will only return entities that
+        the user has created.        
+      tags:
+        - 'User Attributes'
+      security:
+        - Bearer: []
+      parameters:
+        - name: userId
+          type: string
+          description: The user id
+          format: UUID
+          in: path
+          required: true
+        - name: attributeId
+          type: string
+          description: The attribute id
+          format: UUID
+          in: path
+          required: true
+      responses:
+        200:
+          description: OK - the request was successful
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        500:
+          $ref: '#/definitions/ServerError'
+    patch:
+      description: |
+        Update an existing user attribute with given ids.
+        
+        **Security** - Note that for non-admin users, this endpoint will only allow updates on entities that the
+        calling user has created.
+      tags:
+        - 'User Attributes'
+      security:
+        - Bearer: []
+      parameters:
+        - name: userId
+          type: string
+          description: The user id
+          format: UUID
+          in: path
+          required: true
+        - name: attributeId
+          type: string
+          description: The attribute id
+          format: UUID
+          in: path
+          required: true
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/UserAttributeUpdateRequestBody'
+      responses:
+        200:
+          description: OK - the request was successful
+          schema:
+            $ref: '#/definitions/UserAttribute'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        409:
+          $ref: '#/definitions/Conflict'
+        500:
+          $ref: '#/definitions/ServerError'
+    delete:
+      description: |
+        Remove an existing User Attribute with given ids.
+        
+        **Security** - Note that this endpoint is only available for admin users.  
+      tags:
+        - 'User Attributes'
+      security:
+        - Bearer: []
+      parameters:
+        - name: userId
+          type: string
+          description: The user id
+          format: UUID
+          in: path
+          required: true
+        - name: attributeId
+          type: string
+          description: The attribute id
+          format: UUID
+          in: path
+          required: true
+      responses:
+        204:
+          description: OK - the request was successful
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        409:
+          $ref: '#/definitions/Conflict'
+        500:
+          $ref: '#/definitions/ServerError'
+
+  /attributes:
+    get:
+      description: |
+        Get list of attributes in the application.  If no results, then empty array is returned.
+        
+        **Security** - Note that for non-admin users, this endpoint will only return entities that
+        the user has created.
+      tags:
+        - 'Attributes'
+      security:
+        - Bearer: []
+      parameters:
+        - name: attributeGroupId
+          type: string
+          format: UUID
+          description: Filter by attribute group id
+          required: false
+          in: query
+        - name: name
+          type: string
+          description: Filter by attribute name
+          in: query
+          required: false
+      responses:
+        200:
+          description: OK - the request was successful
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Attribute'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        500:
+          $ref: '#/definitions/ServerError'
+    head:
+      description: |
+        Retrieve header information for get operation on Attributes in the application.
+        
+        **Security** - Note that for non-admin users, this endpoint will only return entities that
+        the user has created.
+      tags:
+        - 'Attributes'
+      security:
+        - Bearer: []
+      responses:
+        200:
+          description: Success response
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        500:
+          $ref: '#/definitions/ServerError'          
+    post:
+      description: | 
+        Create a new Attribute.
+        
+        **Security** - This endpoint is accessible by all authenticated users.        
+      tags:
+        - 'Attributes'
+      security:
+        - Bearer: []
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/AttributeRequestBody'
+      responses:
+        200:
+          description: OK - the request was successful
+          schema:
+            $ref: '#/definitions/Attribute'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        409:
+          $ref: '#/definitions/Conflict'
+        500:
+          $ref: '#/definitions/ServerError'
+  
+  /attributes/{attributeId}:
+    get:
+      description: |
+        Get Attribute by given attribute id.
+        
+        **Security** - Note that for non-admin users, this endpoint will only return entities that
+        the user has created.        
+      tags:
+        - 'Attributes'
+      security:
+        - Bearer: []
+      parameters:
+        - name: attributeId
+          type: string
+          description: The attribute id
+          format: UUID
+          in: path
+          required: true
+      responses:
+        200:
+          description: OK - the request was successful
+          schema:
+            $ref: '#/definitions/Attribute'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        500:
+          $ref: '#/definitions/ServerError'
+    head:
+      description: |
+        Retrieve header information for get operation on Attribute by its id in the application.
+        
+        **Security** - Note that for non-admin users, this endpoint will only return entities that
+        the user has created.       
+      tags:
+        - Attributes
+      security:
+        - Bearer: []
+      parameters:
+        - name: attributeId
+          type: string
+          description: The attribute id
+          format: UUID
+          in: path
+          required: true
+      responses:
+        200:
+          description: OK - the request was successful
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        500:
+          $ref: '#/definitions/ServerError'
+    patch:
+      description: |
+        Update an existing attribute with given id.
+        
+        **Security** - Note that for non-admin users, this endpoint will only allow updates on entities that the
+        calling user has created.
+      tags:
+        - Attributes
+      security:
+        - Bearer: []
+      parameters:
+        - name: attributeId
+          type: string
+          description: The attribute id
+          format: UUID
+          in: path
+          required: true
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/AttributeUpdateRequestBody'
+      responses:
+        200:
+          description: OK - the request was successful
+          schema:
+            $ref: '#/definitions/Attribute'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        409:
+          $ref: '#/definitions/Conflict'
+        500:
+          $ref: '#/definitions/ServerError'
+    delete:
+      description: |
+        Remove an existing attribute with given id.
+        
+        **Security** - Note that this endpoint is only available for admin users.  
+      tags:
+        - Attributes
+      security:
+        - Bearer: []
+      parameters:
+        - name: attributeId
+          type: string
+          description: The attribute id
+          format: UUID
+          in: path
+          required: true
+      responses:
+        204:
+          description: OK - the request was successful
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        409:
+          $ref: '#/definitions/Conflict'
+        500:
+          $ref: '#/definitions/ServerError'       
+
+  /attributeGroups:
+    get:
+      description: |
+        Search Attribute Groups in the application.  Multiple filters are supported.
+        If no results, then empty array is returned.
+        
+        **Security** - Note that for non-admin users, this endpoint will only return entities that
+        the user has created.
+      tags:
+        - 'Attribute Groups'
+      security:
+        - Bearer: []
+      parameters:
+        - name: name
+          type: string
+          description: Filter by group name
+          in: query
+          required: false
+        - name: organizationId
+          type: string
+          format: UUID
+          description: Filter by organization id
+          in: query
+          required: false
+      responses:
+        200:
+          description: OK - the request was successful
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/AttributeGroup'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        500:
+          $ref: '#/definitions/ServerError'
+    head:
+      description: |
+        Retrieve header information for a search operation on Attribute Groups in the application.
+        
+        **Security** - Note that for non-admin users, this endpoint will only return entities that
+        the user has created.
+      tags:
+        - 'Attribute Groups'
+      security:
+        - Bearer: []
+      parameters:
+        - name: name
+          type: string
+          description: Filter by group name
+          in: query
+          required: false
+        - name: organizationId
+          type: string
+          format: UUID
+          description: Filter by organization id
+          in: query
+          required: false
+      responses:
+        200:
+          description: Success response
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        500:
+          $ref: '#/definitions/ServerError'        
+    post:
+      description: | 
+        Create a new Attribute Group.
+        
+        **Security** - This endpoint is accessible by all authenticated users.        
+      tags:
+        - 'Attribute Groups'
+      security:
+        - Bearer: []
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/AttributeGroupRequestBody'
+      responses:
+        200:
+          description: OK - the request was successful
+          schema:
+            $ref: '#/definitions/AttributeGroup'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        409:
+          $ref: '#/definitions/Conflict'
+        500:
+          $ref: '#/definitions/ServerError'      
+
+  /attributeGroups/{id}:
+    get:
+      description: |
+        Get Attribute Groups with given id.
+        
+        **Security** - Note that for non-admin users, this endpoint will only return entities that
+        the user has created.        
+      tags:
+        - 'Attribute Groups'
+      security:
+        - Bearer: []
+      parameters:
+        - name: id
+          type: string
+          description: The id
+          format: UUID
+          in: path
+          required: true
+      responses:
+        200:
+          description: OK - the request was successful
+          schema:
+              $ref: '#/definitions/AttributeGroup'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        500:
+          $ref: '#/definitions/ServerError'
+    head:
+      description: |
+        Get Attribute Group with given id, but only header information is returned.
+        
+        **Security** - Note that for non-admin users, this endpoint will only return entities that
+        the user has created.
+      tags:
+        - 'Attribute Groups'
+      security:
+        - Bearer: []
+      parameters:
+        - name: id
+          type: string
+          description: The id
+          format: UUID
+          in: path
+          required: true
+      responses:
+        200:
+          description: OK - the request was successful
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        500:
+          $ref: '#/definitions/ServerError'
+    patch:
+      description: |
+        Update an existing Attribute Group with given id.  Only the fields in the request body are updated.
+        
+        **Security** - Note that for non-admin users, this endpoint will only allow updates on entities that the
+        calling user has created.
+      tags:
+        - 'Attribute Groups'
+      security:
+        - Bearer: []
+      parameters:
+        - name: id
+          type: string
+          description: The id
+          format: UUID
+          in: path
+          required: true
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/AttributeGroupRequestBody'
+      responses:
+        200:
+          description: OK - the request was successful
+          schema:
+            $ref: '#/definitions/AttributeGroup'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        409:
+          $ref: '#/definitions/Conflict'
+        500:
+          $ref: '#/definitions/ServerError'          
+    delete:
+      description: |
+        Remove an existing Attribute Group with given id.
+        
+        **Security** - Note that this endpoint is only available for admin users.  
+      tags:
+        - 'Attribute Groups'
+      security:
+        - Bearer: []
+      parameters:
+        - name: id
+          type: string
+          description: The id
+          format: UUID
+          in: path
+          required: true
+      responses:
+        204:
+          description: OK - the request was successful
+        401:
+          $ref: '#/definitions/Unauthorized'
+        403:
+          $ref: '#/definitions/Forbidden'
+        404:
+          $ref: '#/definitions/NotFound'
+        409:
+          $ref: '#/definitions/Conflict'
+        500:
+          $ref: '#/definitions/ServerError'      
+
+definitions:
+  AuditFields:
+    type: object
+    description: Describes the audit fields that are present in all the models in this API.
+    required:
+      - created
+      - updated
+      - createdBy
+      - updatedBy
+    properties:
+      created:
+        type: string
+        format: date-time
+        description: When the entity was created.
+      updated:
+        type: string
+        format: date-time
+        description: When the entity was updated.
+      createdBy:
+        type: string
+        format: UUID
+        description: Creator of the entity.
+      updatedBy:
+        type: string
+        format: UUID
+        description: User that last updated the entity.
+
+  Achievement:
+    allOf:
+      - type: object
+        required:
+          - userId
+          - achievementsProviderId
+          - name
+          - uri
+          - certifierId
+          - certifierDate
+        properties:
+          userId:
+            type: string
+            format: UUID
+            description: The id of user that this Achievement belongs to.
+          achievementsProviderId:
+            type: string
+            format: UUID
+            description: The id of achievements provider for this Achievement.
+          name:
+            type: string
+            description: Name of achievement.
+          uri:
+            type: string
+            description: Uri of achievement
+          certifierId:
+            type: string
+            description: Id of certifier
+          certifiedDate:
+            type: string
+            format: date-time
+            description: The date when certification occurred.
+      - $ref: '#/definitions/AuditFields'
+
+  AchievementRequestBody:
+    required:
+      - achievementsProviderId
+      - name
+      - uri
+      - certifierId
+      - certifierDate
+    allOf:
+      - type: object  
+        properties:
+          achievementsProviderId:
+            type: string
+            format: UUID
+            description: The id of provider for this Achievement. 
+      - $ref: '#/definitions/AchievementUpdateRequestBody'      
+
+  AchievementUpdateRequestBody:
+    type: object
+    properties:
+      name:
+        type: string
+        description: Name of Achievement
+      uri:
+        type: string
+        description: Uri of Achievement
+      certifierId:
+        type: string
+        description: Id of certifier
+      certifiedDate:
+        type: string
+        format: date-time
+        description: The date when certification occurred.
+  
+  AchievementsProvider:
+    allOf:
+      - type: object
+        required:
+          - id
+          - name
+        properties:
+          id:
+            type: string
+            format: UUID
+            description: The id of the provider.
+          name:
+            type: string
+            description: The name of the provider.
+      - $ref: '#/definitions/AuditFields'
+
+  Skill:
+    allOf:
+      - type: object
+        required:
+          - id
+          - skillProviderId
+          - name
+          - externalId
+          - uri
+        properties:
+          id:
+            type: string
+            format: UUID
+            description: The skill id
+          skillProviderId:
+            type: string
+            format: UUID
+            description: The referenced skill provider id
+          name:
+            type: string
+            description: The name of the skill
+          externalId:
+            type: string
+            description: The external id for the skill
+          uri:
+            type: string
+            description: The uri for the skill
+      - $ref: '#/definitions/AuditFields'
+
+  SkillRequestBody:
+    required:
+      - skillProviderId
+      - name
+      - externalId
+      - uri
+    allOf:
+      - type: object
+      - $ref: '#/definitions/SkillUpdateRequestBody'
+
+  SkillUpdateRequestBody:
+    type: object
+    properties:
+      skillProviderId:
+        type: string
+        format: UUID
+        description: The id of provider for this Skill. 
+      name:
+        type: string
+        description: Name of Skill
+      uri:
+        type: string
+        description: Uri of Skill
+      externalId:
+        type: string
+        description: External Id of skill
+
+  SkillsProvider:
+    allOf:
+      - type: object
+        required:
+          - id
+          - name
+        properties:
+          id:
+            type: string
+            format: UUID
+            description: The id of the provider.
+          name:
+            type: string
+            description: The name of the provider.
+      - $ref: '#/definitions/AuditFields'      
+
+  ExternalProfile:
+    allOf:
+      - type: object
+        required:
+          - userId
+          - organizationId
+          - uri
+        properties:
+          userId:
+            type: string
+            format: UUID
+            description: The id of the user this profile belongs to.
+          organizationId:
+            type: string
+            format: UUID
+            description: The id of the organization this profile belongs to.
+          uri:
+            type: string
+            description: The uri of the external profile.
+      - $ref: '#/definitions/AuditFields'
+
+  ExternalProfileRequestBody:
+    type: object
+    required:
+      - organizationId
+      - uri
+    properties:
+      organizationId:
+        type: string
+        format: UUID
+        description: The id of the organization this profile belongs to.
+      uri:
+        type: string
+        description: The uri of the external profile.      
+
+  ExternalProfileUpdateRequestBody:
+    type: object
+    properties:
+      uri:
+        type: string
+        description: The uri of the external profile.      
+
+  Role:
+    allOf:
+      - type: object
+        required:
+          - id
+          - name
+        properties:
+          id:
+            type: string
+            format: UUID
+            description: The id of the role.
+          name:
+            type: string
+            description: The name of the role.
+      - $ref: '#/definitions/AuditFields'
+
+  UserRole:
+    allOf:
+      - type: object
+        required:
+          - userId
+          - roleId
+        properties:
+          userId:
+            type: string
+            format: UUID
+            description: The user to be associated with the role
+      - $ref: '#/definitions/UserRoleRequestBody'
+      - $ref: '#/definitions/AuditFields'
+
+  UserRoleRequestBody:
+    type: object
+    description: | 
+      Represents a Role that belongs to a given user.
+    required:
+      - roleId
+    properties:
+      roleId:
+        type: string
+        format: UUID
+        description: The roleId of this user role.
+
+  User:
+    allOf:
+      - type: object
+        required:
+          - id
+          - handle
+          - isAvailable
+        properties:
+          id:
+            type: string
+            format: UUID
+            description: The id of the user.
+          handle:
+            type: string
+            description: The handle of the user.
+          isAvailable:
+            type: boolean
+            description: Indicates the availability of the user. 
+      - $ref: '#/definitions/AuditFields'
+
+  UserSkill:
+    allOf:
+      - type: object
+        required:
+          - userId
+          - skillId
+          - metricValue
+          - certifierId
+          - certifiedDate
+        properties:
+          userId:
+            type: string
+            format: UUID
+            description: The id of user that this Skill belongs to.
+          skillId:
+            type: string
+            format: UUID
+            description: The Skill id.
+          metricValue:
+            type: string
+            description: The skill metric value.
+          certifierId:
+            type: string
+            description: Id of certifier
+          certifiedDate:
+            type: string
+            format: date-time
+            description: The date when certification occurred.
+      - $ref: '#/definitions/AuditFields'
+  
+  UserSkillRequestBody:
+    required:
+      - skillId
+      - metricValue
+      - certifierId
+      - certifiedDate
+    allOf:
+      - type: object  
+        properties:
+          skillId:
+            type: string
+            format: UUID
+            description: The Skill id. 
+      - $ref: '#/definitions/UserSkillUpdateRequestBody'
+
+  UserSkillUpdateRequestBody:
+    type: object
+    properties:
+      metricValue:
+        type: string
+        description: The skill metric value.
+      certifierId:
+        type: string
+        description: Id of certifier
+      certifiedDate:
+        type: string
+        format: date-time
+        description: The date when certification occurred.
+
+  UserAttribute:
+    allOf:
+      - type: object
+        required:
+          - userId
+          - attributeId
+          - value
+        properties:
+          userId:
+            type: string
+            format: UUID
+            description: The id of user that this user attribute belongs to.
+          attributeId:
+            type: string
+            format: UUID
+            description: The attribute id.
+          value:
+            type: string
+            description: The user attribute value.
+      - $ref: '#/definitions/AuditFields'
+  
+  UserAttributeRequestBody:
+    required:
+      - attributeId
+      - value
+    allOf:
+      - type: object  
+        properties:
+          attributeId:
+            type: string
+            format: UUID
+            description: The attribute id. 
+      - $ref: '#/definitions/UserAttributeUpdateRequestBody'
+
+  UserAttributeUpdateRequestBody:
+    type: object
+    properties:
+      value:
+        type: string
+        description: The user attribute value.
+
+  UserRequestBody:
+    type: object
+    description: |
+      Properties that are provided when creating or editing a User.
+    properties:
+      handle:
+        type: string
+        description: The handle of the user.
+      isAvailable:
+        type: boolean
+        description: Indicates the availability of the user. 
+  
+  UserUpdateRequestBody:
+    type: object
+    properties:
+      handle:
+        type: string
+        description: The handle of the user.
+      isAvailable:
+        type: boolean
+        description: Indicates the availability of the user. 
+
+  AttributeGroup:
+    allOf:
+      - type: object
+        required:
+          - id
+          - name
+          - organizationId
+        properties:
+          id:
+            type: string
+            format: UUID
+            description: Id of the AttributeGroup
+          name:
+            type: string
+            description: Name of the AttributeGroup
+          organizationId:
+            type: string
+            format: UUID
+            description: Id of the organization that this attribute group belongs to.
+      - $ref: '#/definitions/AuditFields'
+
+  AttributeGroupRequestBody:
+    type: object
+    required:
+      - organizationId
+      - name
+    description: Request body containing the fields for an Attribute Group.
+    properties:
+      name:
+        type: string
+        description: Name of the entity       
+      organizationId:
+        type: string
+        format: UUID
+        description: Id of the organization that this attribute group belongs to.        
+
+  Organization:
+    allOf:
+      - type: object
+        required:
+          - id
+          - name
+        properties:
+          id:
+            type: string
+            format: UUID
+            description: Id of the organization
+          name:
+            type: string
+            description: Name of the organization          
+      - $ref: '#/definitions/AuditFields'
+
+  NameRequestBody:
+    type: object
+    description: Simple request body containing the name of the entity.
+    required:
+      - name
+    properties:
+      name:
+        type: string
+        description: Name of the entity
+
+  Attribute:
+    allOf:
+      - type: object
+        required:
+          - id
+          - attributeGroupId
+          - name
+        properties:
+          id:
+            type: string
+            format: UUID
+            description: The attribute id
+          attributeGroupId:
+            type: string
+            format: UUID
+            description: The referenced attribute group id
+          name:
+            type: string
+            description: The name of the attribute
+      - $ref: '#/definitions/AuditFields'
+
+  AttributeRequestBody:
+    required:
+      - attributeGroupId
+      - name
+    allOf:
+      - $ref: '#/definitions/AttributeUpdateRequestBody'
+
+  AttributeUpdateRequestBody:
+    type: object
+    properties:
+      attributeGroupId:
+        type: string
+        format: UUID
+        description: The id of provider for this attribute.
+      name:
+        type: string
+        description: Name of attribute
+
+  # Schema for error body
+  Unauthorized:
+    type: object
+    description: The unauthorized error entity.
+    properties:
+      message:
+        type: string
+        description: The unauthorized error message.
+        example: Unable to authenticate the user.
+
+  NotFound:
+    type: object
+    description: The not found error entity.
+    properties:
+      message:
+        type: string
+        description: The not found error message.
+        example: A resource with the name could not be found.
+
+  ServerError:
+    type: object
+    description: The server error entity.
+    properties:
+      message:
+        type: string
+        description: The server error message.
+        example: Something went wrong while processing your request. We�re sorry for the trouble. We�ve been notified of the error and will correct it as soon as possible. Please try your request again in a moment.
+
+  BadRequest:
+    type: object
+    description: The bad request error entity.
+    properties:
+      message:
+        type: string
+        description: The bad request error message.
+        example: Invalid input.
+
+  Forbidden:
+    type: object
+    description: The permission error entity.
+    properties:
+      message:
+        type: string
+        description: The forbidden error message.
+        example: You are not allowed to access the request.
+
+  Conflict:
+    type: object
+    description: The conflict error entity.
+    required:
+      - message
+    properties:
+      message:
+        type: string
+        description: The conflict error message.
+        example: Creating a resource with a name already exists.

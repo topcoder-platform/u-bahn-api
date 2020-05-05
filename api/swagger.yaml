@@ -1,0 +1,3682 @@
+---
+swagger: "2.0"
+info:
+  description: "API for an employee management system to determine employees that\
+    \ are no longer working on active projects and to understand their qualifications\
+    \ and expertise for suitability in other projects"
+  version: "1.0.0"
+  title: "UBahn API"
+tags:
+- name: "Users"
+  description: "Users registered in the system"
+- name: "Users Skills"
+  description: "Skills of users"
+- name: "Skills"
+  description: "Skills registered in the system"
+- name: "Skills Provider"
+  description: "Skill providers registered in the system"
+- name: "Roles"
+  description: "Roles registered in the system"
+- name: "User Roles"
+  description: "Roles of users"
+- name: "External Profiles"
+  description: "External profiles of users w.r.t an organization"
+- name: "Achievements"
+  description: "Achievements of users"
+- name: "Achievements Provider"
+  description: "Achievement providers registered in the system"
+- name: "Organizations"
+  description: "Organizations registered in the system"
+- name: "User Attributes"
+  description: "Attributes of users"
+- name: "Attributes"
+  description: "Attributes registered in the system"
+- name: "Attribute Groups"
+  description: "Attribute groups registered in the system"
+schemes:
+- "https"
+consumes:
+- "application/json"
+produces:
+- "application/json"
+paths:
+  /users:
+    get:
+      tags:
+      - "Users"
+      description: "**Point to note** - For non-admin users, this endpoint will only\
+        \ return entities that the user has created."
+      operationId: "usersGET"
+      parameters:
+      - name: "handle"
+        in: "query"
+        description: "Filter by user handle"
+        required: false
+        type: "string"
+      - name: "isAvailable"
+        in: "query"
+        description: "Filter by user availability"
+        required: false
+        type: "boolean"
+      - name: "groupId"
+        in: "query"
+        description: "Filter by user group Id"
+        required: false
+        type: "string"
+        format: "UUID"
+      - name: "roleId"
+        in: "query"
+        description: "Filter by user roleId"
+        required: false
+        type: "string"
+        format: "UUID"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/User"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Users"
+    head:
+      tags:
+      - "Users"
+      description: "Retrieve header information for a search operation on users in\
+        \ the application.\n\n**Security** - Note that for non-admin users, this endpoint\
+        \ will only return entities that\nthe user has created.\n"
+      operationId: "usersHEAD"
+      parameters:
+      - name: "handle"
+        in: "query"
+        description: "Filter by user handle"
+        required: false
+        type: "string"
+      - name: "isAvailable"
+        in: "query"
+        description: "Filter by user availability"
+        required: false
+        type: "boolean"
+      - name: "groupId"
+        in: "query"
+        description: "Filter by user group Id"
+        required: false
+        type: "string"
+        format: "UUID"
+      - name: "roleId"
+        in: "query"
+        description: "Filter by user roleId"
+        required: false
+        type: "string"
+        format: "UUID"
+      responses:
+        "200":
+          description: "Success response"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Users"
+    post:
+      tags:
+      - "Users"
+      description: "Create a new User.\n\n**Security** - This endpoint is accessible\
+        \ by all authenticated users.        \n"
+      operationId: "usersPOST"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/UserRequestBody"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            $ref: "#/definitions/User"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "409":
+          $ref: "#/definitions/Conflict"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Users"
+  /users/{userId}:
+    get:
+      tags:
+      - "Users"
+      description: "Get User with given id.\n\n**Security** - Note that for non-admin\
+        \ users, this endpoint will only return entities that\nthe user has created.\
+        \        \n"
+      operationId: "usersUserIdGET"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "The user id"
+        required: true
+        type: "string"
+        format: "UUID"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            $ref: "#/definitions/User"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Users"
+    head:
+      tags:
+      - "Users"
+      description: "Get User with given id, but only header information is returned.\n\
+        \n**Security** - Note that for non-admin users, this endpoint will only return\
+        \ entities that\nthe user has created.        \n"
+      operationId: "usersUserIdHEAD"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "The user id"
+        required: true
+        type: "string"
+        format: "UUID"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Users"
+    delete:
+      tags:
+      - "Users"
+      description: "Remove an existing User with given id.\n\n**Security** - Note\
+        \ that this endpoint is only available for admin users.  \n"
+      operationId: "usersUserIdDELETE"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "The user id"
+        required: true
+        type: "string"
+        format: "UUID"
+      responses:
+        "204":
+          description: "OK - the request was successful"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "409":
+          $ref: "#/definitions/Conflict"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Users"
+    patch:
+      tags:
+      - "Users"
+      description: "Update an existing User with given id.\n\n**Security** - Note\
+        \ that for non-admin users, this endpoint will only allow updates on entities\
+        \ that the\ncalling user has created.\n"
+      operationId: "usersUserIdPATCH"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "The user id"
+        required: true
+        type: "string"
+        format: "UUID"
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/UserUpdateRequestBody"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            $ref: "#/definitions/User"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "409":
+          $ref: "#/definitions/Conflict"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Users"
+  /users/{userId}/skills:
+    get:
+      tags:
+      - "Users Skills"
+      description: "Filter skills by its name given an user id.  If no results, then\
+        \ empty array is returned.\n\n**Security** - Note that for non-admin users,\
+        \ this endpoint will only return entities that\nthe user has created.\n"
+      operationId: "usersUserIdSkillsGET"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "The user id"
+        required: true
+        type: "string"
+        format: "UUID"
+      - name: "skillName"
+        in: "query"
+        description: "Filter by skill name (through skill id)"
+        required: false
+        type: "string"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/UserSkill"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "UsersSkills"
+    head:
+      tags:
+      - "Users Skills"
+      description: "Retrieve header information for a search operation on users skills\
+        \ in the application.\n\n**Security** - Note that for non-admin users, this\
+        \ endpoint will only return entities that\nthe user has created.\n"
+      operationId: "usersUserIdSkillsHEAD"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "The user id"
+        required: true
+        type: "string"
+        format: "UUID"
+      - name: "skillName"
+        in: "query"
+        description: "Filter by skill name (through skill id)"
+        required: false
+        type: "string"
+      responses:
+        "200":
+          description: "Success response"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "UsersSkills"
+    post:
+      tags:
+      - "Users Skills"
+      description: "Create a new User Skill.\n\n**Security** - This endpoint is accessible\
+        \ by all authenticated users.        \n"
+      operationId: "usersUserIdSkillsPOST"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "The user id"
+        required: true
+        type: "string"
+        format: "UUID"
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/UserSkillRequestBody"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            $ref: "#/definitions/UserSkill"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "409":
+          $ref: "#/definitions/Conflict"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "UsersSkills"
+  /users/{userId}/skills/{skillId}:
+    get:
+      tags:
+      - "Users Skills"
+      description: "Get User Skills with given user and skill id.\n\n**Security**\
+        \ - Note that for non-admin users, this endpoint will only return entities\
+        \ that\nthe user has created.        \n"
+      operationId: "usersUserIdSkillsSkillIdGET"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "The user id"
+        required: true
+        type: "string"
+        format: "UUID"
+      - name: "skillId"
+        in: "path"
+        description: "The skill id"
+        required: true
+        type: "string"
+        format: "UUID"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            $ref: "#/definitions/UserSkill"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "UsersSkills"
+    head:
+      tags:
+      - "Users Skills"
+      description: "Get User Skills with given ids, but only header information is\
+        \ returned.\n\n**Security** - Note that for non-admin users, this endpoint\
+        \ will only return entities that\nthe user has created.        \n"
+      operationId: "usersUserIdSkillsSkillIdHEAD"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "The user id"
+        required: true
+        type: "string"
+        format: "UUID"
+      - name: "skillId"
+        in: "path"
+        description: "The skill id"
+        required: true
+        type: "string"
+        format: "UUID"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "UsersSkills"
+    delete:
+      tags:
+      - "Users Skills"
+      description: "Remove an existing User Skill with given ids.\n\n**Security**\
+        \ - Note that this endpoint is only available for admin users.  \n"
+      operationId: "usersUserIdSkillsSkillIdDELETE"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "The user id"
+        required: true
+        type: "string"
+        format: "UUID"
+      - name: "skillId"
+        in: "path"
+        description: "The skill id"
+        required: true
+        type: "string"
+        format: "UUID"
+      responses:
+        "204":
+          description: "OK - the request was successful"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "409":
+          $ref: "#/definitions/Conflict"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "UsersSkills"
+    patch:
+      tags:
+      - "Users Skills"
+      description: "Update an existing skill with given ids.\n\n**Security** - Note\
+        \ that for non-admin users, this endpoint will only allow updates on entities\
+        \ that the\ncalling user has created.\n"
+      operationId: "usersUserIdSkillsSkillIdPATCH"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "The user id"
+        required: true
+        type: "string"
+        format: "UUID"
+      - name: "skillId"
+        in: "path"
+        description: "The skill id"
+        required: true
+        type: "string"
+        format: "UUID"
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/UserSkillUpdateRequestBody"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            $ref: "#/definitions/UserSkill"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "409":
+          $ref: "#/definitions/Conflict"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "UsersSkills"
+  /skills:
+    get:
+      tags:
+      - "Skills"
+      description: "Get list of skills in the application.  If no results, then empty\
+        \ array is returned.  Multiple filters are\nsupported.\n\n**Security** - Note\
+        \ that for non-admin users, this endpoint will only return entities that\n\
+        the user has created.\n"
+      operationId: "skillsGET"
+      parameters: []
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Skill"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Skills"
+    head:
+      tags:
+      - "Skills"
+      description: "Retrieve header information for get operation on Skills in the\
+        \ application.\n\n**Security** - Note that for non-admin users, this endpoint\
+        \ will only return entities that\nthe user has created.\n"
+      operationId: "skillsHEAD"
+      parameters: []
+      responses:
+        "200":
+          description: "Success response"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Skills"
+    post:
+      tags:
+      - "Skills"
+      description: "Create a new Skill.\n\n**Security** - This endpoint is accessible\
+        \ by all authenticated users.        \n"
+      operationId: "skillsPOST"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/SkillRequestBody"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            $ref: "#/definitions/Skill"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "409":
+          $ref: "#/definitions/Conflict"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Skills"
+  /skills/{skillId}:
+    get:
+      tags:
+      - "Skills"
+      description: "Get Skill by given skill id.\n\n**Security** - Note that for non-admin\
+        \ users, this endpoint will only return entities that\nthe user has created.\
+        \        \n"
+      operationId: "skillsSkillIdGET"
+      parameters:
+      - name: "skillId"
+        in: "path"
+        description: "The skill id"
+        required: true
+        type: "string"
+        format: "UUID"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            $ref: "#/definitions/Skill"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Skills"
+    head:
+      tags:
+      - "Skills"
+      description: "Retrieve header information for get operation on Skill by its\
+        \ Id in the application.\n\n**Security** - Note that for non-admin users,\
+        \ this endpoint will only return entities that\nthe user has created.    \
+        \   \n"
+      operationId: "skillsSkillIdHEAD"
+      parameters:
+      - name: "skillId"
+        in: "path"
+        description: "The user id"
+        required: true
+        type: "string"
+        format: "UUID"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Skills"
+    delete:
+      tags:
+      - "Skills"
+      description: "Remove an existing skill with given id.\n\n**Security** - Note\
+        \ that this endpoint is only available for admin users.  \n"
+      operationId: "skillsSkillIdDELETE"
+      parameters:
+      - name: "skillId"
+        in: "path"
+        description: "The skill id"
+        required: true
+        type: "string"
+        format: "UUID"
+      responses:
+        "204":
+          description: "OK - the request was successful"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "409":
+          $ref: "#/definitions/Conflict"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Skills"
+    patch:
+      tags:
+      - "Skills"
+      description: "Update an existing skill with given id.\n\n**Security** - Note\
+        \ that for non-admin users, this endpoint will only allow updates on entities\
+        \ that the\ncalling user has created.\n"
+      operationId: "skillsSkillIdPATCH"
+      parameters:
+      - name: "skillId"
+        in: "path"
+        description: "The skill id"
+        required: true
+        type: "string"
+        format: "UUID"
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/SkillUpdateRequestBody"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            $ref: "#/definitions/Skill"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "409":
+          $ref: "#/definitions/Conflict"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Skills"
+  /skillsProviders:
+    get:
+      tags:
+      - "Skills Provider"
+      description: "Search Skills Provider in the application.  If no results, then\
+        \ empty array is returned.\n\n**Security** - Note that for non-admin users,\
+        \ this endpoint will only return entities that\nthe user has created.\n"
+      operationId: "skillsProvidersGET"
+      parameters:
+      - name: "name"
+        in: "query"
+        description: "Filter by provider name"
+        required: false
+        type: "string"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/SkillsProvider"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "SkillsProvider"
+    head:
+      tags:
+      - "Skills Provider"
+      description: "Retrieve header information for a search operation on skills providers\
+        \ in the application.\n\n**Security** - Note that for non-admin users, this\
+        \ endpoint will only return entities that\nthe user has created.\n"
+      operationId: "skillsProvidersHEAD"
+      parameters:
+      - name: "name"
+        in: "query"
+        description: "Filter by provider name"
+        required: false
+        type: "string"
+      responses:
+        "200":
+          description: "Success response"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "SkillsProvider"
+    post:
+      tags:
+      - "Skills Provider"
+      description: "Create a new Skills Provider.\n\n**Security** - This endpoint\
+        \ is accessible by all authenticated users.        \n"
+      operationId: "skillsProvidersPOST"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/NameRequestBody"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            $ref: "#/definitions/SkillsProvider"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "409":
+          $ref: "#/definitions/Conflict"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "SkillsProvider"
+  /skillsProviders/{providerId}:
+    get:
+      tags:
+      - "Skills Provider"
+      description: "Get skills provider with given id.\n\n**Security** - Note that\
+        \ for non-admin users, this endpoint will only return entities that\nthe user\
+        \ has created.        \n"
+      operationId: "skillsProvidersProviderIdGET"
+      parameters:
+      - name: "providerId"
+        in: "path"
+        description: "The provider id"
+        required: true
+        type: "string"
+        format: "UUID"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            $ref: "#/definitions/SkillsProvider"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "SkillsProvider"
+    head:
+      tags:
+      - "Skills Provider"
+      description: "Get skills provider with given id, but only header information\
+        \ is returned.\n\n**Security** - Note that for non-admin users, this endpoint\
+        \ will only return entities that\nthe user has created.        \n"
+      operationId: "skillsProvidersProviderIdHEAD"
+      parameters:
+      - name: "providerId"
+        in: "path"
+        description: "The provider id"
+        required: true
+        type: "string"
+        format: "UUID"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "SkillsProvider"
+    delete:
+      tags:
+      - "Skills Provider"
+      description: "Remove an existing skills provider with given id.\n\n**Security**\
+        \ - Note that this endpoint is only available for admin users.  \n"
+      operationId: "skillsProvidersProviderIdDELETE"
+      parameters:
+      - name: "providerId"
+        in: "path"
+        description: "The provider id"
+        required: true
+        type: "string"
+        format: "UUID"
+      responses:
+        "204":
+          description: "OK - the request was successful"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "409":
+          $ref: "#/definitions/Conflict"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "SkillsProvider"
+    patch:
+      tags:
+      - "Skills Provider"
+      description: "Update an existing skills provider with given id.\n\n**Security**\
+        \ - Note that for non-admin users, this endpoint will only allow updates on\
+        \ entities that the\ncalling user has created.\n"
+      operationId: "skillsProvidersProviderIdPATCH"
+      parameters:
+      - name: "providerId"
+        in: "path"
+        description: "The provider id"
+        required: true
+        type: "string"
+        format: "UUID"
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/NameRequestBody"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            $ref: "#/definitions/SkillsProvider"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "409":
+          $ref: "#/definitions/Conflict"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "SkillsProvider"
+  /roles:
+    get:
+      tags:
+      - "Roles"
+      description: "Search Roles in the application.  If no results, then empty array\
+        \ is returned.\n\n**Security** - Note that for non-admin users, this endpoint\
+        \ will only return entities that\nthe user has created.\n"
+      operationId: "rolesGET"
+      parameters:
+      - name: "name"
+        in: "query"
+        description: "Filter by role name"
+        required: false
+        type: "string"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Role"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Roles"
+    head:
+      tags:
+      - "Roles"
+      description: "Retrieve header information for a search operation on Roles in\
+        \ the application.\n\n**Security** - Note that for non-admin users, this endpoint\
+        \ will only return entities that\nthe user has created.\n"
+      operationId: "rolesHEAD"
+      parameters:
+      - name: "name"
+        in: "query"
+        description: "Filter by role name"
+        required: false
+        type: "string"
+      responses:
+        "200":
+          description: "Success response"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Roles"
+    post:
+      tags:
+      - "Roles"
+      description: "Create a new Role.\n\n**Security** - This endpoint is accessible\
+        \ by all authenticated users.        \n"
+      operationId: "rolesPOST"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/NameRequestBody"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            $ref: "#/definitions/Role"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "409":
+          $ref: "#/definitions/Conflict"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Roles"
+  /roles/{roleId}:
+    get:
+      tags:
+      - "Roles"
+      description: "Get role with given id.\n\n**Security** - Note that for non-admin\
+        \ users, this endpoint will only return entities that\nthe user has created.\
+        \        \n"
+      operationId: "rolesRoleIdGET"
+      parameters:
+      - name: "roleId"
+        in: "path"
+        description: "The role id"
+        required: true
+        type: "string"
+        format: "UUID"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            $ref: "#/definitions/Role"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Roles"
+    head:
+      tags:
+      - "Roles"
+      description: "Get role with given id, but only header information is returned.\n\
+        \n**Security** - Note that for non-admin users, this endpoint will only return\
+        \ entities that\nthe user has created.        \n"
+      operationId: "rolesRoleIdHEAD"
+      parameters:
+      - name: "roleId"
+        in: "path"
+        description: "The role id"
+        required: true
+        type: "string"
+        format: "UUID"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Roles"
+    delete:
+      tags:
+      - "Roles"
+      description: "Remove an existing role with given id.\n\n**Security** - Note\
+        \ that this endpoint is only available for admin users.  \n"
+      operationId: "rolesRoleIdDELETE"
+      parameters:
+      - name: "roleId"
+        in: "path"
+        description: "The role id"
+        required: true
+        type: "string"
+        format: "UUID"
+      responses:
+        "204":
+          description: "OK - the request was successful"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "409":
+          $ref: "#/definitions/Conflict"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Roles"
+    patch:
+      tags:
+      - "Roles"
+      description: "Update an existing role with given id.\n\n**Security** - Note\
+        \ that for non-admin users, this endpoint will only allow updates on entities\
+        \ that the\ncalling user has created.\n"
+      operationId: "rolesRoleIdPATCH"
+      parameters:
+      - name: "roleId"
+        in: "path"
+        description: "The role id"
+        required: true
+        type: "string"
+        format: "UUID"
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/NameRequestBody"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            $ref: "#/definitions/Role"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "409":
+          $ref: "#/definitions/Conflict"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Roles"
+  /users/{userId}/roles:
+    get:
+      tags:
+      - "User Roles"
+      description: "Get User Roles that belong to given user id.\n\n**Security** -\
+        \ Note that for non-admin users, this endpoint will only return entities that\n\
+        the user has created.        \n"
+      operationId: "usersUserIdRolesGET"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "The user id"
+        required: true
+        type: "string"
+        format: "UUID"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/UserRole"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "UserRoles"
+    head:
+      tags:
+      - "User Roles"
+      description: "Get User Roles that belong to given user id, but only header information\
+        \ is returned.\n\n**Security** - Note that for non-admin users, this endpoint\
+        \ will only return entities that\nthe user has created.        \n"
+      operationId: "usersUserIdRolesHEAD"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "The user id"
+        required: true
+        type: "string"
+        format: "UUID"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "UserRoles"
+    post:
+      tags:
+      - "User Roles"
+      description: "Create a new User Role.\n\n**Security** - This endpoint is accessible\
+        \ by all authenticated users.        \n"
+      operationId: "usersUserIdRolesPOST"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "The user id"
+        required: true
+        type: "string"
+        format: "UUID"
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/UserRoleRequestBody"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            $ref: "#/definitions/UserRole"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "409":
+          $ref: "#/definitions/Conflict"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "UserRoles"
+  /users/{userId}/roles/{roleId}:
+    get:
+      tags:
+      - "User Roles"
+      description: "Get role by its id.\n\n**Security** - Note that for non-admin\
+        \ users, this endpoint will only return entities that\nthe user has created.\n"
+      operationId: "usersUserIdRolesRoleIdGET"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "The user id"
+        required: true
+        type: "string"
+        format: "UUID"
+      - name: "roleId"
+        in: "path"
+        description: "The role id"
+        required: true
+        type: "string"
+        format: "UUID"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/UserRole"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "UserRoles"
+    head:
+      tags:
+      - "User Roles"
+      description: "Retrieve header information for a search operation on User Roles\
+        \ in the application.\n\n**Security** - Note that for non-admin users, this\
+        \ endpoint will only return entities that\nthe user has created.\n"
+      operationId: "usersUserIdRolesRoleIdHEAD"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "The user id"
+        required: true
+        type: "string"
+        format: "UUID"
+      - name: "roleId"
+        in: "path"
+        description: "The role id"
+        required: true
+        type: "string"
+        format: "UUID"
+      responses:
+        "200":
+          description: "Success response"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "UserRoles"
+    delete:
+      tags:
+      - "User Roles"
+      description: "Remove an existing user role with given user and role id.\n\n\
+        **Security** - Note that this endpoint is only available for admin users.\
+        \  \n"
+      operationId: "usersUserIdRolesRoleIdDELETE"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "The user id"
+        required: true
+        type: "string"
+        format: "UUID"
+      - name: "roleId"
+        in: "path"
+        description: "The role id"
+        required: true
+        type: "string"
+        format: "UUID"
+      responses:
+        "204":
+          description: "OK - the request was successful"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "409":
+          $ref: "#/definitions/Conflict"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "UserRoles"
+  /users/{userId}/externalProfiles:
+    get:
+      tags:
+      - "External Profiles"
+      description: "Get External Profiles with given user id.\n\n**Security** - Note\
+        \ that for non-admin users, this endpoint will only return entities that\n\
+        the user has created.        \n"
+      operationId: "usersUserIdExternalProfilesGET"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "The user id"
+        required: true
+        type: "string"
+        format: "UUID"
+      - name: "organizationName"
+        in: "query"
+        description: "The organization name"
+        required: false
+        type: "string"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/ExternalProfile"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "ExternalProfiles"
+    head:
+      tags:
+      - "External Profiles"
+      description: "Get External Profiles with given user id, but only header information\
+        \ is returned.\n\n**Security** - Note that for non-admin users, this endpoint\
+        \ will only return entities that\nthe user has created.        \n"
+      operationId: "usersUserIdExternalProfilesHEAD"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "The user id"
+        required: true
+        type: "string"
+        format: "UUID"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "ExternalProfiles"
+    post:
+      tags:
+      - "External Profiles"
+      description: "Create a new External Profile for given user id.\n\n**Security**\
+        \ - This endpoint is accessible by all authenticated users.        \n"
+      operationId: "usersUserIdExternalProfilesPOST"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "The user id"
+        required: true
+        type: "string"
+        format: "UUID"
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/ExternalProfileRequestBody"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            $ref: "#/definitions/ExternalProfile"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "409":
+          $ref: "#/definitions/Conflict"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "ExternalProfiles"
+  /users/{userId}/externalProfiles/{organizationId}:
+    get:
+      tags:
+      - "External Profiles"
+      description: "Get external profile with given user id and organization id.\n\
+        \n**Security** - Note that for non-admin users, this endpoint will only return\
+        \ entities that\nthe user has created.        \n"
+      operationId: "usersUserIdExternalProfilesOrganizationIdGET"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "The user id"
+        required: true
+        type: "string"
+        format: "UUID"
+      - name: "organizationId"
+        in: "path"
+        description: "The organization id"
+        required: true
+        type: "string"
+        format: "UUID"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            $ref: "#/definitions/ExternalProfile"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "ExternalProfiles"
+    head:
+      tags:
+      - "External Profiles"
+      description: "Get external profile with given user id and organization id, but\
+        \ only header information is returned.\n\n**Security** - Note that for non-admin\
+        \ users, this endpoint will only return entities that\nthe user has created.\
+        \        \n"
+      operationId: "usersUserIdExternalProfilesOrganizationIdHEAD"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "The user id"
+        required: true
+        type: "string"
+        format: "UUID"
+      - name: "organizationId"
+        in: "path"
+        description: "The organization id"
+        required: true
+        type: "string"
+        format: "UUID"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "ExternalProfiles"
+    delete:
+      tags:
+      - "External Profiles"
+      description: "Remove an existing external profile with given user id and organization\
+        \ id.\n\n**Security** - Note that this endpoint is only available for admin\
+        \ users.  \n"
+      operationId: "usersUserIdExternalProfilesOrganizationIdDELETE"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "The user id"
+        required: true
+        type: "string"
+        format: "UUID"
+      - name: "organizationId"
+        in: "path"
+        description: "The organization id"
+        required: true
+        type: "string"
+        format: "UUID"
+      responses:
+        "204":
+          description: "OK - the request was successful"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "409":
+          $ref: "#/definitions/Conflict"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "ExternalProfiles"
+    patch:
+      tags:
+      - "External Profiles"
+      description: "Update an existing external profile with given user id and organization\
+        \ id.\n\n**Security** - Note that for non-admin users, this endpoint will\
+        \ only allow updates on entities that the\ncalling user has created.\n"
+      operationId: "usersUserIdExternalProfilesOrganizationIdPATCH"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "The user id"
+        required: true
+        type: "string"
+        format: "UUID"
+      - name: "organizationId"
+        in: "path"
+        description: "The organization id"
+        required: true
+        type: "string"
+        format: "UUID"
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/ExternalProfileUpdateRequestBody"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            $ref: "#/definitions/ExternalProfile"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "409":
+          $ref: "#/definitions/Conflict"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "ExternalProfiles"
+  /users/{userId}/achievements:
+    get:
+      tags:
+      - "Achievements"
+      description: "Get Achievements for given user id.\n\n**Security** - Note that\
+        \ for non-admin users, this endpoint will only return entities that\nthe user\
+        \ has created.        \n"
+      operationId: "usersUserIdAchievementsGET"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "The user id"
+        required: true
+        type: "string"
+        format: "UUID"
+      - name: "achievementsproviderName"
+        in: "query"
+        description: "The achievement provider name"
+        required: false
+        type: "string"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Achievement"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Achievements"
+    head:
+      tags:
+      - "Achievements"
+      description: "Get Achievements for given user id, but only header information\
+        \ is returned.\n\n**Security** - Note that for non-admin users, this endpoint\
+        \ will only return entities that\nthe user has created.        \n"
+      operationId: "usersUserIdAchievementsHEAD"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "The user id"
+        required: true
+        type: "string"
+        format: "UUID"
+      - name: "achievementsproviderName"
+        in: "query"
+        description: "The achievement provider name"
+        required: false
+        type: "string"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Achievements"
+    post:
+      tags:
+      - "Achievements"
+      description: "Create a new Achievement.\n\n**Security** - This endpoint is accessible\
+        \ by all authenticated users.        \n"
+      operationId: "usersUserIdAchievementsPOST"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "The user id"
+        required: true
+        type: "string"
+        format: "UUID"
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/AchievementRequestBody"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            $ref: "#/definitions/Achievement"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "409":
+          $ref: "#/definitions/Conflict"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Achievements"
+  /users/{userId}/achievements/{achievementsProviderId}:
+    get:
+      tags:
+      - "Achievements"
+      description: "Get Achievements for given user id and provider id.\n\n**Security**\
+        \ - Note that for non-admin users, this endpoint will only return entities\
+        \ that\nthe user has created.\n"
+      operationId: "usersUserIdAchievementsAchievementsProviderIdGET"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "The user id"
+        required: true
+        type: "string"
+        format: "UUID"
+      - name: "achievementsProviderId"
+        in: "path"
+        description: "The provider id"
+        required: true
+        type: "string"
+        format: "UUID"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Achievement"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Achievements"
+    head:
+      tags:
+      - "Achievements"
+      description: "Get Achievements for given user id and provider id, but only header\
+        \ information is returned.\n\n**Security** - Note that for non-admin users,\
+        \ this endpoint will only return entities that\nthe user has created.    \
+        \    \n"
+      operationId: "usersUserIdAchievementsAchievementsProviderIdHEAD"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "The user id"
+        required: true
+        type: "string"
+        format: "UUID"
+      - name: "achievementsProviderId"
+        in: "path"
+        description: "The provider id"
+        required: true
+        type: "string"
+        format: "UUID"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Achievements"
+    delete:
+      tags:
+      - "Achievements"
+      description: "Remove an existing Achievement with given userId and achievement\
+        \ providerId.\n\n**Security** - Note that this endpoint is only available\
+        \ for admin users.  \n"
+      operationId: "usersUserIdAchievementsAchievementsProviderIdDELETE"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "The user id"
+        required: true
+        type: "string"
+        format: "UUID"
+      - name: "achievementsProviderId"
+        in: "path"
+        description: "The provider id"
+        required: true
+        type: "string"
+        format: "UUID"
+      responses:
+        "204":
+          description: "OK - the request was successful"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "409":
+          $ref: "#/definitions/Conflict"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Achievements"
+    patch:
+      tags:
+      - "Achievements"
+      description: "Update an existing Achievement with given userId and achievement\
+        \ providerId.  Only the fields in the request body are updated.\n\n**Security**\
+        \ - Note that for non-admin users, this endpoint will only allow updates on\
+        \ entities that the\ncalling user has created.\n"
+      operationId: "usersUserIdAchievementsAchievementsProviderIdPATCH"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "The user id"
+        required: true
+        type: "string"
+        format: "UUID"
+      - name: "achievementsProviderId"
+        in: "path"
+        description: "The provider id"
+        required: true
+        type: "string"
+        format: "UUID"
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/AchievementUpdateRequestBody"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            $ref: "#/definitions/Achievement"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "409":
+          $ref: "#/definitions/Conflict"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Achievements"
+  /achievementsProviders:
+    get:
+      tags:
+      - "Achievements Provider"
+      description: "Search Achievements Provider in the application.  If no results,\
+        \ then empty array is returned.\n\n**Security** - Note that for non-admin\
+        \ users, this endpoint will only return entities that\nthe user has created.\n"
+      operationId: "achievementsProvidersGET"
+      parameters:
+      - name: "name"
+        in: "query"
+        description: "Filter by provider name"
+        required: false
+        type: "string"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/AchievementsProvider"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "AchievementsProvider"
+    head:
+      tags:
+      - "Achievements Provider"
+      description: "Retrieve header information for a search operation on achivements\
+        \ provider in the application.\n\n**Security** - Note that for non-admin users,\
+        \ this endpoint will only return entities that\nthe user has created.\n"
+      operationId: "achievementsProvidersHEAD"
+      parameters:
+      - name: "name"
+        in: "query"
+        description: "Filter by provider name"
+        required: false
+        type: "string"
+      responses:
+        "200":
+          description: "Success response"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "AchievementsProvider"
+    post:
+      tags:
+      - "Achievements Provider"
+      description: "Create a new Achievements Provider.\n\n**Security** - This endpoint\
+        \ is accessible by all authenticated users.        \n"
+      operationId: "achievementsProvidersPOST"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/NameRequestBody"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            $ref: "#/definitions/AchievementsProvider"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "409":
+          $ref: "#/definitions/Conflict"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "AchievementsProvider"
+  /achievementsProviders/{providerId}:
+    get:
+      tags:
+      - "Achievements Provider"
+      description: "Get achievements provider with given id.\n\n**Security** - Note\
+        \ that for non-admin users, this endpoint will only return entities that\n\
+        the user has created.        \n"
+      operationId: "achievementsProvidersProviderIdGET"
+      parameters:
+      - name: "providerId"
+        in: "path"
+        description: "The provider id"
+        required: true
+        type: "string"
+        format: "UUID"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            $ref: "#/definitions/AchievementsProvider"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "AchievementsProvider"
+    head:
+      tags:
+      - "Achievements Provider"
+      description: "Get achivements provider with given id, but only header information\
+        \ is returned.\n\n**Security** - Note that for non-admin users, this endpoint\
+        \ will only return entities that\nthe user has created.        \n"
+      operationId: "achievementsProvidersProviderIdHEAD"
+      parameters:
+      - name: "providerId"
+        in: "path"
+        description: "The provider id"
+        required: true
+        type: "string"
+        format: "UUID"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "AchievementsProvider"
+    delete:
+      tags:
+      - "Achievements Provider"
+      description: "Remove an existing achiements provider with given id.\n\n**Security**\
+        \ - Note that this endpoint is only available for admin users.  \n"
+      operationId: "achievementsProvidersProviderIdDELETE"
+      parameters:
+      - name: "providerId"
+        in: "path"
+        description: "The provider id"
+        required: true
+        type: "string"
+        format: "UUID"
+      responses:
+        "204":
+          description: "OK - the request was successful"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "409":
+          $ref: "#/definitions/Conflict"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "AchievementsProvider"
+    patch:
+      tags:
+      - "Achievements Provider"
+      description: "Update an existing achivements provider with given id.\n\n**Security**\
+        \ - Note that for non-admin users, this endpoint will only allow updates on\
+        \ entities that the\ncalling user has created.\n"
+      operationId: "achievementsProvidersProviderIdPATCH"
+      parameters:
+      - name: "providerId"
+        in: "path"
+        description: "The provider id"
+        required: true
+        type: "string"
+        format: "UUID"
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/NameRequestBody"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            $ref: "#/definitions/AchievementsProvider"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "409":
+          $ref: "#/definitions/Conflict"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "AchievementsProvider"
+  /organizations:
+    get:
+      tags:
+      - "Organizations"
+      description: "Search organizations in the application.  If no results, then\
+        \ empty array is returned.\n\n**Security** - Note that for non-admin users,\
+        \ this endpoint will only return entities that\nthe user has created.\n"
+      operationId: "organizationsGET"
+      parameters:
+      - name: "name"
+        in: "query"
+        description: "Filter by organization name"
+        required: false
+        type: "string"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Organization"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Organizations"
+    head:
+      tags:
+      - "Organizations"
+      description: "Retrieve header information for a search operation on organizations\
+        \ in the application.\n\n**Security** - Note that for non-admin users, this\
+        \ endpoint will only return entities that\nthe user has created.\n"
+      operationId: "organizationsHEAD"
+      parameters:
+      - name: "name"
+        in: "query"
+        description: "Filter by organization name"
+        required: false
+        type: "string"
+      responses:
+        "200":
+          description: "success response"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Organizations"
+    post:
+      tags:
+      - "Organizations"
+      description: "Create a new Organization.\n\n**Security** - This endpoint is\
+        \ accessible by all authenticated users.        \n"
+      operationId: "organizationsPOST"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/NameRequestBody"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            $ref: "#/definitions/Organization"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "409":
+          $ref: "#/definitions/Conflict"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Organizations"
+  /organizations/{organizationId}:
+    get:
+      tags:
+      - "Organizations"
+      description: "Get organization with given id.\n\n**Security** - Note that for\
+        \ non-admin users, this endpoint will only return entities that\nthe user\
+        \ has created.        \n"
+      operationId: "organizationsOrganizationIdGET"
+      parameters:
+      - name: "organizationId"
+        in: "path"
+        description: "The organization id"
+        required: true
+        type: "string"
+        format: "UUID"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            $ref: "#/definitions/Organization"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Organizations"
+    head:
+      tags:
+      - "Organizations"
+      description: "Get organization with given id, but only header information is\
+        \ returned.\n\n**Security** - Note that for non-admin users, this endpoint\
+        \ will only return entities that\nthe user has created.        \n"
+      operationId: "organizationsOrganizationIdHEAD"
+      parameters:
+      - name: "organizationId"
+        in: "path"
+        description: "The organization id"
+        required: true
+        type: "string"
+        format: "UUID"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Organizations"
+    delete:
+      tags:
+      - "Organizations"
+      description: "Remove an existing organization with given id.\n\n**Security**\
+        \ - Note that this endpoint is only available for admin users.  \n"
+      operationId: "organizationsOrganizationIdDELETE"
+      parameters:
+      - name: "organizationId"
+        in: "path"
+        description: "The organization id"
+        required: true
+        type: "string"
+        format: "UUID"
+      responses:
+        "204":
+          description: "OK - the request was successful"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "409":
+          $ref: "#/definitions/Conflict"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Organizations"
+    patch:
+      tags:
+      - "Organizations"
+      description: "Update an existing organization with given id.\n\n**Security**\
+        \ - Note that for non-admin users, this endpoint will only allow updates on\
+        \ entities that the\ncalling user has created.\n"
+      operationId: "organizationsOrganizationIdPATCH"
+      parameters:
+      - name: "organizationId"
+        in: "path"
+        description: "The organization id"
+        required: true
+        type: "string"
+        format: "UUID"
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/NameRequestBody"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            $ref: "#/definitions/Organization"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "409":
+          $ref: "#/definitions/Conflict"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Organizations"
+  /users/{userId}/attributes:
+    get:
+      tags:
+      - "User Attributes"
+      description: "Get attributes for the given user.\nOptionally, filter attributes\
+        \ by the attribute name, attribute group name and attribute group id, given\
+        \ an user id.  If no results, then empty array is returned.\n\n**Security**\
+        \ - Note that for non-admin users, this endpoint will only return entities\
+        \ that\nthe user has created.\n"
+      operationId: "usersUserIdAttributesGET"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "The user id"
+        required: true
+        type: "string"
+        format: "UUID"
+      - name: "attributeName"
+        in: "query"
+        description: "Filter by the attribute name"
+        required: false
+        type: "string"
+      - name: "attributeGroupName"
+        in: "query"
+        description: "Filter by the attribute group name"
+        required: false
+        type: "string"
+      - name: "attributeGroupId"
+        in: "query"
+        description: "Filter by the attribute group id"
+        required: false
+        type: "string"
+        format: "UUID"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/UserAttribute"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "UserAttributes"
+    head:
+      tags:
+      - "User Attributes"
+      description: "Retrieve header information for a search operation on users attributes\
+        \ in the application.\n\n**Security** - Note that for non-admin users, this\
+        \ endpoint will only return entities that\nthe user has created.\n"
+      operationId: "usersUserIdAttributesHEAD"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "The user id"
+        required: true
+        type: "string"
+        format: "UUID"
+      - name: "attributeName"
+        in: "query"
+        description: "Filter by the attribute name"
+        required: false
+        type: "string"
+      - name: "attributeGroupName"
+        in: "query"
+        description: "Filter by the attribute group name"
+        required: false
+        type: "string"
+      - name: "attributeGroupId"
+        in: "query"
+        description: "Filter by the attribute group id"
+        required: false
+        type: "string"
+        format: "UUID"
+      responses:
+        "200":
+          description: "Success response"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "UserAttributes"
+    post:
+      tags:
+      - "User Attributes"
+      description: "Create a new User Attribute.\n\n**Security** - This endpoint is\
+        \ accessible by all authenticated users.        \n"
+      operationId: "usersUserIdAttributesPOST"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "The user id"
+        required: true
+        type: "string"
+        format: "UUID"
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/UserAttributeRequestBody"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            $ref: "#/definitions/UserAttribute"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "409":
+          $ref: "#/definitions/Conflict"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "UserAttributes"
+  /users/{userId}/attributes/{attributeId}:
+    get:
+      tags:
+      - "User Attributes"
+      description: "Get User Attributes with given user and attribute id.\n\n**Security**\
+        \ - Note that for non-admin users, this endpoint will only return entities\
+        \ that\nthe user has created.        \n"
+      operationId: "usersUserIdAttributesAttributeIdGET"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "The user id"
+        required: true
+        type: "string"
+        format: "UUID"
+      - name: "attributeId"
+        in: "path"
+        description: "The attribute id"
+        required: true
+        type: "string"
+        format: "UUID"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            $ref: "#/definitions/UserAttribute"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "UserAttributes"
+    head:
+      tags:
+      - "User Attributes"
+      description: "Get User Attributes with given ids, but only header information\
+        \ is returned.\n\n**Security** - Note that for non-admin users, this endpoint\
+        \ will only return entities that\nthe user has created.        \n"
+      operationId: "usersUserIdAttributesAttributeIdHEAD"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "The user id"
+        required: true
+        type: "string"
+        format: "UUID"
+      - name: "attributeId"
+        in: "path"
+        description: "The attribute id"
+        required: true
+        type: "string"
+        format: "UUID"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "UserAttributes"
+    delete:
+      tags:
+      - "User Attributes"
+      description: "Remove an existing User Attribute with given ids.\n\n**Security**\
+        \ - Note that this endpoint is only available for admin users.  \n"
+      operationId: "usersUserIdAttributesAttributeIdDELETE"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "The user id"
+        required: true
+        type: "string"
+        format: "UUID"
+      - name: "attributeId"
+        in: "path"
+        description: "The attribute id"
+        required: true
+        type: "string"
+        format: "UUID"
+      responses:
+        "204":
+          description: "OK - the request was successful"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "409":
+          $ref: "#/definitions/Conflict"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "UserAttributes"
+    patch:
+      tags:
+      - "User Attributes"
+      description: "Update an existing user attribute with given ids.\n\n**Security**\
+        \ - Note that for non-admin users, this endpoint will only allow updates on\
+        \ entities that the\ncalling user has created.\n"
+      operationId: "usersUserIdAttributesAttributeIdPATCH"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "The user id"
+        required: true
+        type: "string"
+        format: "UUID"
+      - name: "attributeId"
+        in: "path"
+        description: "The attribute id"
+        required: true
+        type: "string"
+        format: "UUID"
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/UserAttributeUpdateRequestBody"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            $ref: "#/definitions/UserAttribute"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "409":
+          $ref: "#/definitions/Conflict"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "UserAttributes"
+  /attributes:
+    get:
+      tags:
+      - "Attributes"
+      description: "Get list of attributes in the application.  If no results, then\
+        \ empty array is returned.\n\n**Security** - Note that for non-admin users,\
+        \ this endpoint will only return entities that\nthe user has created.\n"
+      operationId: "attributesGET"
+      parameters:
+      - name: "attributeGroupId"
+        in: "query"
+        description: "Filter by attribute group id"
+        required: false
+        type: "string"
+        format: "UUID"
+      - name: "name"
+        in: "query"
+        description: "Filter by attribute name"
+        required: false
+        type: "string"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Attribute"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Attributes"
+    head:
+      tags:
+      - "Attributes"
+      description: "Retrieve header information for get operation on Attributes in\
+        \ the application.\n\n**Security** - Note that for non-admin users, this endpoint\
+        \ will only return entities that\nthe user has created.\n"
+      operationId: "attributesHEAD"
+      parameters: []
+      responses:
+        "200":
+          description: "Success response"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Attributes"
+    post:
+      tags:
+      - "Attributes"
+      description: "Create a new Attribute.\n\n**Security** - This endpoint is accessible\
+        \ by all authenticated users.        \n"
+      operationId: "attributesPOST"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/AttributeRequestBody"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            $ref: "#/definitions/Attribute"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "409":
+          $ref: "#/definitions/Conflict"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Attributes"
+  /attributes/{attributeId}:
+    get:
+      tags:
+      - "Attributes"
+      description: "Get Attribute by given attribute id.\n\n**Security** - Note that\
+        \ for non-admin users, this endpoint will only return entities that\nthe user\
+        \ has created.        \n"
+      operationId: "attributesAttributeIdGET"
+      parameters:
+      - name: "attributeId"
+        in: "path"
+        description: "The attribute id"
+        required: true
+        type: "string"
+        format: "UUID"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            $ref: "#/definitions/Attribute"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Attributes"
+    head:
+      tags:
+      - "Attributes"
+      description: "Retrieve header information for get operation on Attribute by\
+        \ its id in the application.\n\n**Security** - Note that for non-admin users,\
+        \ this endpoint will only return entities that\nthe user has created.    \
+        \   \n"
+      operationId: "attributesAttributeIdHEAD"
+      parameters:
+      - name: "attributeId"
+        in: "path"
+        description: "The attribute id"
+        required: true
+        type: "string"
+        format: "UUID"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Attributes"
+    delete:
+      tags:
+      - "Attributes"
+      description: "Remove an existing attribute with given id.\n\n**Security** -\
+        \ Note that this endpoint is only available for admin users.  \n"
+      operationId: "attributesAttributeIdDELETE"
+      parameters:
+      - name: "attributeId"
+        in: "path"
+        description: "The attribute id"
+        required: true
+        type: "string"
+        format: "UUID"
+      responses:
+        "204":
+          description: "OK - the request was successful"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "409":
+          $ref: "#/definitions/Conflict"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Attributes"
+    patch:
+      tags:
+      - "Attributes"
+      description: "Update an existing attribute with given id.\n\n**Security** -\
+        \ Note that for non-admin users, this endpoint will only allow updates on\
+        \ entities that the\ncalling user has created.\n"
+      operationId: "attributesAttributeIdPATCH"
+      parameters:
+      - name: "attributeId"
+        in: "path"
+        description: "The attribute id"
+        required: true
+        type: "string"
+        format: "UUID"
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/AttributeUpdateRequestBody"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            $ref: "#/definitions/Attribute"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "409":
+          $ref: "#/definitions/Conflict"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Attributes"
+  /attributeGroups:
+    get:
+      tags:
+      - "Attribute Groups"
+      description: "Search Attribute Groups in the application.  Multiple filters\
+        \ are supported.\nIf no results, then empty array is returned.\n\n**Security**\
+        \ - Note that for non-admin users, this endpoint will only return entities\
+        \ that\nthe user has created.\n"
+      operationId: "attributeGroupsGET"
+      parameters:
+      - name: "name"
+        in: "query"
+        description: "Filter by group name"
+        required: false
+        type: "string"
+      - name: "organizationId"
+        in: "query"
+        description: "Filter by organization id"
+        required: false
+        type: "string"
+        format: "UUID"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/AttributeGroup"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "AttributeGroups"
+    head:
+      tags:
+      - "Attribute Groups"
+      description: "Retrieve header information for a search operation on Attribute\
+        \ Groups in the application.\n\n**Security** - Note that for non-admin users,\
+        \ this endpoint will only return entities that\nthe user has created.\n"
+      operationId: "attributeGroupsHEAD"
+      parameters:
+      - name: "name"
+        in: "query"
+        description: "Filter by group name"
+        required: false
+        type: "string"
+      - name: "organizationId"
+        in: "query"
+        description: "Filter by organization id"
+        required: false
+        type: "string"
+        format: "UUID"
+      responses:
+        "200":
+          description: "Success response"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "AttributeGroups"
+    post:
+      tags:
+      - "Attribute Groups"
+      description: "Create a new Attribute Group.\n\n**Security** - This endpoint\
+        \ is accessible by all authenticated users.        \n"
+      operationId: "attributeGroupsPOST"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/AttributeGroupRequestBody"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            $ref: "#/definitions/AttributeGroup"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "409":
+          $ref: "#/definitions/Conflict"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "AttributeGroups"
+  /attributeGroups/{id}:
+    get:
+      tags:
+      - "Attribute Groups"
+      description: "Get Attribute Groups with given id.\n\n**Security** - Note that\
+        \ for non-admin users, this endpoint will only return entities that\nthe user\
+        \ has created.        \n"
+      operationId: "attributeGroupsIdGET"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "The id"
+        required: true
+        type: "string"
+        format: "UUID"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            $ref: "#/definitions/AttributeGroup"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "AttributeGroups"
+    head:
+      tags:
+      - "Attribute Groups"
+      description: "Get Attribute Group with given id, but only header information\
+        \ is returned.\n\n**Security** - Note that for non-admin users, this endpoint\
+        \ will only return entities that\nthe user has created.\n"
+      operationId: "attributeGroupsIdHEAD"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "The id"
+        required: true
+        type: "string"
+        format: "UUID"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "AttributeGroups"
+    delete:
+      tags:
+      - "Attribute Groups"
+      description: "Remove an existing Attribute Group with given id.\n\n**Security**\
+        \ - Note that this endpoint is only available for admin users.  \n"
+      operationId: "attributeGroupsIdDELETE"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "The id"
+        required: true
+        type: "string"
+        format: "UUID"
+      responses:
+        "204":
+          description: "OK - the request was successful"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "409":
+          $ref: "#/definitions/Conflict"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "AttributeGroups"
+    patch:
+      tags:
+      - "Attribute Groups"
+      description: "Update an existing Attribute Group with given id.  Only the fields\
+        \ in the request body are updated.\n\n**Security** - Note that for non-admin\
+        \ users, this endpoint will only allow updates on entities that the\ncalling\
+        \ user has created.\n"
+      operationId: "attributeGroupsIdPATCH"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "The id"
+        required: true
+        type: "string"
+        format: "UUID"
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/AttributeGroupRequestBody"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            $ref: "#/definitions/AttributeGroup"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "409":
+          $ref: "#/definitions/Conflict"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "AttributeGroups"
+securityDefinitions:
+  Bearer:
+    type: "apiKey"
+    name: "Authorization"
+    in: "header"
+definitions:
+  AuditFields:
+    type: "object"
+    required:
+    - "created"
+    - "createdBy"
+    - "updated"
+    - "updatedBy"
+    properties:
+      created:
+        type: "string"
+        format: "date-time"
+        description: "When the entity was created."
+      updated:
+        type: "string"
+        format: "date-time"
+        description: "When the entity was updated."
+      createdBy:
+        type: "string"
+        format: "UUID"
+        description: "Creator of the entity."
+      updatedBy:
+        type: "string"
+        format: "UUID"
+        description: "User that last updated the entity."
+    description: "Describes the audit fields that are present in all the models in\
+      \ this API."
+  Achievement:
+    allOf:
+    - type: "object"
+      required:
+      - "achievementsProviderId"
+      - "certifierId"
+      - "name"
+      - "uri"
+      - "userId"
+      properties:
+        userId:
+          type: "string"
+          format: "UUID"
+          description: "The id of user that this Achievement belongs to."
+        achievementsProviderId:
+          type: "string"
+          format: "UUID"
+          description: "The id of achievements provider for this Achievement."
+        name:
+          type: "string"
+          description: "Name of achievement."
+        uri:
+          type: "string"
+          description: "Uri of achievement"
+        certifierId:
+          type: "string"
+          description: "Id of certifier"
+        certifiedDate:
+          type: "string"
+          format: "date-time"
+          description: "The date when certification occurred."
+    - $ref: "#/definitions/AuditFields"
+  AchievementRequestBody:
+    allOf:
+    - type: "object"
+      properties:
+        achievementsProviderId:
+          type: "string"
+          format: "UUID"
+          description: "The id of provider for this Achievement."
+    - $ref: "#/definitions/AchievementUpdateRequestBody"
+  AchievementUpdateRequestBody:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+        description: "Name of Achievement"
+      uri:
+        type: "string"
+        description: "Uri of Achievement"
+      certifierId:
+        type: "string"
+        description: "Id of certifier"
+      certifiedDate:
+        type: "string"
+        format: "date-time"
+        description: "The date when certification occurred."
+    example:
+      certifierId: "certifierId"
+      certifiedDate: "2000-01-23T04:56:07.000+00:00"
+      name: "name"
+      uri: "uri"
+  AchievementsProvider:
+    allOf:
+    - type: "object"
+      required:
+      - "id"
+      - "name"
+      properties:
+        id:
+          type: "string"
+          format: "UUID"
+          description: "The id of the provider."
+        name:
+          type: "string"
+          description: "The name of the provider."
+    - $ref: "#/definitions/AuditFields"
+  Skill:
+    allOf:
+    - type: "object"
+      required:
+      - "externalId"
+      - "id"
+      - "name"
+      - "skillProviderId"
+      - "uri"
+      properties:
+        id:
+          type: "string"
+          format: "UUID"
+          description: "The skill id"
+        skillProviderId:
+          type: "string"
+          format: "UUID"
+          description: "The referenced skill provider id"
+        name:
+          type: "string"
+          description: "The name of the skill"
+        externalId:
+          type: "string"
+          description: "The external id for the skill"
+        uri:
+          type: "string"
+          description: "The uri for the skill"
+    - $ref: "#/definitions/AuditFields"
+  SkillRequestBody:
+    allOf:
+    - type: "object"
+    - $ref: "#/definitions/SkillUpdateRequestBody"
+  SkillUpdateRequestBody:
+    type: "object"
+    properties:
+      skillProviderId:
+        type: "string"
+        format: "UUID"
+        description: "The id of provider for this Skill."
+      name:
+        type: "string"
+        description: "Name of Skill"
+      uri:
+        type: "string"
+        description: "Uri of Skill"
+      externalId:
+        type: "string"
+        description: "External Id of skill"
+    example:
+      skillProviderId: "skillProviderId"
+      name: "name"
+      externalId: "externalId"
+      uri: "uri"
+  SkillsProvider:
+    allOf:
+    - type: "object"
+      required:
+      - "id"
+      - "name"
+      properties:
+        id:
+          type: "string"
+          format: "UUID"
+          description: "The id of the provider."
+        name:
+          type: "string"
+          description: "The name of the provider."
+    - $ref: "#/definitions/AuditFields"
+  ExternalProfile:
+    allOf:
+    - type: "object"
+      required:
+      - "organizationId"
+      - "uri"
+      - "userId"
+      properties:
+        userId:
+          type: "string"
+          format: "UUID"
+          description: "The id of the user this profile belongs to."
+        organizationId:
+          type: "string"
+          format: "UUID"
+          description: "The id of the organization this profile belongs to."
+        uri:
+          type: "string"
+          description: "The uri of the external profile."
+    - $ref: "#/definitions/AuditFields"
+  ExternalProfileRequestBody:
+    type: "object"
+    required:
+    - "organizationId"
+    - "uri"
+    properties:
+      organizationId:
+        type: "string"
+        format: "UUID"
+        description: "The id of the organization this profile belongs to."
+      uri:
+        type: "string"
+        description: "The uri of the external profile."
+    example:
+      organizationId: "organizationId"
+      uri: "uri"
+  ExternalProfileUpdateRequestBody:
+    type: "object"
+    properties:
+      uri:
+        type: "string"
+        description: "The uri of the external profile."
+    example:
+      uri: "uri"
+  Role:
+    allOf:
+    - type: "object"
+      required:
+      - "id"
+      - "name"
+      properties:
+        id:
+          type: "string"
+          format: "UUID"
+          description: "The id of the role."
+        name:
+          type: "string"
+          description: "The name of the role."
+    - $ref: "#/definitions/AuditFields"
+  UserRole:
+    allOf:
+    - type: "object"
+      required:
+      - "userId"
+      properties:
+        userId:
+          type: "string"
+          format: "UUID"
+          description: "The user to be associated with the role"
+    - $ref: "#/definitions/UserRoleRequestBody"
+    - $ref: "#/definitions/AuditFields"
+  UserRoleRequestBody:
+    type: "object"
+    required:
+    - "roleId"
+    properties:
+      roleId:
+        type: "string"
+        format: "UUID"
+        description: "The roleId of this user role."
+    description: "Represents a Role that belongs to a given user.\n"
+    example:
+      roleId: "roleId"
+  User:
+    allOf:
+    - type: "object"
+      required:
+      - "handle"
+      - "id"
+      - "isAvailable"
+      properties:
+        id:
+          type: "string"
+          format: "UUID"
+          description: "The id of the user."
+        handle:
+          type: "string"
+          description: "The handle of the user."
+        isAvailable:
+          type: "boolean"
+          description: "Indicates the availability of the user."
+    - $ref: "#/definitions/AuditFields"
+  UserSkill:
+    allOf:
+    - type: "object"
+      required:
+      - "certifiedDate"
+      - "certifierId"
+      - "metricValue"
+      - "skillId"
+      - "userId"
+      properties:
+        userId:
+          type: "string"
+          format: "UUID"
+          description: "The id of user that this Skill belongs to."
+        skillId:
+          type: "string"
+          format: "UUID"
+          description: "The Skill id."
+        metricValue:
+          type: "string"
+          description: "The skill metric value."
+        certifierId:
+          type: "string"
+          description: "Id of certifier"
+        certifiedDate:
+          type: "string"
+          format: "date-time"
+          description: "The date when certification occurred."
+    - $ref: "#/definitions/AuditFields"
+  UserSkillRequestBody:
+    allOf:
+    - type: "object"
+      properties:
+        skillId:
+          type: "string"
+          format: "UUID"
+          description: "The Skill id."
+    - $ref: "#/definitions/UserSkillUpdateRequestBody"
+  UserSkillUpdateRequestBody:
+    type: "object"
+    properties:
+      metricValue:
+        type: "string"
+        description: "The skill metric value."
+      certifierId:
+        type: "string"
+        description: "Id of certifier"
+      certifiedDate:
+        type: "string"
+        format: "date-time"
+        description: "The date when certification occurred."
+    example:
+      certifierId: "certifierId"
+      certifiedDate: "2000-01-23T04:56:07.000+00:00"
+      metricValue: "metricValue"
+  UserAttribute:
+    allOf:
+    - type: "object"
+      required:
+      - "attributeId"
+      - "userId"
+      - "value"
+      properties:
+        userId:
+          type: "string"
+          format: "UUID"
+          description: "The id of user that this user attribute belongs to."
+        attributeId:
+          type: "string"
+          format: "UUID"
+          description: "The attribute id."
+        value:
+          type: "string"
+          description: "The user attribute value."
+    - $ref: "#/definitions/AuditFields"
+  UserAttributeRequestBody:
+    allOf:
+    - type: "object"
+      properties:
+        attributeId:
+          type: "string"
+          format: "UUID"
+          description: "The attribute id."
+    - $ref: "#/definitions/UserAttributeUpdateRequestBody"
+  UserAttributeUpdateRequestBody:
+    type: "object"
+    properties:
+      value:
+        type: "string"
+        description: "The user attribute value."
+    example:
+      value: "value"
+  UserRequestBody:
+    type: "object"
+    properties:
+      handle:
+        type: "string"
+        description: "The handle of the user."
+      isAvailable:
+        type: "boolean"
+        description: "Indicates the availability of the user."
+    description: "Properties that are provided when creating or editing a User.\n"
+    example:
+      isAvailable: true
+      handle: "handle"
+  UserUpdateRequestBody:
+    type: "object"
+    properties:
+      handle:
+        type: "string"
+        description: "The handle of the user."
+      isAvailable:
+        type: "boolean"
+        description: "Indicates the availability of the user."
+    example:
+      isAvailable: true
+      handle: "handle"
+  AttributeGroup:
+    allOf:
+    - type: "object"
+      required:
+      - "id"
+      - "name"
+      - "organizationId"
+      properties:
+        id:
+          type: "string"
+          format: "UUID"
+          description: "Id of the AttributeGroup"
+        name:
+          type: "string"
+          description: "Name of the AttributeGroup"
+        organizationId:
+          type: "string"
+          format: "UUID"
+          description: "Id of the organization that this attribute group belongs to."
+    - $ref: "#/definitions/AuditFields"
+  AttributeGroupRequestBody:
+    type: "object"
+    required:
+    - "name"
+    - "organizationId"
+    properties:
+      name:
+        type: "string"
+        description: "Name of the entity"
+      organizationId:
+        type: "string"
+        format: "UUID"
+        description: "Id of the organization that this attribute group belongs to."
+    description: "Request body containing the fields for an Attribute Group."
+    example:
+      organizationId: "organizationId"
+      name: "name"
+  Organization:
+    allOf:
+    - type: "object"
+      required:
+      - "id"
+      - "name"
+      properties:
+        id:
+          type: "string"
+          format: "UUID"
+          description: "Id of the organization"
+        name:
+          type: "string"
+          description: "Name of the organization"
+    - $ref: "#/definitions/AuditFields"
+  NameRequestBody:
+    type: "object"
+    required:
+    - "name"
+    properties:
+      name:
+        type: "string"
+        description: "Name of the entity"
+    description: "Simple request body containing the name of the entity."
+    example:
+      name: "name"
+  Attribute:
+    allOf:
+    - type: "object"
+      required:
+      - "attributeGroupId"
+      - "id"
+      - "name"
+      properties:
+        id:
+          type: "string"
+          format: "UUID"
+          description: "The attribute id"
+        attributeGroupId:
+          type: "string"
+          format: "UUID"
+          description: "The referenced attribute group id"
+        name:
+          type: "string"
+          description: "The name of the attribute"
+    - $ref: "#/definitions/AuditFields"
+  AttributeRequestBody:
+    allOf:
+    - $ref: "#/definitions/AttributeUpdateRequestBody"
+    - {}
+  AttributeUpdateRequestBody:
+    type: "object"
+    properties:
+      attributeGroupId:
+        type: "string"
+        format: "UUID"
+        description: "The id of provider for this attribute."
+      name:
+        type: "string"
+        description: "Name of attribute"
+    example:
+      name: "name"
+      attributeGroupId: "attributeGroupId"
+  Unauthorized:
+    type: "object"
+    properties:
+      message:
+        type: "string"
+        example: "Unable to authenticate the user."
+        description: "The unauthorized error message."
+    description: "The unauthorized error entity."
+  NotFound:
+    type: "object"
+    properties:
+      message:
+        type: "string"
+        example: "A resource with the name could not be found."
+        description: "The not found error message."
+    description: "The not found error entity."
+  ServerError:
+    type: "object"
+    properties:
+      message:
+        type: "string"
+        example: "Something went wrong while processing your request. We�re sorry\
+          \ for the trouble. We�ve been notified of the error and will correct it\
+          \ as soon as possible. Please try your request again in a moment."
+        description: "The server error message."
+    description: "The server error entity."
+  BadRequest:
+    type: "object"
+    properties:
+      message:
+        type: "string"
+        example: "Invalid input."
+        description: "The bad request error message."
+    description: "The bad request error entity."
+  Forbidden:
+    type: "object"
+    properties:
+      message:
+        type: "string"
+        example: "You are not allowed to access the request."
+        description: "The forbidden error message."
+    description: "The permission error entity."
+  Conflict:
+    type: "object"
+    required:
+    - "message"
+    properties:
+      message:
+        type: "string"
+        example: "Creating a resource with a name already exists."
+        description: "The conflict error message."
+    description: "The conflict error entity."
