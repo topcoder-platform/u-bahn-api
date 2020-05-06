@@ -5,12 +5,11 @@
  * **Point to note** - For non-admin users, this endpoint will only return entities that the user has created.
  *
  * handle String Filter by user handle (optional)
- * isAvailable Boolean Filter by user availability (optional)
  * groupId String Filter by user group Id (optional)
  * roleId String Filter by user roleId (optional)
  * returns List
  **/
-exports.usersGET = function(handle,isAvailable,groupId,roleId) {
+exports.usersGET = function(handle,groupId,roleId) {
   return new Promise(function(resolve, reject) {
     var examples = {};
     examples['application/json'] = [ "", "" ];
@@ -27,12 +26,11 @@ exports.usersGET = function(handle,isAvailable,groupId,roleId) {
  * Retrieve header information for a search operation on users in the application.  **Security** - Note that for non-admin users, this endpoint will only return entities that the user has created. 
  *
  * handle String Filter by user handle (optional)
- * isAvailable Boolean Filter by user availability (optional)
  * groupId String Filter by user group Id (optional)
  * roleId String Filter by user roleId (optional)
  * no response value expected for this operation
  **/
-exports.usersHEAD = function(handle,isAvailable,groupId,roleId) {
+exports.usersHEAD = function(handle,groupId,roleId) {
   return new Promise(function(resolve, reject) {
     resolve();
   });

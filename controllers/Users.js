@@ -5,10 +5,9 @@ var Users = require('../service/UsersService');
 
 module.exports.usersGET = function usersGET (req, res, next) {
   var handle = req.swagger.params['handle'].value;
-  var isAvailable = req.swagger.params['isAvailable'].value;
   var groupId = req.swagger.params['groupId'].value;
   var roleId = req.swagger.params['roleId'].value;
-  Users.usersGET(handle,isAvailable,groupId,roleId)
+  Users.usersGET(handle,groupId,roleId)
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -19,10 +18,9 @@ module.exports.usersGET = function usersGET (req, res, next) {
 
 module.exports.usersHEAD = function usersHEAD (req, res, next) {
   var handle = req.swagger.params['handle'].value;
-  var isAvailable = req.swagger.params['isAvailable'].value;
   var groupId = req.swagger.params['groupId'].value;
   var roleId = req.swagger.params['roleId'].value;
-  Users.usersHEAD(handle,isAvailable,groupId,roleId)
+  Users.usersHEAD(handle,groupId,roleId)
     .then(function (response) {
       utils.writeJson(res, response);
     })

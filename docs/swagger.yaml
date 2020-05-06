@@ -6,6 +6,8 @@ info:
     \ and expertise for suitability in other projects"
   version: "1.0.0"
   title: "UBahn API"
+host: "api.ubahn-dev.com"
+basePath: "/v5"
 tags:
 - name: "Users"
   description: "Users registered in the system"
@@ -53,11 +55,6 @@ paths:
         description: "Filter by user handle"
         required: false
         type: "string"
-      - name: "isAvailable"
-        in: "query"
-        description: "Filter by user availability"
-        required: false
-        type: "boolean"
       - name: "groupId"
         in: "query"
         description: "Filter by user group Id"
@@ -101,11 +98,6 @@ paths:
         description: "Filter by user handle"
         required: false
         type: "string"
-      - name: "isAvailable"
-        in: "query"
-        description: "Filter by user availability"
-        required: false
-        type: "boolean"
       - name: "groupId"
         in: "query"
         description: "Filter by user group Id"
@@ -3398,7 +3390,6 @@ definitions:
       required:
       - "handle"
       - "id"
-      - "isAvailable"
       properties:
         id:
           type: "string"
@@ -3407,9 +3398,6 @@ definitions:
         handle:
           type: "string"
           description: "The handle of the user."
-        isAvailable:
-          type: "boolean"
-          description: "Indicates the availability of the user."
     - $ref: "#/definitions/AuditFields"
   UserSkill:
     allOf:
@@ -3509,12 +3497,8 @@ definitions:
       handle:
         type: "string"
         description: "The handle of the user."
-      isAvailable:
-        type: "boolean"
-        description: "Indicates the availability of the user."
     description: "Properties that are provided when creating or editing a User.\n"
     example:
-      isAvailable: true
       handle: "handle"
   UserUpdateRequestBody:
     type: "object"
@@ -3522,11 +3506,7 @@ definitions:
       handle:
         type: "string"
         description: "The handle of the user."
-      isAvailable:
-        type: "boolean"
-        description: "Indicates the availability of the user."
     example:
-      isAvailable: true
       handle: "handle"
   AttributeGroup:
     allOf:
@@ -3649,8 +3629,8 @@ definitions:
     properties:
       message:
         type: "string"
-        example: "Something went wrong while processing your request. We�re sorry\
-          \ for the trouble. We�ve been notified of the error and will correct it\
+        example: "Something went wrong while processing your request. We're sorry\
+          \ for the trouble. We've been notified of the error and will correct it\
           \ as soon as possible. Please try your request again in a moment."
         description: "The server error message."
     description: "The server error entity."
