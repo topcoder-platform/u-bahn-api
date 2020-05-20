@@ -6,7 +6,7 @@ info:
     \ and expertise for suitability in other projects"
   version: "1.0.0"
   title: "UBahn API"
-host: "api.ubahn-dev.com"
+host: "ubahn-api-dev.herokuapp.com"
 basePath: "/v5"
 tags:
 - name: "Users"
@@ -2436,7 +2436,7 @@ paths:
     head:
       tags:
       - "User Attributes"
-      description: "Retrieve header information for a search operation on users attributes\
+      description: "Retrieve header information for a search operation on user attributes\
         \ in the application.\n\n**Security** - Note that for non-admin users, this\
         \ endpoint will only return entities that\nthe user has created.\n"
       operationId: "usersUserIdAttributesHEAD"

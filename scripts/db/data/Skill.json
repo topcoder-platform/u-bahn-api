@@ -1,0 +1,13 @@
+[
+  {
+    "id": "0de5cb8b-d217-4133-8483-a3a09db9ab3d",
+    "created": "2020-05-05T11:03:56.711Z",
+    "updated": "2020-05-05T11:04:25.798Z",
+    "createdBy": "tc-Copilot",
+    "updatedBy": "tc-Copilot",
+    "skillProviderId": "7637ae1a-3b7c-44eb-a5ed-10ea02f1885d",
+    "name": "skill_name_update",
+    "externalId": "externalId",
+    "uri": "http://www.google.com"
+  }
+]

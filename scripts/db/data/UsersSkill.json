@@ -1,0 +1,14 @@
+[
+  {
+    "id": "952d5f60-153c-466e-b4e9-8d5b91cc78c4",
+    "created": "2020-05-05T11:04:51.134Z",
+    "updated": "2020-05-05T11:05:13.574Z",
+    "createdBy": "tc-Copilot",
+    "updatedBy": "tc-Copilot",
+    "skillId": "0de5cb8b-d217-4133-8483-a3a09db9ab3d",
+    "metricValue": "4.5L",
+    "certifierId": "certifier_id",
+    "certifiedDate": "2020-05-04T07:36:28.036Z",
+    "userId": "0bcb0d86-09bb-410a-b2b1-fba90d1a7699"
+  }
+]

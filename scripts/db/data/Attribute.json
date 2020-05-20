@@ -1,0 +1,29 @@
+[
+  {
+    "id": "89b3c78f-d71b-4fc6-88cb-701c25e54dac",
+    "created": "2020-05-13T08:46:39.030Z",
+    "updated": null,
+    "createdBy": "tc-user",
+    "updatedBy": null,
+    "attributeGroupId": "7ce54e9c-5a2a-4c63-9f53-b854234f6bb2",
+    "name": "attribute_02"
+  },
+  {
+    "id": "f3fd623f-a613-4e3c-bf2f-9df529ff4317",
+    "created": "2020-05-13T08:35:45.512Z",
+    "updated": null,
+    "createdBy": "tc-Admin",
+    "updatedBy": null,
+    "attributeGroupId": "84634bbd-8191-40cf-a03e-9962d7e39fda",
+    "name": "attribute_02"
+  },
+  {
+    "id": "ed1c98da-1876-49b9-a565-583fafd9cd4c",
+    "created": "2020-05-13T07:32:03.128Z",
+    "updated": null,
+    "createdBy": "tc-Admin",
+    "updatedBy": null,
+    "attributeGroupId": "84634bbd-8191-40cf-a03e-9962d7e39fda",
+    "name": "attribute_01"
+  }
+]

@@ -1,0 +1,20 @@
+[
+  {
+    "id": "7ce54e9c-5a2a-4c63-9f53-b854234f6bb2",
+    "created": "2020-05-13T08:45:33.291Z",
+    "updated": null,
+    "createdBy": "tc-user",
+    "updatedBy": null,
+    "organizationId": "854f1bf3-6f51-424b-866f-e5f5a5803904",
+    "name": "attributeGroup_03"
+  },
+  {
+    "id": "84634bbd-8191-40cf-a03e-9962d7e39fda",
+    "created": "2020-05-13T07:15:01.215Z",
+    "updated": "2020-05-13T07:16:20.636Z",
+    "createdBy": "tc-Admin",
+    "updatedBy": "tc-Admin",
+    "organizationId": "36ed815b-3da1-49f1-a043-aaed0a4e81ad",
+    "name": "group 03"
+  }
+]
