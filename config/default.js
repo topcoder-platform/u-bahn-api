@@ -8,7 +8,7 @@ module.exports = {
   AUTH_SECRET: process.env.AUTH_SECRET || 'CLIENT_SECRET',
   VALID_ISSUERS: process.env.VALID_ISSUERS ? process.env.VALID_ISSUERS.replace(/\\"/g, '')
     : '["https://topcoder-dev.auth0.com/", "https://api.topcoder.com"]',
-  API_VERSION: 'api/1.0',
+  API_VERSION: process.env.API_VERSION || 'api/1.0',
 
   AWS_KEY: process.env.AWS_KEY,
   AWS_SECRET: process.env.AWS_SECRET,
