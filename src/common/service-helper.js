@@ -2,6 +2,7 @@ const joi = require('@hapi/joi')
 const appConst = require('../consts')
 const _ = require('lodash')
 const errors = require('./errors')
+const esHelper = require('./es-helper')
 
 /**
  * make sure reference item exists
@@ -141,10 +142,11 @@ function getServiceMethods (Model, createSchema, patchSchema, searchSchema, buil
    * get device by id
    * @param id the device id
    * @param auth the auth obj
-   * @param params the query params
+   * @param params the path parameters
+   * @param query the query parameters
    * @return {Promise} the db device
    */
-  async function get (id, auth, params) {
+  async function get (id, auth, params, query) {
     let recordObj
     if (_.isNil(params) || _.isEmpty(params)) {
       recordObj = await models.DBHelper.get(Model, id)
@@ -194,9 +196,11 @@ function getServiceMethods (Model, createSchema, patchSchema, searchSchema, buil
     await models.DBHelper.delete(Model, id, buildQueryByParams(params))
   }
 
-  return {
+  const methods = {
     create, search, patch, get, remove
   }
+
+  return esHelper.wrapElasticSearchOp(methods, Model)
 }
 
 module.exports = {

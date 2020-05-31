@@ -4,11 +4,17 @@ const {
   Timestamp
 } = require('ion-js')
 
+const config = require('config')
+const querystring = require('querystring')
 const errors = require('./errors')
 const appConst = require('../consts')
 const _ = require('lodash')
 const { getServiceMethods } = require('./service-helper')
 const { getControllerMethods, getSubControllerMethods } = require('./controller-helper')
+const logger = require('./logger')
+const busApi = require('tc-bus-api-wrapper')
+const busApiClient = busApi(_.pick(config, ['AUTH0_URL', 'AUTH0_AUDIENCE', 'TOKEN_CACHE_TIME', 'AUTH0_CLIENT_ID',
+  'AUTH0_CLIENT_SECRET', 'BUSAPI_URL', 'KAFKA_ERROR_TOPIC']))
 
 /**
  * convert json object to ion.js writer
@@ -153,12 +159,58 @@ function checkIfExists (source, term) {
 }
 
 /**
- * no paging in database, so only inject X-Total
- * @param res the response
- * @param meta the metadata
+ * Get link for a given page.
+ * @param {Object} req the HTTP request
+ * @param {Number} page the page number
+ * @returns {String} link for the page
  */
-function injectSearchMeta (res, meta) {
-  res.header({ 'X-Total': meta.total })
+function getPageLink (req, page) {
+  const q = _.assignIn({}, req.query, { page })
+  return `${req.protocol}://${req.get('Host')}${req.baseUrl}${req.path}?${querystring.stringify(q)}`
+}
+
+/**
+ * Set HTTP response headers from result.
+ * @param {Object} req the HTTP request
+ * @param {Object} res the HTTP response
+ * @param {Object} result the operation result
+ */
+function injectSearchMeta (req, res, result) {
+  // if result is got from db, then do not set response headers
+  if (result.fromDB) {
+    return
+  }
+
+  const totalPages = Math.ceil(result.total / result.perPage)
+  if (result.page > 1) {
+    res.set('X-Prev-Page', result.page - 1)
+  }
+  if (result.page < totalPages) {
+    res.set('X-Next-Page', result.page + 1)
+  }
+  res.set('X-Page', result.page)
+  res.set('X-Per-Page', result.perPage)
+  res.set('X-Total', result.total)
+  res.set('X-Total-Pages', totalPages)
+  // set Link header
+  if (totalPages > 0) {
+    let link = `<${getPageLink(req, 1)}>; rel="first", <${getPageLink(req, totalPages)}>; rel="last"`
+    if (result.page > 1) {
+      link += `, <${getPageLink(req, result.page - 1)}>; rel="prev"`
+    }
+    if (result.page < totalPages) {
+      link += `, <${getPageLink(req, result.page + 1)}>; rel="next"`
+    }
+    res.set('Link', link)
+  }
+
+  // Allow browsers access pagination data in headers
+  let accessControlExposeHeaders = res.get('Access-Control-Expose-Headers') || ''
+  accessControlExposeHeaders += accessControlExposeHeaders ? ', ' : ''
+  // append new values, to not override values set by someone else
+  accessControlExposeHeaders += 'X-Page, X-Per-Page, X-Total, X-Total-Pages, X-Prev-Page, X-Next-Page'
+
+  res.set('Access-Control-Expose-Headers', accessControlExposeHeaders)
 }
 
 /**
@@ -173,6 +225,23 @@ function permissionCheck (auth, recordObj) {
   }
 }
 
+/**
+ * Send Kafka event message
+ * @params {String} topic the topic name
+ * @params {Object} payload the payload
+ */
+async function postEvent (topic, payload) {
+  logger.debug(`Posting event to Kafka topic ${topic}, ${JSON.stringify(payload, null, 2)}`)
+  const message = {
+    topic,
+    originator: config.KAFKA_MESSAGE_ORIGINATOR,
+    timestamp: new Date().toISOString(),
+    'mime-type': 'application/json',
+    payload
+  }
+  await busApiClient.postEvent(message)
+}
+
 module.exports = {
   writeValueAsIon,
   readerToJson,
@@ -182,5 +251,6 @@ module.exports = {
   injectSearchMeta,
   getControllerMethods,
   getSubControllerMethods,
-  getServiceMethods
+  getServiceMethods,
+  postEvent
 }

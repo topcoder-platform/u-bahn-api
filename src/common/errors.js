@@ -21,5 +21,6 @@ module.exports = {
   newEntityNotFoundError: msg => new AppError(404, msg || 'The entity does not exist.'),
   newAuthError: msg => new AppError(401, msg || 'Auth failed.'),
   newPermissionError: msg => new AppError(403, msg || 'The entity does not exist.'),
-  newConflictError: msg => new AppError(409, msg || 'The entity does not exist.')
+  newConflictError: msg => new AppError(409, msg || 'The entity does not exist.'),
+  elasticSearchEnrichError: msg => new AppError(500, msg || 'Elasticsearch enrich failed')
 }

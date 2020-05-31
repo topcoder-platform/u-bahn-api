@@ -50,6 +50,8 @@ paths:
         \ return entities that the user has created."
       operationId: "usersGET"
       parameters:
+      - $ref: '#/parameters/page'
+      - $ref: '#/parameters/perPage'
       - name: "handle"
         in: "query"
         description: "Filter by user handle"
@@ -294,6 +296,8 @@ paths:
         \ this endpoint will only return entities that\nthe user has created.\n"
       operationId: "usersUserIdSkillsGET"
       parameters:
+      - $ref: '#/parameters/page'
+      - $ref: '#/parameters/perPage'
       - name: "userId"
         in: "path"
         description: "The user id"
@@ -556,7 +560,9 @@ paths:
         \ that for non-admin users, this endpoint will only return entities that\n\
         the user has created.\n"
       operationId: "skillsGET"
-      parameters: []
+      parameters:
+      - $ref: '#/parameters/page'
+      - $ref: '#/parameters/perPage'
       responses:
         "200":
           description: "OK - the request was successful"
@@ -768,6 +774,8 @@ paths:
         \ this endpoint will only return entities that\nthe user has created.\n"
       operationId: "skillsProvidersGET"
       parameters:
+      - $ref: '#/parameters/page'
+      - $ref: '#/parameters/perPage'
       - name: "name"
         in: "query"
         description: "Filter by provider name"
@@ -988,6 +996,8 @@ paths:
         \ will only return entities that\nthe user has created.\n"
       operationId: "rolesGET"
       parameters:
+      - $ref: '#/parameters/page'
+      - $ref: '#/parameters/perPage'
       - name: "name"
         in: "query"
         description: "Filter by role name"
@@ -1208,6 +1218,8 @@ paths:
         the user has created.        \n"
       operationId: "usersUserIdRolesGET"
       parameters:
+      - $ref: '#/parameters/page'
+      - $ref: '#/parameters/perPage'
       - name: "userId"
         in: "path"
         description: "The user id"
@@ -1417,6 +1429,8 @@ paths:
         the user has created.        \n"
       operationId: "usersUserIdExternalProfilesGET"
       parameters:
+      - $ref: '#/parameters/page'
+      - $ref: '#/parameters/perPage'
       - name: "userId"
         in: "path"
         description: "The user id"
@@ -1680,6 +1694,8 @@ paths:
         \ has created.        \n"
       operationId: "usersUserIdAchievementsGET"
       parameters:
+      - $ref: '#/parameters/page'
+      - $ref: '#/parameters/perPage'
       - name: "userId"
         in: "path"
         description: "The user id"
@@ -1951,6 +1967,8 @@ paths:
         \ users, this endpoint will only return entities that\nthe user has created.\n"
       operationId: "achievementsProvidersGET"
       parameters:
+      - $ref: '#/parameters/page'
+      - $ref: '#/parameters/perPage'
       - name: "name"
         in: "query"
         description: "Filter by provider name"
@@ -2171,6 +2189,8 @@ paths:
         \ this endpoint will only return entities that\nthe user has created.\n"
       operationId: "organizationsGET"
       parameters:
+      - $ref: '#/parameters/page'
+      - $ref: '#/parameters/perPage'
       - name: "name"
         in: "query"
         description: "Filter by organization name"
@@ -2393,6 +2413,8 @@ paths:
         \ that\nthe user has created.\n"
       operationId: "usersUserIdAttributesGET"
       parameters:
+      - $ref: '#/parameters/page'
+      - $ref: '#/parameters/perPage'
       - name: "userId"
         in: "path"
         description: "The user id"
@@ -2677,6 +2699,8 @@ paths:
         \ this endpoint will only return entities that\nthe user has created.\n"
       operationId: "attributesGET"
       parameters:
+      - $ref: '#/parameters/page'
+      - $ref: '#/parameters/perPage'
       - name: "attributeGroupId"
         in: "query"
         description: "Filter by attribute group id"
@@ -2900,6 +2924,8 @@ paths:
         \ that\nthe user has created.\n"
       operationId: "attributeGroupsGET"
       parameters:
+      - $ref: '#/parameters/page'
+      - $ref: '#/parameters/perPage'
       - name: "name"
         in: "query"
         description: "Filter by group name"
@@ -3129,6 +3155,24 @@ securityDefinitions:
     type: "apiKey"
     name: "Authorization"
     in: "header"
+
+parameters:
+  page:
+    name: page
+    in: query
+    description: The page number.
+    required: false
+    type: integer
+    default: 1
+  perPage:
+    name: perPage
+    in: query
+    description: The number of items to list per page.
+    required: false
+    type: integer
+    default: 20
+    maximum: 100
+
 definitions:
   AuditFields:
     type: "object"
