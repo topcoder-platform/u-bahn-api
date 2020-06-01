@@ -52,6 +52,10 @@ Setup your Elasticsearch instance and ensure that it is up and running.
 5. Import mock data, `node scripts/db/genData.js`, this will create tables and gen some data for test (if you need this)
 6. Startup server `node app.js` or `npm run start`
 
+## Working with mock data
+
+You can use the scripts `npm run insert-data` (and `npm run delete-data`) to insert mock data (and delete mock data respectively). The data is inserted into QLDB and Elasticsearch. You need to setup the configurations beforehand and also start the elasticsearch instance before you run these scripts
+
 ## Local Deployment with Docker
 
 Make sure all config values are right(aws key and secret), and you can run on local successful, then run below commands

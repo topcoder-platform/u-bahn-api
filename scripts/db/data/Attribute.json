@@ -6,7 +6,7 @@
     "createdBy": "tc-user",
     "updatedBy": null,
     "attributeGroupId": "7ce54e9c-5a2a-4c63-9f53-b854234f6bb2",
-    "name": "attribute_02"
+    "name": "isAvailable"
   },
   {
     "id": "f3fd623f-a613-4e3c-bf2f-9df529ff4317",
@@ -15,7 +15,7 @@
     "createdBy": "tc-Admin",
     "updatedBy": null,
     "attributeGroupId": "84634bbd-8191-40cf-a03e-9962d7e39fda",
-    "name": "attribute_02"
+    "name": "company"
   },
   {
     "id": "ed1c98da-1876-49b9-a565-583fafd9cd4c",
@@ -24,6 +24,6 @@
     "createdBy": "tc-Admin",
     "updatedBy": null,
     "attributeGroupId": "84634bbd-8191-40cf-a03e-9962d7e39fda",
-    "name": "attribute_01"
+    "name": "location"
   }
 ]

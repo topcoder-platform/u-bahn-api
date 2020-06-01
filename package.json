@@ -5,7 +5,9 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "lint": "standard \"**/*.js\""
+    "lint": "standard \"**/*.js\"",
+    "insert-data": "node scripts/db/genData.js",
+    "delete-data": "node scripts/db/dropAll.js"
   },
   "repository": {
     "type": "git",

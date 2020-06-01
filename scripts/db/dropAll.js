@@ -1,6 +1,7 @@
 /**
  * drop tables
  */
+const _ = require('lodash')
 const models = require('../../src/models')
 const logger = require('../../src/common/logger')
 const { topResources, modelToESIndexMapping } = require('../constants')
