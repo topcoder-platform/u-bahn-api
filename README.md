@@ -17,8 +17,8 @@ Configuration for the application is at config/default.js and config/production.
 - VALID_ISSUERS: valid issuers for TC authentication
 - PAGE_SIZE: the default pagination limit
 - API_VERSION: the API version
-- AWS_KEY: The AWS access key
-- AWS_SECRET: The AWS secret key
+- AWS_ACCESS_KEY_ID: The AWS access key
+- AWS_SECRET_ACCESS_KEY: The AWS secret key
 - AWS_REGION: The Amazon region to use when connecting.
 - DATABASE: The QLDB ledger name
 - AUTH0_URL: Auth0 URL, used to get TC M2M token

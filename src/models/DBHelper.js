@@ -11,9 +11,9 @@ const errors = require('../common/errors')
  * the database instance
  */
 const qldbInstance = new QLDB.PooledQldbDriver(config.DATABASE, {
-  region: config.AWS_REGION,
-  secretAccessKey: config.AWS_SECRET,
-  accessKeyId: config.AWS_KEY
+  accessKeyId: config.AWS_ACCESS_KEY_ID,
+  secretAccessKey: config.AWS_SECRET_ACCESS_KEY,
+  region: config.AWS_REGION
 })
 
 /**

@@ -13,8 +13,8 @@ module.exports = {
   PAGE_SIZE: process.env.PAGE_SIZE || 20,
   API_VERSION: process.env.API_VERSION || 'api/1.0',
 
-  AWS_KEY: process.env.AWS_KEY,
-  AWS_SECRET: process.env.AWS_SECRET,
+  AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
+  AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
   AWS_REGION: process.env.AWS_REGION || 'us-east-1',
   DATABASE: process.env.DATABASE || 'ubahn-db',
 
