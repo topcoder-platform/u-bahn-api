@@ -219,7 +219,7 @@ function injectSearchMeta (req, res, result) {
  * @param recordObj the record object
  */
 function permissionCheck (auth, recordObj) {
-  if (auth && auth.roles && !checkIfExists(auth.roles, [appConst.UserRoles.admin]) &&
+  if (auth && auth.roles && !checkIfExists(auth.roles, [appConst.UserRoles.admin, appConst.UserRoles.administrator]) &&
     recordObj.createdBy !== getAuthUser(auth)) {
     throw errors.newPermissionError('You are not allowed to perform this action')
   }
