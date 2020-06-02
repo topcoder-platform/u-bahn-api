@@ -39,7 +39,6 @@ module.exports = {
   // ElasticSearch
   ES: {
     HOST: process.env.ES_HOST || 'localhost:9200',
-    AWS_REGION: process.env.AWS_REGION || 'us-east-1', // AWS Region to be used if we use AWS ES
     API_VERSION: process.env.ES_API_VERSION || '6.8',
     // es mapping: _index, _type, _id
     DOCUMENTS: {

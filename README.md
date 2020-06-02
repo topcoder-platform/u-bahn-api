@@ -35,7 +35,6 @@ Configuration for the application is at config/default.js and config/production.
 - UBAHN_UPDATE_TOPIC: Kafka topic for update message
 - UBAHN_DELETE_TOPIC: Kafka topic for delete message
 - ES.HOST: Elasticsearch host
-- ES.AWS_REGION: The Amazon region to use when using AWS Elasticsearch service
 - ES.API_VERSION: Elasticsearch API version
 - ES.DOCUMENTS: Elasticsearch index, type and id mapping for resources.
 
