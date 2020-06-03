@@ -183,10 +183,10 @@ function injectSearchMeta (req, res, result) {
 
   const totalPages = Math.ceil(result.total / result.perPage)
   if (result.page > 1) {
-    res.set('X-Prev-Page', result.page - 1)
+    res.set('X-Prev-Page', +result.page - 1)
   }
   if (result.page < totalPages) {
-    res.set('X-Next-Page', result.page + 1)
+    res.set('X-Next-Page', +result.page + 1)
   }
   res.set('X-Page', result.page)
   res.set('X-Per-Page', result.perPage)

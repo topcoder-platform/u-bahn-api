@@ -98,6 +98,8 @@ function getSubControllerMethods (service) {
    * @param res the http response
    */
   async function get (req, res) {
+    // req.query was added to pass query parameters to ES search in a separate parameter not to impact
+    // the existing DB code.
     res.json(await service.get(req.params.id, req.auth, _.omit(req.params, 'id'), req.query))
   }
 

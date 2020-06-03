@@ -69,6 +69,125 @@ paths:
         required: false
         type: "string"
         format: "UUID"
+      - name: "enrich"
+        in: "query"
+        description: "Enrich all child resources under the user"
+        required: false
+        type: "boolean"
+      - name: "userSkill.skillId"
+        in: "query"
+        required: false
+        type: "string"
+        format: "UUID"
+      - name: "userSkill.metricValue"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "userSkill.certifierId"
+        in: "query"
+        required: false
+        type: "string"
+        format: "UUID"
+      - name: "userSkill.certifiedDate"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "skill.skillProviderId"
+        in: "query"
+        required: false
+        type: "string"
+        format: "UUID"
+      - name: "skill.name"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "skill.externalId"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "skill.uri"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "skillProvider.name"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "userRole.roleId"
+        in: "query"
+        required: false
+        type: "string"
+        format: "UUID"
+      - name: "role.name"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "externalProfile.organizationId"
+        in: "query"
+        required: false
+        type: "string"
+        format: "UUID"
+      - name: "externalProfile.uri"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "organization.name"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "achievement.achievementProviderId"
+        in: "query"
+        required: false
+        type: "string"
+        format: "UUID"
+      - name: "achievement.name"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "achievement.uri"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "achievement.certifierId"
+        in: "query"
+        required: false
+        type: "string"
+        format: "UUID"
+      - name: "achievement.certifiedDate"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "achievementProvider.name"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "userAttribute.attributeId"
+        in: "query"
+        required: false
+        type: "string"
+        format: "UUID"
+      - name: "userAttribute.value"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "attribute.attributeGroupId"
+        in: "query"
+        required: false
+        type: "string"
+        format: "UUID"
+      - name: "attribute.name"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "attributeGroup.name"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "attributeGroup.organizationId"
+        in: "query"
+        required: false
+        type: "string"
+        format: "UUID"
       responses:
         "200":
           description: "OK - the request was successful"
@@ -109,6 +228,125 @@ paths:
       - name: "roleId"
         in: "query"
         description: "Filter by user roleId"
+        required: false
+        type: "string"
+        format: "UUID"
+      - name: "enrich"
+        in: "query"
+        description: "Enrich all child resources under the user"
+        required: false
+        type: "boolean"
+      - name: "userSkill.skillId"
+        in: "query"
+        required: false
+        type: "string"
+        format: "UUID"
+      - name: "userSkill.metricValue"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "userSkill.certifierId"
+        in: "query"
+        required: false
+        type: "string"
+        format: "UUID"
+      - name: "userSkill.certifiedDate"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "skill.skillProviderId"
+        in: "query"
+        required: false
+        type: "string"
+        format: "UUID"
+      - name: "skill.name"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "skill.externalId"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "skill.uri"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "skillProvider.name"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "userRole.roleId"
+        in: "query"
+        required: false
+        type: "string"
+        format: "UUID"
+      - name: "role.name"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "externalProfile.organizationId"
+        in: "query"
+        required: false
+        type: "string"
+        format: "UUID"
+      - name: "externalProfile.uri"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "organization.name"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "achievement.achievementProviderId"
+        in: "query"
+        required: false
+        type: "string"
+        format: "UUID"
+      - name: "achievement.name"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "achievement.uri"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "achievement.certifierId"
+        in: "query"
+        required: false
+        type: "string"
+        format: "UUID"
+      - name: "achievement.certifiedDate"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "achievementProvider.name"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "userAttribute.attributeId"
+        in: "query"
+        required: false
+        type: "string"
+        format: "UUID"
+      - name: "userAttribute.value"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "attribute.attributeGroupId"
+        in: "query"
+        required: false
+        type: "string"
+        format: "UUID"
+      - name: "attribute.name"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "attributeGroup.name"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "attributeGroup.organizationId"
+        in: "query"
         required: false
         type: "string"
         format: "UUID"
@@ -171,6 +409,11 @@ paths:
         required: true
         type: "string"
         format: "UUID"
+      - name: "enrich"
+        in: "query"
+        description: "Enrich all child resources under the user"
+        required: false
+        type: "boolean"
       responses:
         "200":
           description: "OK - the request was successful"
@@ -203,6 +446,11 @@ paths:
         required: true
         type: "string"
         format: "UUID"
+      - name: "enrich"
+        in: "query"
+        description: "Enrich all child resources under the user"
+        required: false
+        type: "boolean"
       responses:
         "200":
           description: "OK - the request was successful"

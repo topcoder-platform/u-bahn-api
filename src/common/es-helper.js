@@ -3,6 +3,7 @@ const _ = require('lodash')
 const logger = require('../common/logger')
 const errors = require('./errors')
 const groupApi = require('./group-api')
+const appConst = require('../consts')
 const esClient = require('./es-client').getESClient()
 
 const DOCUMENTS = config.ES.DOCUMENTS
@@ -20,8 +21,8 @@ _.forOwn(DOCUMENTS, (value, key) => {
 // mapping operation to topic
 const OP_TO_TOPIC = {
   create: config.UBAHN_CREATE_TOPIC,
-  update: config.UBAHN_UPDATE_TOPIC,
-  delete: config.UBAHN_DELETE_TOPIC
+  patch: config.UBAHN_UPDATE_TOPIC,
+  remove: config.UBAHN_DELETE_TOPIC
 }
 
 // map model name to bus message resource if different
@@ -334,6 +335,8 @@ async function getFromElasticSearch (resource, ...args) {
     esQuery._source_includes = subDoc.userField
   }
 
+  logger.debug(`ES query for get ${resource}: ${JSON.stringify(esQuery, null, 2)}`)
+
   // query ES
   const result = await esClient.getSource(esQuery)
 
@@ -401,7 +404,10 @@ function setResourceFilterToEsQuery (resFilters, esQuery) {
   if (resFilters.length > 0) {
     for (const filter of resFilters) {
       const doc = DOCUMENTS[filter.resource]
-      const matchField = doc.userField ? `${doc.userField}.${doc.queryField}.keyword` : `${filter.queryField}.keyword`
+      let matchField = doc.userField ? `${doc.userField}.${doc.queryField}` : `${filter.queryField}`
+      if (filter.queryField !== 'name') {
+        matchField = matchField + '.keyword'
+      }
       esQuery.body.query.bool.must.push({
         match: {
           [matchField]: filter.value
@@ -409,6 +415,37 @@ function setResourceFilterToEsQuery (resFilters, esQuery) {
       })
     }
   }
+}
+
+/**
+ * Set filter values to ES query.
+ * @param esQuery the ES query object
+ * @param matchField the field to match
+ * @param filterValue the filter value, it can be array or single value
+ * @param queryField the field that the filter applies
+ * @returns {*} the ES query
+ */
+function setFilterValueToEsQuery (esQuery, matchField, filterValue, queryField) {
+  if (queryField !== 'name') {
+    matchField = matchField + '.keyword'
+  }
+  if (Array.isArray(filterValue)) {
+    for (const value of filterValue) {
+      esQuery.body.query.bool.should.push({
+        match: {
+          [matchField]: value
+        }
+      })
+    }
+    esQuery.body.query.bool.minimum_should_match = 1
+  } else {
+    esQuery.body.query.bool.must.push({
+      match: {
+        [matchField]: filterValue
+      }
+    })
+  }
+  return esQuery
 }
 
 /**
@@ -424,19 +461,16 @@ function buildEsQueryFromFilter (filter) {
     body: {
       query: {
         bool: {
-          must: []
+          must: [],
+          should: [],
+          minimum_should_match: 0
         }
       }
     }
   }
 
-  const matchField = `${filter.queryField}.keyword`
-  esQuery.body.query.bool.must.push({
-    match: {
-      [matchField]: filter.value
-    }
-  })
-  return esQuery
+  const matchField = `${filter.queryField}`
+  return setFilterValueToEsQuery(esQuery, matchField, filter.value, filter.queryField)
 }
 
 /**
@@ -464,7 +498,13 @@ async function resolveResFilter (filter, initialRes) {
   const result = await esClient.search(esQuery)
 
   if (result.hits.total > 0) {
-    const value = result.hits.hits[0]._source.id
+    // this value can be array
+    let value
+    if (result.hits.total === 1) {
+      value = result.hits.hits[0]._source.id
+    } else {
+      value = result.hits.hits.map(hit => hit._source.id)
+    }
     const nextFilter = {
       resource: filterChain.filterNext,
       queryField: filterChain.queryField,
@@ -514,9 +554,11 @@ function applySubResFilters (results, preResFilterResults, ownResFilters, perPag
  * @returns {Promise<*>} the promise of searched results
  */
 async function searchElasticSearch (resource, ...args) {
+  const { checkIfExists, getAuthUser } = require('./helper')
   logger.debug(`Searching ES first: ${JSON.stringify(args, null, 2)}`)
   // path and query parameters
   const params = args[0]
+  const authUser = args[1]
   const doc = DOCUMENTS[resource]
   const userDoc = DOCUMENTS.user
   const topSubDoc = SUB_DOCUMENTS[resource]
@@ -562,37 +604,48 @@ async function searchElasticSearch (resource, ...args) {
     body: {
       query: {
         bool: {
-          must: []
+          must: [],
+          should: [],
+          minimum_should_match: 0
         }
       }
     }
   }
 
-  if (params.enrich && resource === 'user') {
-    // apply resolved pre-enrich filter values
-    if (enrichFilterResults.length > 0) {
-      for (const filter of enrichFilterResults) {
-        const matchField = `${filter.userField}.${filter.queryField}.keyword`
-        esQuery.body.query.bool.must.push({
-          match: {
-            [matchField]: filter.value
+  // for non-admin, only return entities that the user created
+  if (authUser.roles && !checkIfExists(authUser.roles, [appConst.UserRoles.admin, appConst.UserRoles.administrator])) {
+    setFilterValueToEsQuery(esQuery, 'createdBy', getAuthUser(authUser), 'createdBy')
+  }
+
+  if (resource === 'user') {
+    if (params.enrich) {
+      // apply resolved pre-enrich filter values
+      if (enrichFilterResults.length > 0) {
+        for (const filter of enrichFilterResults) {
+          const matchField = `${filter.userField}.${filter.queryField}`
+          setFilterValueToEsQuery(esQuery, matchField, filter.value, filter.queryField)
+        }
+      }
+      // set the sub-resource filters which is in user index
+      _.forOwn(enrichFilters, (enFilter, resource) => {
+        _.forEach(enFilter, filter => {
+          if (filter.userField) {
+            let matchField = `${filter.userField}.${filter.queryField}`
+            if (filter.queryField !== 'name') {
+              matchField = matchField + '.keyword'
+            }
+            esQuery.body.query.bool.must.push({
+              match: {
+                [matchField]: filter.value
+              }
+            })
           }
         })
-      }
-    }
-    // set the sub-resource filters which is in user index
-    _.forOwn(enrichFilters, (enFilter, resource) => {
-      _.forEach(enFilter, filter => {
-        if (filter.userField) {
-          const matchField = `${filter.userField}.${filter.queryField}.keyword`
-          esQuery.body.query.bool.must.push({
-            match: {
-              [matchField]: filter.value
-            }
-          })
-        }
       })
-    })
+    } else {
+      // do not return sub-resources
+      esQuery._source_excludes = SUB_PROPERTIES.join(',')
+    }
   } else if (topSubDoc) {
     // add userId match
     const userFC = FILTER_CHAIN.user
@@ -608,12 +661,8 @@ async function searchElasticSearch (resource, ...args) {
   // set pre res filter results
   if (!params.enrich && preResFilterResults.length > 0) {
     for (const filter of preResFilterResults) {
-      const matchField = filter.userField ? `${filter.userField}.${filter.queryField}.keyword` : `${filter.queryField}.keyword`
-      esQuery.body.query.bool.must.push({
-        match: {
-          [matchField]: filter.value
-        }
-      })
+      const matchField = filter.userField ? `${filter.userField}.${filter.queryField}` : `${filter.queryField}`
+      setFilterValueToEsQuery(esQuery, matchField, filter.value, filter.queryField)
     }
   }
 
@@ -623,7 +672,7 @@ async function searchElasticSearch (resource, ...args) {
     setResourceFilterToEsQuery(ownResFilters, esQuery)
   }
 
-  logger.debug(`ES query for ${resource}: ${JSON.stringify(esQuery, null, 2)}`)
+  logger.debug(`ES query for search ${resource}: ${JSON.stringify(esQuery, null, 2)}`)
   const docs = await esClient.search(esQuery)
   if (docs.hits && docs.hits.total === 0) {
     throw new Error('No data returns from ES query')
@@ -647,7 +696,7 @@ async function searchElasticSearch (resource, ...args) {
     result = docs.hits.hits.map(hit => hit._source)
   }
 
-  return { total: result.length, page: params.page, perPage: params.perPage, result }
+  return { total: docs.hits.total, page: params.page, perPage: params.perPage, result }
 }
 
 async function publishMessage (op, resource, result) {
@@ -683,11 +732,11 @@ function wrapElasticSearchOp (methods, Model) {
         try {
           return await searchElasticSearch(resource, ...args)
         } catch (err) {
-          logger.logFullError(err)
           // return error if enrich fails
           if (resource === 'user' && args[0].enrich) {
             throw errors.elasticSearchEnrichError(err.message)
           }
+          logger.logFullError(err)
           const { items, meta } = await func(...args)
           // return fromDB:true to indicate it is got from db,
           // and response headers ('X-Total', 'X-Page', etc.) are not set in this case
@@ -695,19 +744,24 @@ function wrapElasticSearchOp (methods, Model) {
         }
       }
     } else if (func.name === 'get') {
+      const { permissionCheck } = require('./helper')
       return async (...args) => {
         if (args[3]) {
           // merge query to params if exists. req.query was added at the end not to break the existing QLDB code.
           args[2] = _.assign(args[2], args[3])
         }
         try {
-          return await getFromElasticSearch(resource, ...args)
+          const result = await getFromElasticSearch(resource, ...args)
+          // check permission
+          const authUser = args[1]
+          permissionCheck(authUser, result)
+          return result
         } catch (err) {
-          logger.logFullError(err)
-          // return error if enrich fails
-          if (resource === 'user' && args[2].enrich) {
+          // return error if enrich fails or permission fails
+          if ((resource === 'user' && args[2].enrich) || (err.status && err.status === 403)) {
             throw errors.elasticSearchEnrichError(err.message)
           }
+          logger.logFullError(err)
           const result = await func(...args)
           return result
         }
