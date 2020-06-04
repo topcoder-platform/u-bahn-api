@@ -768,7 +768,13 @@ function wrapElasticSearchOp (methods, Model) {
       }
     } else {
       return async (...args) => {
-        const result = await func(...args)
+        let result = await func(...args)
+        // remove action returns undefined, pass id to elasticsearch
+        if (func.name === 'remove') {
+          result = {
+            id: args[0]
+          }
+        }
         try {
           await publishMessage(func.name, resource, result)
         } catch (err) {
