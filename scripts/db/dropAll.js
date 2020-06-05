@@ -15,7 +15,7 @@ async function main () {
     if (models[key].tableName) {
       const esResourceName = modelToESIndexMapping[key]
       try {
-        await models.DBHelper.drop(models[key])
+        await models.DBHelper.clear(models[key])
 
         if (_.includes(_.keys(topResources), esResourceName)) {
           await client.indices.delete({
