@@ -7,6 +7,8 @@ class User extends RecordObject {
   constructor () {
     super()
     this.handle = null
+    this.firstName = null
+    this.lastName = null
   }
 }
 

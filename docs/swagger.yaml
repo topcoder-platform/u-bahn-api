@@ -3681,6 +3681,8 @@ definitions:
     - type: "object"
       required:
       - "handle"
+      - "firstName"
+      - "lastName"
       - "id"
       properties:
         id:
@@ -3690,6 +3692,12 @@ definitions:
         handle:
           type: "string"
           description: "The handle of the user."
+        firstName:
+          type: "string"
+          description: "The first name of the user."
+        lastName:
+          type: "string"
+          description: "The last name of the user."
     - $ref: "#/definitions/AuditFields"
   UserSkill:
     allOf:
@@ -3789,17 +3797,33 @@ definitions:
       handle:
         type: "string"
         description: "The handle of the user."
+      firstName:
+        type: "string"
+        description: "The first name of the user."
+      lastName:
+        type: "string"
+        description: "The last name of the user."
     description: "Properties that are provided when creating or editing a User.\n"
     example:
       handle: "handle"
+      firstName: "John"
+      lastName: "Doe"
   UserUpdateRequestBody:
     type: "object"
     properties:
       handle:
         type: "string"
         description: "The handle of the user."
+      firstName:
+        type: "string"
+        description: "The first name of the user."
+      lastName:
+        type: "string"
+        description: "The last name of the user."
     example:
       handle: "handle"
+      firstName: "John"
+      lastName: "Doe"
   AttributeGroup:
     allOf:
     - type: "object"
