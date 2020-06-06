@@ -59,7 +59,7 @@ const USER_FILTER_TO_MODEL = {
     esDocumentValueQuery: 'attributes.value.keyword',
     values: []
   },
-  isAvailable: {
+  isavailable: {
     name: 'isAvailable',
     isAttribute: true,
     attributeName: 'isAvailable',
@@ -267,7 +267,7 @@ function parseUserFilter (params) {
         filters[key] = USER_FILTER_TO_MODEL[key]
       }
 
-      filters[key].values = value
+      filters[key].values = _.isString(value) ? [value] : value
     }
   })
 
