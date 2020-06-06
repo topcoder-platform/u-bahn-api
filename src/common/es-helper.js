@@ -34,6 +34,49 @@ const MODEL_TO_RESOURCE = {
   UsersRole: 'userrole'
 }
 
+const USER_FILTER_TO_MODEL = {
+  skill: {
+    name: 'skill',
+    isAttribute: false,
+    model: require('../models/Skill'),
+    queryField: 'name',
+    esDocumentQuery: 'skills.skillId.keyword',
+    values: []
+  },
+  achievement: {
+    name: 'achievement',
+    isAttribute: false,
+    model: require('../models/Achievement'),
+    queryField: 'name',
+    esDocumentQuery: 'achievements.id.keyword',
+    values: []
+  },
+  location: {
+    name: 'location',
+    isAttribute: true,
+    attributeName: 'location',
+    esDocumentQuery: 'attributes.attributeId.keyword',
+    esDocumentValueQuery: 'attributes.value.keyword',
+    values: []
+  },
+  isAvailable: {
+    name: 'isAvailable',
+    isAttribute: true,
+    attributeName: 'isAvailable',
+    esDocumentQuery: 'attributes.attributeId.keyword',
+    esDocumentValueQuery: 'attributes.value.keyword',
+    values: []
+  },
+  company: {
+    name: 'company',
+    isAttribute: true,
+    attributeName: 'company',
+    esDocumentQuery: 'attributes.attributeId.keyword',
+    esDocumentValueQuery: 'attributes.value.keyword',
+    values: []
+  }
+}
+
 // resource filter config
 const RESOURCE_FILTER = {
   // independent resources
@@ -209,6 +252,26 @@ function getResource (modelName) {
   } else {
     return modelName.toLowerCase()
   }
+}
+
+function getTotalCount (total) {
+  return typeof total === 'number' ? total : total.value
+}
+
+function parseUserFilter (params) {
+  const filters = {}
+  _.forOwn(params, (value, key) => {
+    key = key.toLowerCase()
+    if (USER_FILTER_TO_MODEL[key]) {
+      if (!filters[key]) {
+        filters[key] = USER_FILTER_TO_MODEL[key]
+      }
+
+      filters[key].values = value
+    }
+  })
+
+  return filters
 }
 
 /**
@@ -473,6 +536,97 @@ function buildEsQueryFromFilter (filter) {
   return setFilterValueToEsQuery(esQuery, matchField, filter.value, filter.queryField)
 }
 
+async function resolveUserFilterFromDb (filter, { handle }) {
+  const DBHelper = require('../models/index').DBHelper
+  if (filter.isAttribute) {
+    const esQueryClause = {
+      bool: {
+        filter: [],
+        should: [],
+        minimum_should_match: 0
+      }
+    }
+
+    let organizationId
+
+    // TODO Use the service method instead of raw query
+    const orgIdLookupResults = await DBHelper.find(require('../models/ExternalProfile'), [
+      `select * from DUser, ExternalProfile Where DUser.handle='${handle}' AND DUser.id = ExternalProfile.userId;`
+    ])
+
+    if (orgIdLookupResults.length > 0) {
+      organizationId = orgIdLookupResults[0].organizationId
+    }
+
+    // TODO Use the service method instead of raw query
+    const attributeIdLookupResults = await DBHelper.find(require('../models/Attribute'), [
+      'select Attribute.id from AttributeGroup, Attribute',
+      `AttributeGroup.organizationId = '${organizationId}'`,
+      'Attribute.attributeGroupId = AttributeGroup.id',
+      `Attribute.name = '${filter.attributeName}'`
+    ])
+
+    let attributeId
+    if (attributeIdLookupResults.length > 0) {
+      attributeId = attributeIdLookupResults[0].id
+    } else {
+      throw new Error(`Attribute ${filter.attributeName} is invalid for the current users organization`)
+    }
+
+    esQueryClause.bool.filter.push({
+      term: {
+        [filter.esDocumentQuery]: attributeId
+      }
+    })
+
+    if (typeof filter.values === 'object') {
+      for (const value of filter.values) {
+        esQueryClause.bool.should.push({
+          term: {
+            [filter.esDocumentValueQuery]: value
+          }
+        })
+      }
+    } else {
+      esQueryClause.bool.should.push({
+        term: {
+          [filter.esDocumentValueQuery]: filter.values
+        }
+      })
+    }
+    esQueryClause.bool.minimum_should_match = 1
+
+    return esQueryClause
+  } else {
+    const esQueryClause = {
+      bool: {
+        should: [],
+        minimum_should_match: 0
+      }
+    }
+
+    const model = filter.model
+    // TODO Use the service method instead of raw query
+    const dbQueries = [
+      `${filter.queryField} in (${filter.values.map(f => `'${f}'`).join(',')})`
+    ]
+    const results = await DBHelper.find(model, dbQueries)
+    if (results.length > 0) {
+      for (const { id } of results) {
+        esQueryClause.bool.should.push({
+          term: {
+            [filter.esDocumentQuery]: id
+          }
+        })
+      }
+      esQueryClause.bool.minimum_should_match = 1
+      return esQueryClause
+    } else {
+      throw new Error(`User filter ${filter.name} returns no data`)
+    }
+  }
+}
+
 /**
  * Resolve filter by querying ES with filter data.
  * @param filter the filter to query ES
@@ -497,10 +651,12 @@ async function resolveResFilter (filter, initialRes) {
   const esQuery = buildEsQueryFromFilter(filter)
   const result = await esClient.search(esQuery)
 
-  if (result.hits.total > 0) {
+  const numHits = getTotalCount(result.hits.total)
+
+  if (numHits > 0) {
     // this value can be array
     let value
-    if (result.hits.total === 1) {
+    if (numHits === 1) {
       value = result.hits.hits[0]._source.id
     } else {
       value = result.hits.hits.map(hit => hit._source.id)
@@ -595,6 +751,16 @@ async function searchElasticSearch (resource, ...args) {
     }
   }
 
+  const userFilters = params.enrich && resource === 'user' ? parseUserFilter(params) : []
+  const resolvedUserFilters = []
+  if (params.enrich && resource === 'user') {
+    const filterKey = Object.keys(userFilters)
+    for (const key of filterKey) {
+      const resolved = await resolveUserFilterFromDb(userFilters[key], authUser)
+      resolvedUserFilters.push(resolved)
+    }
+  }
+
   // construct ES query
   const esQuery = {
     index: doc.userField ? userDoc.index : doc.index,
@@ -619,6 +785,11 @@ async function searchElasticSearch (resource, ...args) {
 
   if (resource === 'user') {
     if (params.enrich) {
+      // apply user filters
+      if (resolvedUserFilters.length > 0) {
+        esQuery.body.query.bool.filter = resolvedUserFilters
+      }
+
       // apply resolved pre-enrich filter values
       if (enrichFilterResults.length > 0) {
         for (const filter of enrichFilterResults) {
@@ -674,8 +845,8 @@ async function searchElasticSearch (resource, ...args) {
 
   logger.debug(`ES query for search ${resource}: ${JSON.stringify(esQuery, null, 2)}`)
   const docs = await esClient.search(esQuery)
-  if (docs.hits && docs.hits.total === 0) {
-    throw new Error('No data returns from ES query')
+  if (docs.hits && getTotalCount(docs.hits.total) === 0) {
+    return { total: docs.hits.total, page: params.page, perPage: params.perPage, result: [] }
   }
 
   let result = []
