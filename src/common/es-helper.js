@@ -55,24 +55,30 @@ const USER_FILTER_TO_MODEL = {
     name: 'location',
     isAttribute: true,
     attributeName: 'location',
+    esDocumentPath: 'attributes',
     esDocumentQuery: 'attributes.attributeId.keyword',
     esDocumentValueQuery: 'attributes.value.keyword',
+    defaultSortOrder: 'asc',
     values: []
   },
   isavailable: {
     name: 'isAvailable',
     isAttribute: true,
     attributeName: 'isAvailable',
+    esDocumentPath: 'attributes',
     esDocumentQuery: 'attributes.attributeId.keyword',
     esDocumentValueQuery: 'attributes.value.keyword',
+    defaultSortOrder: 'desc', // results in ordering: true false
     values: []
   },
   company: {
     name: 'company',
     isAttribute: true,
     attributeName: 'company',
+    esDocumentPath: 'attributes',
     esDocumentQuery: 'attributes.attributeId.keyword',
     esDocumentValueQuery: 'attributes.value.keyword',
+    defaultSortOrder: 'asc',
     values: []
   }
 }
@@ -258,13 +264,48 @@ function getTotalCount (total) {
   return typeof total === 'number' ? total : total.value
 }
 
+async function getOrganizationId (handle) {
+  const DBHelper = require('../models/index').DBHelper
+
+  // TODO Use the service method instead of raw query
+  const orgIdLookupResults = await DBHelper.find(require('../models/ExternalProfile'), [
+    'select * from DUser, ExternalProfile',
+    `DUser.handle='${handle}'`,
+    'DUser.id = ExternalProfile.userId'
+  ])
+
+  if (orgIdLookupResults.length > 0) {
+    return orgIdLookupResults[0].organizationId
+  }
+
+  throw new Error('User doesn\'t belong to any organization')
+}
+
+async function getAttributeId (organizationId, attributeName) {
+  const DBHelper = require('../models/index').DBHelper
+
+  // TODO Use the service method instead of raw query
+  const attributeIdLookupResults = await DBHelper.find(require('../models/Attribute'), [
+    'select Attribute.id from AttributeGroup, Attribute',
+    `AttributeGroup.organizationId = '${organizationId}'`,
+    'Attribute.attributeGroupId = AttributeGroup.id',
+    `Attribute.name = '${attributeName}'`
+  ])
+
+  if (attributeIdLookupResults.length > 0) {
+    return attributeIdLookupResults[0].id
+  }
+
+  throw new Error(`Attribute ${attributeName} is invalid for the current users organization`)
+}
+
 function parseUserFilter (params) {
   const filters = {}
   _.forOwn(params, (value, key) => {
     key = key.toLowerCase()
     if (USER_FILTER_TO_MODEL[key]) {
       if (!filters[key]) {
-        filters[key] = USER_FILTER_TO_MODEL[key]
+        filters[key] = _.clone(USER_FILTER_TO_MODEL[key])
       }
 
       filters[key].values = _.isString(value) ? [value] : value
@@ -536,8 +577,9 @@ function buildEsQueryFromFilter (filter) {
   return setFilterValueToEsQuery(esQuery, matchField, filter.value, filter.queryField)
 }
 
-async function resolveUserFilterFromDb (filter, { handle }) {
+async function resolveUserFilterFromDb (filter, { handle }, organizationId) {
   const DBHelper = require('../models/index').DBHelper
+
   if (filter.isAttribute) {
     const esQueryClause = {
       bool: {
@@ -547,31 +589,11 @@ async function resolveUserFilterFromDb (filter, { handle }) {
       }
     }
 
-    let organizationId
-
-    // TODO Use the service method instead of raw query
-    const orgIdLookupResults = await DBHelper.find(require('../models/ExternalProfile'), [
-      `select * from DUser, ExternalProfile Where DUser.handle='${handle}' AND DUser.id = ExternalProfile.userId;`
-    ])
-
-    if (orgIdLookupResults.length > 0) {
-      organizationId = orgIdLookupResults[0].organizationId
+    if (organizationId == null) {
+      organizationId = await getOrganizationId(handle)
     }
 
-    // TODO Use the service method instead of raw query
-    const attributeIdLookupResults = await DBHelper.find(require('../models/Attribute'), [
-      'select Attribute.id from AttributeGroup, Attribute',
-      `AttributeGroup.organizationId = '${organizationId}'`,
-      'Attribute.attributeGroupId = AttributeGroup.id',
-      `Attribute.name = '${filter.attributeName}'`
-    ])
-
-    let attributeId
-    if (attributeIdLookupResults.length > 0) {
-      attributeId = attributeIdLookupResults[0].id
-    } else {
-      throw new Error(`Attribute ${filter.attributeName} is invalid for the current users organization`)
-    }
+    const attributeId = await getAttributeId(organizationId, filter.attributeName)
 
     esQueryClause.bool.filter.push({
       term: {
@@ -596,7 +618,12 @@ async function resolveUserFilterFromDb (filter, { handle }) {
     }
     esQueryClause.bool.minimum_should_match = 1
 
-    return esQueryClause
+    return {
+      nested: {
+        path: filter.esDocumentPath,
+        query: esQueryClause
+      }
+    }
   } else {
     const esQueryClause = {
       bool: {
@@ -625,6 +652,37 @@ async function resolveUserFilterFromDb (filter, { handle }) {
       throw new Error(`User filter ${filter.name} returns no data`)
     }
   }
+}
+
+async function resolveSortClauseFromDb (orderBy, { handle }, organizationId) {
+  if (orderBy === 'name') {
+    return [{
+      'firstName.keyword': 'asc'
+    }, {
+      'lastName.keyword': 'asc'
+    }]
+  }
+
+  const attributes = _.filter(USER_FILTER_TO_MODEL, d => d.isAttribute)
+  for (const attribute of attributes) {
+    if (orderBy === attribute.name) {
+      if (organizationId == null) organizationId = await getOrganizationId(handle)
+
+      return [{
+        [attribute.esDocumentValueQuery]: {
+          order: attribute.defaultSortOrder || 'asc',
+          nested: {
+            path: attribute.esDocumentPath,
+            filter: {
+              term: { [`${attribute.esDocumentQuery}`]: await getAttributeId(organizationId, attribute.attributeName) }
+            }
+          }
+        }
+      }]
+    }
+  }
+
+  throw new Error(`Invalid orderBy clause encountered ${orderBy}.`)
 }
 
 /**
@@ -725,6 +783,8 @@ async function searchElasticSearch (resource, ...args) {
     params.perPage = config.PAGE_SIZE
   }
 
+  let sortClause = []
+
   const preResFilters = parseResourceFilter(resource, params, false)
   const preResFilterResults = []
   // resolve pre resource filters
@@ -755,9 +815,14 @@ async function searchElasticSearch (resource, ...args) {
   const resolvedUserFilters = []
   if (params.enrich && resource === 'user') {
     const filterKey = Object.keys(userFilters)
+    let authUserOrganizationId // Fetch and hold organizationId so subsequent filter resolution needn't make the same DB query to fetch it again
     for (const key of filterKey) {
-      const resolved = await resolveUserFilterFromDb(userFilters[key], authUser)
+      const resolved = await resolveUserFilterFromDb(userFilters[key], authUser, authUserOrganizationId)
       resolvedUserFilters.push(resolved)
+    }
+
+    if (params.orderBy) {
+      sortClause = sortClause.concat(await resolveSortClauseFromDb(params.orderBy, authUser, authUserOrganizationId))
     }
   }
 
@@ -774,7 +839,8 @@ async function searchElasticSearch (resource, ...args) {
           should: [],
           minimum_should_match: 0
         }
-      }
+      },
+      sort: sortClause
     }
   }
 

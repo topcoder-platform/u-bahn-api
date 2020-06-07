@@ -32,6 +32,22 @@ async function insertIntoES (modelName, body) {
       id: body.userId
     })
 
+    if (userResource.nested === true && userResource.mappingCreated !== true) {
+      await client.indices.putMapping({
+        index: topResources.user.index,
+        type: topResources.user.type,
+        include_type_name: true,
+        body: {
+          properties: {
+            [userResource.propertyName]: {
+              type: 'nested'
+            }
+          }
+        }
+      })
+      userResource.mappingCreated = true
+    }
+
     const relateId = body[userResource.relateKey]
 
     if (!user[userResource.propertyName]) {

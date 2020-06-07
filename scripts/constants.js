@@ -51,7 +51,8 @@ const userResources = {
   },
   userattribute: {
     propertyName: config.get('ES.DOCUMENTS.userattribute.userField'),
-    relateKey: 'attributeId'
+    relateKey: 'attributeId',
+    nested: true
   },
   userrole: {
     propertyName: config.get('ES.DOCUMENTS.userrole.userField'),
