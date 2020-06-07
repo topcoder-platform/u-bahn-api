@@ -57,23 +57,50 @@ paths:
         description: "Filter by user handle"
         required: false
         type: "string"
-      - name: "groupId"
+      - name: "enrich"
         in: "query"
-        description: "Filter by user group Id"
+        description: "Enrich all child resources under the user"
         required: false
+        type: "boolean"
+      - name: "skill[]"
+        in: "query"
+        type: "array"
+        description: "The skill name to filter users with. Specify multiple times to provide multiple values"
+        items:
+          type: "string"
+        collectionFormat: multi
+      - name: "achievement[]"
+        in: "query"
+        type: "array"
+        description: "The achievement name to filter users with. Specify multiple times to provide multiple values"
+        items:
+          type: "string"
+        collectionFormat: multi
+      - name: "location[]"
+        in: "query"
+        type: "array"
+        description: "The location name to filter users with. Specify multiple times to provide multiple values. `location` here is an attribute of the user"
+        items:
+          type: "string"
+        collectionFormat: multi
+      - name: "isAvailable"
+        in: "query"
+        type: "boolean"
+        description: "`true` corresponds to users that are available. `false` corresponds to users that are not available. `isAvailable` here is an attribute of the user"
+        items:
+          type: "string"
+        collectionFormat: multi
+      - name: "orderBy"
+        in: "query"
         type: "string"
-        format: "UUID"
+        description: "Sort order"
+        enum: ["name", "location", "isAvailable"]
       - name: "roleId"
         in: "query"
         description: "Filter by user roleId"
         required: false
         type: "string"
         format: "UUID"
-      - name: "enrich"
-        in: "query"
-        description: "Enrich all child resources under the user"
-        required: false
-        type: "boolean"
       - name: "userSkill.skillId"
         in: "query"
         required: false
@@ -219,23 +246,50 @@ paths:
         description: "Filter by user handle"
         required: false
         type: "string"
-      - name: "groupId"
+      - name: "enrich"
         in: "query"
-        description: "Filter by user group Id"
+        description: "Enrich all child resources under the user"
         required: false
+        type: "boolean"
+      - name: "skill[]"
+        in: "query"
+        type: "array"
+        description: "The skill name to filter users with. Specify multiple times to provide multiple values"
+        items:
+          type: "string"
+        collectionFormat: multi
+      - name: "achievement[]"
+        in: "query"
+        type: "array"
+        description: "The achievement name to filter users with. Specify multiple times to provide multiple values"
+        items:
+          type: "string"
+        collectionFormat: multi
+      - name: "location[]"
+        in: "query"
+        type: "array"
+        description: "The location name to filter users with. Specify multiple times to provide multiple values. `location` here is an attribute of the user"
+        items:
+          type: "string"
+        collectionFormat: multi
+      - name: "isAvailable"
+        in: "query"
+        type: "boolean"
+        description: "`true` corresponds to users that are available. `false` corresponds to users that are not available. `isAvailable` here is an attribute of the user"
+        items:
+          type: "string"
+        collectionFormat: multi
+      - name: "orderBy"
+        in: "query"
         type: "string"
-        format: "UUID"
+        description: "Sort order"
+        enum: ["name", "location", "isAvailable"]
       - name: "roleId"
         in: "query"
         description: "Filter by user roleId"
         required: false
         type: "string"
         format: "UUID"
-      - name: "enrich"
-        in: "query"
-        description: "Enrich all child resources under the user"
-        required: false
-        type: "boolean"
       - name: "userSkill.skillId"
         in: "query"
         required: false
