@@ -181,7 +181,9 @@ function injectSearchMeta (req, res, result) {
     return
   }
 
-  const totalPages = Math.ceil(result.total / result.perPage)
+  const resultTotal = _.isNumber(result.total) ? result.total : result.total.value;
+
+  const totalPages = Math.ceil(resultTotal / result.perPage)
   if (result.page > 1) {
     res.set('X-Prev-Page', +result.page - 1)
   }
@@ -190,7 +192,7 @@ function injectSearchMeta (req, res, result) {
   }
   res.set('X-Page', result.page)
   res.set('X-Per-Page', result.perPage)
-  res.set('X-Total', result.total)
+  res.set('X-Total', resultTotal)
   res.set('X-Total-Pages', totalPages)
   // set Link header
   if (totalPages > 0) {
