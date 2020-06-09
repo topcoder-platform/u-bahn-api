@@ -1008,8 +1008,12 @@ function wrapElasticSearchOp (methods, Model) {
         let result = await func(...args)
         // remove action returns undefined, pass id to elasticsearch
         if (func.name === 'remove') {
-          result = {
-            id: args[0]
+          if (SUB_DOCUMENTS[resource]) {
+            result = _.assign({}, args[2])
+          } else {
+            result = {
+              id: args[0]
+            }
           }
         }
         try {
