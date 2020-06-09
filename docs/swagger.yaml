@@ -865,6 +865,15 @@ paths:
       parameters:
       - $ref: '#/parameters/page'
       - $ref: '#/parameters/perPage'
+      - name: "skillProviderId"
+        in: "query"
+        description: "The referenced skill provider id"
+        type: "string"
+        format: "UUID"
+      - name: "externalId"
+        in: "query"
+        description: "The external id of the skill"
+        type: "string"
       responses:
         "200":
           description: "OK - the request was successful"
@@ -890,7 +899,18 @@ paths:
         \ application.\n\n**Security** - Note that for non-admin users, this endpoint\
         \ will only return entities that\nthe user has created.\n"
       operationId: "skillsHEAD"
-      parameters: []
+      parameters:
+      - $ref: '#/parameters/page'
+      - $ref: '#/parameters/perPage'
+      - name: "skillProviderId"
+        in: "query"
+        description: "The referenced skill provider id"
+        type: "string"
+        format: "UUID"
+      - name: "externalId"
+        in: "query"
+        description: "The external id of the skill"
+        type: "string"
       responses:
         "200":
           description: "Success response"
@@ -3790,6 +3810,11 @@ definitions:
           type: "string"
           format: "UUID"
           description: "The Skill id."
+      example:
+        certifierId: "certifierId"
+        certifiedDate: "2000-01-23T04:56:07.000+00:00"
+        metricValue: "metricValue"
+        skillId: "string"
     - $ref: "#/definitions/UserSkillUpdateRequestBody"
   UserSkillUpdateRequestBody:
     type: "object"

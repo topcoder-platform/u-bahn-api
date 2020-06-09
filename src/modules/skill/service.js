@@ -20,7 +20,18 @@ const methods = helper.getServiceMethods(
     externalId: joi.string()
   },
   {},
-  async () => [])
+  async query => {
+    const dbQueries = []
+    if (query.externalId) {
+      dbQueries.push(`externalId like '%${query.externalId}%'`)
+    }
+    if (query.skillProviderId) {
+      dbQueries.push(`skillProviderId like '%${query.skillProviderId}%'`)
+    }
+    return dbQueries
+  },
+  [['skillProviderId', 'externalId']]
+)
 
 module.exports = {
   ...methods
