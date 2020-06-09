@@ -649,7 +649,7 @@ async function resolveUserFilterFromDb (filter, { handle }, organizationId) {
       esQueryClause.bool.minimum_should_match = 1
       return esQueryClause
     } else {
-      throw new Error(`User filter ${filter.name} returns no data`)
+      throw new Error(`Lookup data of type ${filter.name} with one or more value(s) in (${filter.values.join(', ')}) does not exist. Cannot filter records using it as reference`)
     }
   }
 }
