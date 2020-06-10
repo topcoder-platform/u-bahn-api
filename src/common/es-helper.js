@@ -1037,6 +1037,19 @@ function wrapElasticSearchOp (methods, Model) {
   })
 }
 
+async function searchUsers (filter) {
+  // Placeholder for searching users
+  return { total: 0, result: [] }
+}
+
+async function searchAttributeValues ({ attributeId, attributeValue }) {
+  // Placeholder for searching for attribute values
+  // Return maximum 5 values at a time
+  return { total: 0, result: [] }
+}
+
 module.exports = {
-  wrapElasticSearchOp
+  wrapElasticSearchOp,
+  searchUsers,
+  searchAttributeValues
 }

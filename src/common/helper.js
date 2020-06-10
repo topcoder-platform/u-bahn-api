@@ -181,7 +181,7 @@ function injectSearchMeta (req, res, result) {
     return
   }
 
-  const resultTotal = _.isNumber(result.total) ? result.total : result.total.value;
+  const resultTotal = _.isNumber(result.total) ? result.total : result.total.value
 
   const totalPages = Math.ceil(resultTotal / result.perPage)
   if (result.page > 1) {

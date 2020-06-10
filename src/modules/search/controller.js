@@ -1,0 +1,27 @@
+/**
+ * The search controller
+ */
+const esHelper = require('../../common/es-helper')
+const { injectSearchMeta } = require('../../common/helper')
+
+/**
+ * Search for users. Returns enriched users
+ */
+async function searchUsers (req, res) {
+  const result = await esHelper.searchUsers(req.body)
+  injectSearchMeta(req, res, result)
+  res.send(result.result)
+}
+
+/**
+ * Search for attribute values
+ */
+async function searchAttributeValues (req, res) {
+  const result = await esHelper.searchAttributeValues(req.query)
+  res.send(result.result)
+}
+
+module.exports = {
+  searchUsers,
+  searchAttributeValues
+}
