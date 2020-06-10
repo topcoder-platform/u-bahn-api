@@ -7,6 +7,7 @@
     "updatedBy": "tc-Admin",
     "userId": "ce348067-e73f-49d7-af72-fcf11a6c88bf",
     "organizationId": "36ed815b-3da1-49f1-a043-aaed0a4e81ad",
+    "externalId": "1234567",
     "uri": "http://www.new.com/new-uri"
   },
   {
@@ -17,6 +18,7 @@
     "updatedBy": "tc-Admin",
     "userId": "3f64739e-10bf-42ca-8314-8aea0245cd0f",
     "organizationId": "36ed815b-3da1-49f1-a043-aaed0a4e81ad",
+    "externalId": "8547899",
     "uri": "http://www.new.com/new-uri"
   }
 ]
