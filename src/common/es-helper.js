@@ -34,6 +34,13 @@ const MODEL_TO_RESOURCE = {
   UsersRole: 'userrole'
 }
 
+const USER_ATTRIBUTE = {
+  esDocumentPath: 'attributes',
+  esDocumentQuery: 'attributes.attributeId.keyword',
+  esDocumentValueStringQuery: 'attributes.value',
+  esDocumentValueQuery: 'attributes.value.keyword'
+}
+
 const USER_FILTER_TO_MODEL = {
   skill: {
     name: 'skill',
@@ -43,6 +50,7 @@ const USER_FILTER_TO_MODEL = {
     esDocumentQuery: 'skills.skillId.keyword',
     values: []
   },
+  get skills () { return this.skill },
   achievement: {
     name: 'achievement',
     isAttribute: false,
@@ -51,23 +59,25 @@ const USER_FILTER_TO_MODEL = {
     esDocumentQuery: 'achievements.id.keyword',
     values: []
   },
+  get achievements () { return this.achievement },
   location: {
     name: 'location',
     isAttribute: true,
     attributeName: 'location',
-    esDocumentPath: 'attributes',
-    esDocumentQuery: 'attributes.attributeId.keyword',
-    esDocumentValueQuery: 'attributes.value.keyword',
+    esDocumentPath: USER_ATTRIBUTE.esDocumentPath,
+    esDocumentQuery: USER_ATTRIBUTE.esDocumentQuery,
+    esDocumentValueQuery: USER_ATTRIBUTE.esDocumentValueQuery,
     defaultSortOrder: 'asc',
     values: []
   },
+  get locations () { return this.location },
   isavailable: {
     name: 'isAvailable',
     isAttribute: true,
     attributeName: 'isAvailable',
-    esDocumentPath: 'attributes',
-    esDocumentQuery: 'attributes.attributeId.keyword',
-    esDocumentValueQuery: 'attributes.value.keyword',
+    esDocumentPath: USER_ATTRIBUTE.esDocumentPath,
+    esDocumentQuery: USER_ATTRIBUTE.esDocumentQuery,
+    esDocumentValueQuery: USER_ATTRIBUTE.esDocumentValueQuery,
     defaultSortOrder: 'desc', // results in ordering: true false
     values: []
   },
@@ -75,9 +85,9 @@ const USER_FILTER_TO_MODEL = {
     name: 'company',
     isAttribute: true,
     attributeName: 'company',
-    esDocumentPath: 'attributes',
-    esDocumentQuery: 'attributes.attributeId.keyword',
-    esDocumentValueQuery: 'attributes.value.keyword',
+    esDocumentPath: USER_ATTRIBUTE.esDocumentPath,
+    esDocumentQuery: USER_ATTRIBUTE.esDocumentQuery,
+    esDocumentValueQuery: USER_ATTRIBUTE.esDocumentValueQuery,
     defaultSortOrder: 'asc',
     values: []
   }
@@ -563,6 +573,43 @@ function setFilterValueToEsQuery (esQuery, matchField, filterValue, queryField) 
 }
 
 /**
+ * Set attribute filters to an ES query to filter users by attributes
+ *
+ * @param filterClause the filter clause of the ES query
+ * @param attributes array of attribute id and value objects
+ */
+function setUserAttributesFiltersToEsQuery (filterClause, attributes) {
+  for (const attribute of attributes) {
+    if (typeof attribute.value !== 'object') {
+      attribute.value = [attribute.value]
+    }
+
+    filterClause.push({
+      nested: {
+        path: USER_ATTRIBUTE.esDocumentPath,
+        query: {
+          bool: {
+            filter: [
+              {
+                term: {
+                  [USER_ATTRIBUTE.esDocumentQuery]: attribute.id
+                }
+              }
+            ],
+            should: attribute.value.map(val => ({
+              term: {
+                [USER_ATTRIBUTE.esDocumentValueQuery]: val
+              }
+            })),
+            minimum_should_match: 1
+          }
+        }
+      }
+    })
+  }
+}
+
+/**
  * Build ES query from given filter.
  * @param filter
  * @returns {{}} created ES query object
@@ -585,6 +632,72 @@ function buildEsQueryFromFilter (filter) {
 
   const matchField = `${filter.queryField}`
   return setFilterValueToEsQuery(esQuery, matchField, filter.value, filter.queryField)
+}
+
+/**
+ * Build ES Query to get attribute values by attributeId
+ * @param attributeId the attribute whose values to fetch
+ * @param attributeValue only fetch values that are case insensitive substrings of attributeValue
+ * @param page result page, defaults to 1
+ * @param perPage maximum number of matches to return, defaults to 5
+ * @return {{}} created ES query object
+ */
+function buildEsQueryToGetAttributeValues (attributeId, attributeValue, page = 1, perPage = 5) {
+  const queryDoc = DOCUMENTS.user
+
+  const matchConditions = [{
+    match: {
+      [USER_ATTRIBUTE.esDocumentQuery]: attributeId
+    }
+  }]
+
+  if (attributeValue != null) {
+    matchConditions.push({
+      query_string: {
+        default_field: USER_ATTRIBUTE.esDocumentValueStringQuery,
+        // minimum_should_match: `100%`, /* disallow misspellings */
+        query: `*${attributeValue}*`
+      }
+    })
+  }
+
+  const esQuery = {
+    index: queryDoc.index,
+    type: queryDoc.type,
+    body: {
+      query: {
+        nested: {
+          path: USER_ATTRIBUTE.esDocumentPath,
+          query: {
+            bool: {
+              must: matchConditions
+            }
+          },
+          inner_hits: {} // Get the attriute values
+        }
+      },
+      sort: [{
+        [USER_ATTRIBUTE.esDocumentValueQuery]: {
+          order: 'asc',
+          nested: {
+            path: USER_ATTRIBUTE.esDocumentPath,
+            filter: {
+              term: {
+                [USER_ATTRIBUTE.esDocumentQuery]: attributeId
+              }
+            }
+          }
+        }
+      }],
+      size: perPage,
+      from: (page - 1) * perPage,
+      _source: {
+        excludes: '*' // Parent document matches aren't required
+      }
+    }
+  }
+
+  return esQuery
 }
 
 async function resolveUserFilterFromDb (filter, { handle }, organizationId) {
@@ -1037,15 +1150,88 @@ function wrapElasticSearchOp (methods, Model) {
   })
 }
 
-async function searchUsers (filter) {
-  // Placeholder for searching users
-  return { total: 0, result: [] }
+async function searchUsers (authUser, filter, params) {
+  const { checkIfExists, getAuthUser } = require('./helper')
+  const queryDoc = DOCUMENTS.user
+
+  if (!params.page) {
+    params.page = 1
+  }
+  if (!params.perPage) {
+    params.perPage = config.PAGE_SIZE
+  }
+
+  let sortClause = []
+
+  const userFilters = parseUserFilter(filter)
+  const resolvedUserFilters = []
+
+  let authUserOrganizationId
+  const filterKey = Object.keys(userFilters)
+  for (const key of filterKey) {
+    const resolved = await resolveUserFilterFromDb(userFilters[key], authUser, authUserOrganizationId)
+    resolvedUserFilters.push(resolved)
+  }
+
+  if (params.orderBy) {
+    sortClause = sortClause.concat(await resolveSortClauseFromDb(params.orderBy, authUser, authUserOrganizationId))
+  }
+
+  const esQuery = {
+    index: queryDoc.index,
+    type: queryDoc.type,
+    size: params.perPage,
+    from: (params.page - 1) * params.perPage,
+    body: {
+      query: {
+        bool: {
+          must: [],
+          should: [],
+          filter: [],
+          minimum_should_match: 0
+        }
+      },
+      sort: sortClause
+    }
+  }
+
+  // for non-admin, only return entities that the user created
+  if (authUser.roles && !checkIfExists(authUser.roles, [appConst.UserRoles.admin, appConst.UserRoles.administrator])) {
+    setFilterValueToEsQuery(esQuery, 'createdBy', getAuthUser(authUser), 'createdBy')
+  }
+
+  if (resolvedUserFilters.length > 0) {
+    esQuery.body.query.bool.filter = resolvedUserFilters
+  }
+
+  if (filter.attributes != null) {
+    setUserAttributesFiltersToEsQuery(esQuery.body.query.bool.filter, filter.attributes)
+  }
+
+  logger.debug(`ES query for searching users: ${JSON.stringify(esQuery, null, 2)}`)
+
+  const docs = await esClient.search(esQuery)
+  const users = docs.hits.hits.map(hit => hit._source)
+  const result = await enrichUsers(users)
+  // enrich groups
+  for (const user of users) {
+    const groups = await groupApi.getGroups('user', user.id)
+    user.groups = groups
+  }
+
+  return { total: result.length, page: params.page, perPage: params.perPage, result }
 }
 
 async function searchAttributeValues ({ attributeId, attributeValue }) {
-  // Placeholder for searching for attribute values
-  // Return maximum 5 values at a time
-  return { total: 0, result: [] }
+  const esQuery = buildEsQueryToGetAttributeValues(attributeId, attributeValue)
+  logger.debug(`ES query for searching attribute values: ${JSON.stringify(esQuery, null, 2)}`)
+
+  const esResult = await esClient.search(esQuery)
+  const result = esResult.hits.hits.map(hit => {
+    return hit.inner_hits.attributes.hits.hits[0]._source
+  })
+
+  return { total: result.length, result: result }
 }
 
 module.exports = {

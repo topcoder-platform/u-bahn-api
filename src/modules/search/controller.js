@@ -8,7 +8,7 @@ const { injectSearchMeta } = require('../../common/helper')
  * Search for users. Returns enriched users
  */
 async function searchUsers (req, res) {
-  const result = await esHelper.searchUsers(req.body)
+  const result = await esHelper.searchUsers(req.auth, req.body, req.query)
   injectSearchMeta(req, res, result)
   res.send(result.result)
 }

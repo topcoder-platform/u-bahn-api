@@ -1,10 +1,119 @@
 {
 	"info": {
-		"_postman_id": "8248607f-018f-4ac2-b088-edb49f421ff0",
+		"_postman_id": "5c139c1e-e3f2-4002-a278-e03c7b7dc97d",
 		"name": "UBahn_API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
+		{
+			"name": "search",
+			"item": [
+				{
+					"name": "{{HOST}}/search/userAttributes",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ba04f45f-dbdf-4398-9750-3eae3161dedf",
+								"exec": [
+									"var rsp = pm.response.json();",
+									"if(rsp.id) pm.environment.set(\"userId\", rsp.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{HOST}}/search/userAttributes?attributeId=c44d4bee-1356-46d6-9f1f-991936dec297&attributeValue=support",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"search",
+								"userAttributes"
+							],
+							"query": [
+								{
+									"key": "attributeId",
+									"value": "c44d4bee-1356-46d6-9f1f-991936dec297"
+								},
+								{
+									"key": "attributeValue",
+									"value": "support"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{HOST}}/search/users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "64aeda82-1df8-41c7-80c9-d5cf8423fdf9",
+								"exec": [
+									"var rsp = pm.response.json();",
+									"if(rsp.id) pm.environment.set(\"userId\", rsp.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"isAvailable\": \"false\",\n  \"locations\": [\"New York\", \"London\"],\n  \"skills\": [\"Angular (Web Framework)\", \"Python (Programming Language)\"],\n  \"achievements\": [\"Upwork\", \"Topcoder\"],\n  \"attributes\": [{\n    \"id\": \"c44d4bee-1356-46d6-9f1f-991936dec297\",\n    \"value\": [\"Senior Consultant\", \"IT Support Specialist\", \"Consultant\"]\n  }, {\n    \"id\": \"f3fd623f-a613-4e3c-bf2f-9df529ff4317\",\n    \"value\": [\"Bulwark International Inc\"]\n  }]\n}",
+							"options": {
+								"raw": {}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/search/users",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"search",
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
 		{
 			"name": "users",
 			"item": [
@@ -14,7 +123,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "b469546c-8293-4bb3-afb2-45e14b093bc8",
+								"id": "e4f1d08d-a9b5-4efe-b3d9-67d3111608c1",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if(rsp.id) pm.environment.set(\"userId\", rsp.id);"
@@ -372,7 +481,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "d8f3f5d1-c62b-4dde-ae13-a6c644917400",
+								"id": "816c38da-3158-4d9d-828e-bb0644178a98",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if(rsp.id) pm.environment.set(\"roleId\", rsp.id);"
@@ -607,7 +716,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "4a4fc48b-a080-4ba1-985f-233099d955ca",
+								"id": "7671acab-f1f8-4c29-9824-f1f2bd570028",
 								"exec": [
 									""
 								],
@@ -849,7 +958,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "b4080e98-c6a7-452a-9f42-2b0d78b606d7",
+								"id": "5b67a6ba-63b6-4991-a5ea-d881ea802083",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if(rsp.id) pm.environment.set(\"organizationId\", rsp.id);"
@@ -1084,7 +1193,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "d5d06aca-cc7c-4a0c-a602-44b0768bf509",
+								"id": "88d7b18f-c5e1-4577-9d03-a93d9f9d5c7e",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if(rsp.id) pm.environment.set(\"skillsProviderId\", rsp.id);"
@@ -1319,7 +1428,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "79033f51-2602-4303-bd92-898814d4b6fd",
+								"id": "92b83849-961d-4ad3-bac2-d7f457e5fbd7",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if(rsp.id) pm.environment.set(\"skillId\", rsp.id);"
@@ -1555,7 +1664,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "c864cd20-ea0c-40c6-9c6b-f50dbbea2cfb",
+								"id": "d5c59be3-63df-485b-a889-aa4d00c90571",
 								"exec": [
 									""
 								],
@@ -1803,7 +1912,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "a61bd92d-8189-4005-ae58-d28b4b475aca",
+								"id": "d8143ed1-b600-4ef3-845c-396ed909e821",
 								"exec": [
 									""
 								],
@@ -2051,7 +2160,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "0cd87552-e2d3-4510-8ad3-a2bd411d06e2",
+								"id": "6c13436d-c2ee-4867-98ac-eb513e9edb3e",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if(rsp.id) pm.environment.set(\"achievementsProviderId\", rsp.id);"
@@ -2286,7 +2395,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "0183c828-5145-468a-b2ce-29b39722f573",
+								"id": "4453dd7e-65fc-47c0-9081-7a78a6ed1446",
 								"exec": [
 									""
 								],
@@ -2535,7 +2644,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "5117cfff-e15d-4ce9-958b-6f0ece556de2",
+								"id": "d34d4953-a1f9-41ef-a9dd-6fa7c9431c3f",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if (rsp.id) pm.environment.set(\"attributeGroupId\", rsp.id);"
@@ -2776,7 +2885,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "fff8a571-407c-42e9-b7b6-fe50896b0d92",
+								"id": "71539226-1b42-4aa3-9f51-d5b488c817d2",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if (rsp.id) pm.environment.set(\"attributeId\", rsp.id);"
@@ -3016,7 +3125,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "9f864ea3-c055-4ff1-97b8-1c80094d3710",
+								"id": "5c987711-36d9-4472-b6d0-db4edc47685e",
 								"exec": [
 									""
 								],
