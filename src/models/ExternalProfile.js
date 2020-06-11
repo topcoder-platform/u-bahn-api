@@ -8,6 +8,7 @@ class ExternalProfile extends RecordObject {
     super()
     this.userId = null
     this.organizationId = null
+    this.externalId = null
     this.uri = null
   }
 }
