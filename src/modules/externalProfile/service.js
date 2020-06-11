@@ -33,7 +33,7 @@ const methods = helper.getServiceMethods(
       dbQueries.push(`Organization.name like '%${query.organizationName}%'`)
     }
     if (query.externalId) {
-      dbQueries.push(`Organization.externalId like '%${query.externalId}%'`)
+      dbQueries.push(`ExternalProfile.externalId like '%${query.externalId}%'`)
     }
 
     return dbQueries
