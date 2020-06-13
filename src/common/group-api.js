@@ -2,6 +2,8 @@ const config = require('config')
 const _ = require('lodash')
 const axios = require('axios')
 const m2mAuth = require('tc-core-library-js').auth.m2m
+const logger = require('./logger')
+
 const m2m = m2mAuth(_.pick(config, ['AUTH0_URL', 'AUTH0_AUDIENCE', 'TOKEN_CACHE_TIME', 'AUTH0_PROXY_SERVER_URL']))
 
 /**
@@ -14,13 +16,19 @@ async function getM2Mtoken () {
 
 async function getGroups (universalUID) {
   const m2mToken = await getM2Mtoken()
-  const resp = await axios({
-    method: 'get',
-    params: { universalUID },
-    url: config.GROUP_API_URL,
-    headers: { Authorization: `Bearer ${m2mToken}` }
-  })
-  return resp.data
+
+  try {
+    const resp = await axios({
+      method: 'get',
+      params: { universalUID },
+      url: config.GROUP_API_URL,
+      headers: { Authorization: `Bearer ${m2mToken}` }
+    })
+    return resp.data
+  } catch (error) {
+    logger.error(error)
+    return []
+  }
 }
 
 module.exports = {
