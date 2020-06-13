@@ -12,11 +12,11 @@ async function getM2Mtoken () {
   return m2m.getMachineToken(config.AUTH0_CLIENT_ID, config.AUTH0_CLIENT_SECRET)
 }
 
-async function getGroups (membershipType, memberId) {
+async function getGroups (universalUID) {
   const m2mToken = await getM2Mtoken()
   const resp = await axios({
     method: 'get',
-    params: { membershipType, memberId },
+    params: { universalUID },
     url: config.GROUP_API_URL,
     headers: { Authorization: `Bearer ${m2mToken}` }
   })

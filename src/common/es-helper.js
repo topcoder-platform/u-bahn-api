@@ -466,7 +466,7 @@ async function getFromElasticSearch (resource, ...args) {
 
   if (params.enrich && resource === 'user') {
     const user = await enrichUser(result)
-    const groups = await groupApi.getGroups('user', user.id)
+    const groups = await groupApi.getGroups(user.id)
     user.groups = groups
     return user
   } else if (subDoc) {
@@ -1044,7 +1044,7 @@ async function searchElasticSearch (resource, ...args) {
     result = await enrichUsers(users)
     // enrich groups
     for (const user of users) {
-      const groups = await groupApi.getGroups('user', user.id)
+      const groups = await groupApi.getGroups(user.id)
       user.groups = groups
     }
   } else if (topSubDoc) {
@@ -1215,7 +1215,7 @@ async function searchUsers (authUser, filter, params) {
   const result = await enrichUsers(users)
   // enrich groups
   for (const user of users) {
-    const groups = await groupApi.getGroups('user', user.id)
+    const groups = await groupApi.getGroups(user.id)
     user.groups = groups
   }
 
