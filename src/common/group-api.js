@@ -20,7 +20,7 @@ async function getGroups (universalUID) {
   try {
     const resp = await axios({
       method: 'get',
-      params: { universalUID },
+      params: { universalUID, membershipType: 'user' },
       url: config.GROUP_API_URL,
       headers: { Authorization: `Bearer ${m2mToken}` }
     })
