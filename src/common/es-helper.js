@@ -56,6 +56,7 @@ const USER_FILTER_TO_MODEL = {
     isAttribute: false,
     model: require('../models/Achievement'),
     queryField: 'name',
+    esDocumentValueQuery: 'achievements.name',
     esDocumentQuery: 'achievements.id.keyword',
     values: []
   },
@@ -610,6 +611,64 @@ function setUserAttributesFiltersToEsQuery (filterClause, attributes) {
 }
 
 /**
+ * Get skillIds matching the search keyword
+ *
+ * @param keyword the search keyword
+ * @returns array of skillIds
+ */
+async function searchSkills (keyword) {
+  const queryDoc = DOCUMENTS.skill
+  const esQuery = {
+    index: queryDoc.index,
+    type: queryDoc.type,
+    body: {
+      query: {
+        query_string: {
+          default_field: 'name',
+          query: `*${keyword}*`
+        }
+      },
+      _source: 'id'
+    }
+  }
+
+  logger.debug(`ES query for searching skills: ${JSON.stringify(esQuery, null, 2)}`)
+  const results = await esClient.search(esQuery)
+  return results.hits.hits.map(hit => hit._source.id)
+}
+
+async function setUserSearchClausesToEsQuery (boolClause, keyword) {
+  const skillIds = await searchSkills(keyword)
+
+  boolClause.should.push({
+    nested: {
+      path: USER_ATTRIBUTE.esDocumentPath,
+      query: {
+        query_string: {
+          query: `*${keyword}*`,
+          fields: [USER_ATTRIBUTE.esDocumentValueStringQuery]
+        }
+      }
+    }
+  }, {
+    query_string: {
+      query: `*${keyword}*`,
+      fields: [USER_FILTER_TO_MODEL.achievement.esDocumentValueQuery]
+    }
+  })
+
+  if (skillIds.length > 0) {
+    boolClause.should.push({
+      terms: {
+        [USER_FILTER_TO_MODEL.skill.esDocumentQuery]: skillIds
+      }
+    })
+  }
+
+  boolClause.minimum_should_match = 1
+}
+
+/**
  * Build ES query from given filter.
  * @param filter
  * @returns {{}} created ES query object
@@ -651,7 +710,7 @@ function buildEsQueryToGetAttributeValues (attributeId, attributeValue, page = 1
     }
   }]
 
-  if (attributeValue != null) {
+  if (attributeValue !== null) {
     matchConditions.push({
       query_string: {
         default_field: USER_ATTRIBUTE.esDocumentValueStringQuery,
@@ -1202,6 +1261,10 @@ async function searchUsers (authUser, filter, params) {
 
   if (resolvedUserFilters.length > 0) {
     esQuery.body.query.bool.filter = resolvedUserFilters
+  }
+
+  if (filter.keyword != null) {
+    await setUserSearchClausesToEsQuery(esQuery.body.query.bool, filter.keyword)
   }
 
   if (filter.attributes != null) {
