@@ -1145,8 +1145,6 @@ function wrapElasticSearchOp (methods, Model) {
   // methods: create, search, patch, get, remove
   const resource = getResource(Model.name)
 
-  logger.buildService(Model.name, methods)
-
   return _.mapValues(methods, func => {
     if (func.name === 'search') {
       return async (...args) => {

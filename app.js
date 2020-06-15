@@ -2,8 +2,7 @@
  * The application entry point
  */
 
-// Commenting out since logger wrapper is now set in elasticsearch wrapper
-// require('./src/bootstrap')
+require('./src/bootstrap')
 const config = require('config')
 const express = require('express')
 const cross = require('cors')

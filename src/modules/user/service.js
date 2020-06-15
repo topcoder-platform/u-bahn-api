@@ -7,16 +7,8 @@ const models = require('../../models/index')
 const helper = require('../../common/helper')
 const methods = helper.getServiceMethods(
   models.User,
-  {
-    handle: joi.string().required(),
-    firstName: joi.string().required(),
-    lastName: joi.string().required()
-  },
-  {
-    handle: joi.string(),
-    firstName: joi.string(),
-    lastName: joi.string()
-  },
+  { handle: joi.string().required() },
+  { handle: joi.string() },
   { handle: joi.string(), roleId: joi.string() },
   async query => {
     let prefix = 'select * from DUser'
