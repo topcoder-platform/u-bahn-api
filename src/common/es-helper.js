@@ -1282,7 +1282,7 @@ async function searchUsers (authUser, filter, params) {
     user.groups = groups
   }
 
-  return { total: result.length, page: params.page, perPage: params.perPage, result }
+  return { total: getTotalCount(docs.hits.total), page: params.page, perPage: params.perPage, result }
 }
 
 async function searchAttributeValues ({ attributeId, attributeValue }) {
@@ -1294,7 +1294,7 @@ async function searchAttributeValues ({ attributeId, attributeValue }) {
     return hit.inner_hits.attributes.hits.hits[0]._source
   })
 
-  return { total: result.length, result: result }
+  return { total: getTotalCount(esResult.hits.total), result: result }
 }
 
 module.exports = {
