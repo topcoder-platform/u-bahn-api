@@ -21,7 +21,7 @@ function buildServices (dir) {
       let serviceName = curPath.split('modules')[1]
       serviceName = serviceName.substr(1, serviceName.length - 4)
       logger.info(`add decorates for service --> ${serviceName}`)
-        logger.buildService(serviceName, require(curPath)); // eslint-disable-line
+      logger.buildService(serviceName, require(curPath)) // eslint-disable-line
     }
   })
 }
