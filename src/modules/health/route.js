@@ -4,7 +4,7 @@
 
 const Controller = require('./controller')
 module.exports = {
-  '/health': {
+  '/ubahnapi/health': {
     get: {
       method: Controller.get
     }
