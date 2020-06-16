@@ -5,8 +5,44 @@
 - node 12.x
 - npm 6.x
 - docker
+- elasticsearch 6.x
+
+## Configuration
+
+Configuration for the application is at config/default.js and config/production.js. The following parameters can be set in config files or in env variables:
+
+- LOG_LEVEL: the log level
+- PORT: the server port
+- AUTH_SECRET: TC Authentication secret
+- VALID_ISSUERS: valid issuers for TC authentication
+- PAGE_SIZE: the default pagination limit
+- API_VERSION: the API version
+- AWS_ACCESS_KEY_ID: The AWS access key
+- AWS_SECRET_ACCESS_KEY: The AWS secret key
+- AWS_REGION: The Amazon region to use when connecting.
+- DATABASE: The QLDB ledger name
+- AUTH0_URL: Auth0 URL, used to get TC M2M token
+- AUTH0_AUDIENCE: Auth0 audience, used to get TC M2M token
+- TOKEN_CACHE_TIME: Auth0 token cache time, used to get TC M2M token
+- AUTH0_CLIENT_ID: Auth0 client id, used to get TC M2M token
+- AUTH0_CLIENT_SECRET: Auth0 client secret, used to get TC M2M token
+- AUTH0_PROXY_SERVER_URL: Proxy Auth0 URL, used to get TC M2M token
+- GROUP_API_URL: Topcoder Group API URL
+- BUSAPI_URL: Topcoder Bus API URL
+- KAFKA_ERROR_TOPIC: The error topic at which bus api will publish any errors
+- KAFKA_MESSAGE_ORIGINATOR: The originator value for the kafka messages
+- UBAHN_CREATE_TOPIC: Kafka topic for create message
+- UBAHN_UPDATE_TOPIC: Kafka topic for update message
+- UBAHN_DELETE_TOPIC: Kafka topic for delete message
+- ES.HOST: Elasticsearch host
+- ES.API_VERSION: Elasticsearch API version
+- ES.DOCUMENTS: Elasticsearch index, type and id mapping for resources.
+
+For `ES.DOCUMENTS` configuration, you will find multiple other configurations below it. Each has default values that you can override using the environment variables
 
 ## Local deployment
+
+Setup your Elasticsearch instance and ensure that it is up and running.
 
 1. Visit [this link](https://console.aws.amazon.com/qldb/home?region=us-east-1#gettingStarted), login and create one **ledger** databases named `ubahn-db`
 2. Visit [this link](https://console.aws.amazon.com/iam/home?region=us-east-1#/security_credentials) to download your "Access keys"
@@ -15,30 +51,32 @@
 5. Import mock data, `node scripts/db/genData.js`, this will create tables and gen some data for test (if you need this)
 6. Startup server `node app.js` or `npm run start`
 
-## Docker
+## Working with mock data
+
+You can use the scripts `npm run insert-data` (and `npm run delete-data`) to insert mock data (and delete mock data respectively). The data is inserted into QLDB and Elasticsearch. You need to setup the configurations beforehand and also start the elasticsearch instance before you run these scripts
+
+## Local Deployment with Docker
 
 Make sure all config values are right(aws key and secret), and you can run on local successful, then run below commands
 
-- Run `docker build -t tc/ubahn_api .` to build image
-- Then run `docker run tc/ubahn_api -d` to startup image
+1. Navigate to the directory `docker`
+
+2. Rename the file `sample.api.env` to `api.env`
+
+3. Set the required AUTH0 configurations, AWS credentials and ElasticSearch host in the file `api.env`
+
+4. Once that is done, run the following command
+
+    ```bash
+    docker-compose up
+    ```
+
+5. When you are running the application for the first time, It will take some time initially to download the image and install the dependencies
 
 ## API endpoints verification
 
 1. open postman
 2. import *docs/UBahn_API.postman_collection.json* , *UBahn_ENV.postman_environment.json* and then check endpoints
-
-## Configuration
-
-| key           | system Environment name | description                |
-| ------------- | ----------------------- | -------------------------- |
-| PORT          | PORT                    | the server port            |
-| AUTH_SECRET   | AUTH_SECRET             | the jwt client secret      |
-| VALID_ISSUERS | VALID_ISSUERS           | jwt token issuers          |
-| API_VERSION   |                         | the api prefix version     |
-| AWS_KEY       | AWS_KEY                 | the aws Access key         |
-| AWS_SECRET    | AWS_SECRET              | the aws Access secret      |
-| AWS_REGION    | AWS_REGION              | the aws service region     |
-| DATABASE      | DATABASE                | the aws QLDB database name |
 
 ## Test token
 

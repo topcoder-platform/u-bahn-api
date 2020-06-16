@@ -50,20 +50,168 @@ paths:
         \ return entities that the user has created."
       operationId: "usersGET"
       parameters:
+      - $ref: '#/parameters/page'
+      - $ref: '#/parameters/perPage'
       - name: "handle"
         in: "query"
         description: "Filter by user handle"
         required: false
         type: "string"
-      - name: "groupId"
+      - name: "enrich"
         in: "query"
-        description: "Filter by user group Id"
+        description: "Enrich all child resources under the user"
         required: false
+        type: "boolean"
+      - name: "skill[]"
+        in: "query"
+        type: "array"
+        description: "The skill name to filter users with. Specify multiple times to provide multiple values"
+        items:
+          type: "string"
+        collectionFormat: multi
+      - name: "achievement[]"
+        in: "query"
+        type: "array"
+        description: "The achievement name to filter users with. Specify multiple times to provide multiple values"
+        items:
+          type: "string"
+        collectionFormat: multi
+      - name: "location[]"
+        in: "query"
+        type: "array"
+        description: "The location name to filter users with. Specify multiple times to provide multiple values. `location` here is an attribute of the user"
+        items:
+          type: "string"
+        collectionFormat: multi
+      - name: "isAvailable"
+        in: "query"
+        type: "boolean"
+        description: "`true` corresponds to users that are available. `false` corresponds to users that are not available. `isAvailable` here is an attribute of the user"
+        items:
+          type: "string"
+        collectionFormat: multi
+      - name: "orderBy"
+        in: "query"
         type: "string"
-        format: "UUID"
+        description: "Sort order"
+        enum: ["name", "location", "isAvailable"]
       - name: "roleId"
         in: "query"
         description: "Filter by user roleId"
+        required: false
+        type: "string"
+        format: "UUID"
+      - name: "userSkill.skillId"
+        in: "query"
+        required: false
+        type: "string"
+        format: "UUID"
+      - name: "userSkill.metricValue"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "userSkill.certifierId"
+        in: "query"
+        required: false
+        type: "string"
+        format: "UUID"
+      - name: "userSkill.certifiedDate"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "skill.skillProviderId"
+        in: "query"
+        required: false
+        type: "string"
+        format: "UUID"
+      - name: "skill.name"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "skill.externalId"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "skill.uri"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "skillProvider.name"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "userRole.roleId"
+        in: "query"
+        required: false
+        type: "string"
+        format: "UUID"
+      - name: "role.name"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "externalProfile.organizationId"
+        in: "query"
+        required: false
+        type: "string"
+        format: "UUID"
+      - name: "externalProfile.uri"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "organization.name"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "achievement.achievementProviderId"
+        in: "query"
+        required: false
+        type: "string"
+        format: "UUID"
+      - name: "achievement.name"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "achievement.uri"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "achievement.certifierId"
+        in: "query"
+        required: false
+        type: "string"
+        format: "UUID"
+      - name: "achievement.certifiedDate"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "achievementProvider.name"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "userAttribute.attributeId"
+        in: "query"
+        required: false
+        type: "string"
+        format: "UUID"
+      - name: "userAttribute.value"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "attribute.attributeGroupId"
+        in: "query"
+        required: false
+        type: "string"
+        format: "UUID"
+      - name: "attribute.name"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "attributeGroup.name"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "attributeGroup.organizationId"
+        in: "query"
         required: false
         type: "string"
         format: "UUID"
@@ -98,15 +246,161 @@ paths:
         description: "Filter by user handle"
         required: false
         type: "string"
-      - name: "groupId"
+      - name: "enrich"
         in: "query"
-        description: "Filter by user group Id"
+        description: "Enrich all child resources under the user"
         required: false
+        type: "boolean"
+      - name: "skill[]"
+        in: "query"
+        type: "array"
+        description: "The skill name to filter users with. Specify multiple times to provide multiple values"
+        items:
+          type: "string"
+        collectionFormat: multi
+      - name: "achievement[]"
+        in: "query"
+        type: "array"
+        description: "The achievement name to filter users with. Specify multiple times to provide multiple values"
+        items:
+          type: "string"
+        collectionFormat: multi
+      - name: "location[]"
+        in: "query"
+        type: "array"
+        description: "The location name to filter users with. Specify multiple times to provide multiple values. `location` here is an attribute of the user"
+        items:
+          type: "string"
+        collectionFormat: multi
+      - name: "isAvailable"
+        in: "query"
+        type: "boolean"
+        description: "`true` corresponds to users that are available. `false` corresponds to users that are not available. `isAvailable` here is an attribute of the user"
+        items:
+          type: "string"
+        collectionFormat: multi
+      - name: "orderBy"
+        in: "query"
         type: "string"
-        format: "UUID"
+        description: "Sort order"
+        enum: ["name", "location", "isAvailable"]
       - name: "roleId"
         in: "query"
         description: "Filter by user roleId"
+        required: false
+        type: "string"
+        format: "UUID"
+      - name: "userSkill.skillId"
+        in: "query"
+        required: false
+        type: "string"
+        format: "UUID"
+      - name: "userSkill.metricValue"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "userSkill.certifierId"
+        in: "query"
+        required: false
+        type: "string"
+        format: "UUID"
+      - name: "userSkill.certifiedDate"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "skill.skillProviderId"
+        in: "query"
+        required: false
+        type: "string"
+        format: "UUID"
+      - name: "skill.name"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "skill.externalId"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "skill.uri"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "skillProvider.name"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "userRole.roleId"
+        in: "query"
+        required: false
+        type: "string"
+        format: "UUID"
+      - name: "role.name"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "externalProfile.organizationId"
+        in: "query"
+        required: false
+        type: "string"
+        format: "UUID"
+      - name: "externalProfile.uri"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "organization.name"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "achievement.achievementProviderId"
+        in: "query"
+        required: false
+        type: "string"
+        format: "UUID"
+      - name: "achievement.name"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "achievement.uri"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "achievement.certifierId"
+        in: "query"
+        required: false
+        type: "string"
+        format: "UUID"
+      - name: "achievement.certifiedDate"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "achievementProvider.name"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "userAttribute.attributeId"
+        in: "query"
+        required: false
+        type: "string"
+        format: "UUID"
+      - name: "userAttribute.value"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "attribute.attributeGroupId"
+        in: "query"
+        required: false
+        type: "string"
+        format: "UUID"
+      - name: "attribute.name"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "attributeGroup.name"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "attributeGroup.organizationId"
+        in: "query"
         required: false
         type: "string"
         format: "UUID"
@@ -169,6 +463,11 @@ paths:
         required: true
         type: "string"
         format: "UUID"
+      - name: "enrich"
+        in: "query"
+        description: "Enrich all child resources under the user"
+        required: false
+        type: "boolean"
       responses:
         "200":
           description: "OK - the request was successful"
@@ -201,6 +500,11 @@ paths:
         required: true
         type: "string"
         format: "UUID"
+      - name: "enrich"
+        in: "query"
+        description: "Enrich all child resources under the user"
+        required: false
+        type: "boolean"
       responses:
         "200":
           description: "OK - the request was successful"
@@ -294,6 +598,8 @@ paths:
         \ this endpoint will only return entities that\nthe user has created.\n"
       operationId: "usersUserIdSkillsGET"
       parameters:
+      - $ref: '#/parameters/page'
+      - $ref: '#/parameters/perPage'
       - name: "userId"
         in: "path"
         description: "The user id"
@@ -556,7 +862,18 @@ paths:
         \ that for non-admin users, this endpoint will only return entities that\n\
         the user has created.\n"
       operationId: "skillsGET"
-      parameters: []
+      parameters:
+      - $ref: '#/parameters/page'
+      - $ref: '#/parameters/perPage'
+      - name: "skillProviderId"
+        in: "query"
+        description: "The referenced skill provider id"
+        type: "string"
+        format: "UUID"
+      - name: "externalId"
+        in: "query"
+        description: "The external id of the skill"
+        type: "string"
       responses:
         "200":
           description: "OK - the request was successful"
@@ -582,7 +899,18 @@ paths:
         \ application.\n\n**Security** - Note that for non-admin users, this endpoint\
         \ will only return entities that\nthe user has created.\n"
       operationId: "skillsHEAD"
-      parameters: []
+      parameters:
+      - $ref: '#/parameters/page'
+      - $ref: '#/parameters/perPage'
+      - name: "skillProviderId"
+        in: "query"
+        description: "The referenced skill provider id"
+        type: "string"
+        format: "UUID"
+      - name: "externalId"
+        in: "query"
+        description: "The external id of the skill"
+        type: "string"
       responses:
         "200":
           description: "Success response"
@@ -768,6 +1096,8 @@ paths:
         \ this endpoint will only return entities that\nthe user has created.\n"
       operationId: "skillsProvidersGET"
       parameters:
+      - $ref: '#/parameters/page'
+      - $ref: '#/parameters/perPage'
       - name: "name"
         in: "query"
         description: "Filter by provider name"
@@ -988,6 +1318,8 @@ paths:
         \ will only return entities that\nthe user has created.\n"
       operationId: "rolesGET"
       parameters:
+      - $ref: '#/parameters/page'
+      - $ref: '#/parameters/perPage'
       - name: "name"
         in: "query"
         description: "Filter by role name"
@@ -1208,6 +1540,8 @@ paths:
         the user has created.        \n"
       operationId: "usersUserIdRolesGET"
       parameters:
+      - $ref: '#/parameters/page'
+      - $ref: '#/parameters/perPage'
       - name: "userId"
         in: "path"
         description: "The user id"
@@ -1417,6 +1751,8 @@ paths:
         the user has created.        \n"
       operationId: "usersUserIdExternalProfilesGET"
       parameters:
+      - $ref: '#/parameters/page'
+      - $ref: '#/parameters/perPage'
       - name: "userId"
         in: "path"
         description: "The user id"
@@ -1680,6 +2016,8 @@ paths:
         \ has created.        \n"
       operationId: "usersUserIdAchievementsGET"
       parameters:
+      - $ref: '#/parameters/page'
+      - $ref: '#/parameters/perPage'
       - name: "userId"
         in: "path"
         description: "The user id"
@@ -1951,6 +2289,8 @@ paths:
         \ users, this endpoint will only return entities that\nthe user has created.\n"
       operationId: "achievementsProvidersGET"
       parameters:
+      - $ref: '#/parameters/page'
+      - $ref: '#/parameters/perPage'
       - name: "name"
         in: "query"
         description: "Filter by provider name"
@@ -2171,6 +2511,8 @@ paths:
         \ this endpoint will only return entities that\nthe user has created.\n"
       operationId: "organizationsGET"
       parameters:
+      - $ref: '#/parameters/page'
+      - $ref: '#/parameters/perPage'
       - name: "name"
         in: "query"
         description: "Filter by organization name"
@@ -2393,6 +2735,8 @@ paths:
         \ that\nthe user has created.\n"
       operationId: "usersUserIdAttributesGET"
       parameters:
+      - $ref: '#/parameters/page'
+      - $ref: '#/parameters/perPage'
       - name: "userId"
         in: "path"
         description: "The user id"
@@ -2677,6 +3021,8 @@ paths:
         \ this endpoint will only return entities that\nthe user has created.\n"
       operationId: "attributesGET"
       parameters:
+      - $ref: '#/parameters/page'
+      - $ref: '#/parameters/perPage'
       - name: "attributeGroupId"
         in: "query"
         description: "Filter by attribute group id"
@@ -2900,6 +3246,8 @@ paths:
         \ that\nthe user has created.\n"
       operationId: "attributeGroupsGET"
       parameters:
+      - $ref: '#/parameters/page'
+      - $ref: '#/parameters/perPage'
       - name: "name"
         in: "query"
         description: "Filter by group name"
@@ -3129,6 +3477,24 @@ securityDefinitions:
     type: "apiKey"
     name: "Authorization"
     in: "header"
+
+parameters:
+  page:
+    name: page
+    in: query
+    description: The page number.
+    required: false
+    type: integer
+    default: 1
+  perPage:
+    name: perPage
+    in: query
+    description: The number of items to list per page.
+    required: false
+    type: integer
+    default: 20
+    maximum: 100
+
 definitions:
   AuditFields:
     type: "object"
@@ -3389,6 +3755,8 @@ definitions:
     - type: "object"
       required:
       - "handle"
+      - "firstName"
+      - "lastName"
       - "id"
       properties:
         id:
@@ -3398,6 +3766,12 @@ definitions:
         handle:
           type: "string"
           description: "The handle of the user."
+        firstName:
+          type: "string"
+          description: "The first name of the user."
+        lastName:
+          type: "string"
+          description: "The last name of the user."
     - $ref: "#/definitions/AuditFields"
   UserSkill:
     allOf:
@@ -3436,6 +3810,11 @@ definitions:
           type: "string"
           format: "UUID"
           description: "The Skill id."
+      example:
+        certifierId: "certifierId"
+        certifiedDate: "2000-01-23T04:56:07.000+00:00"
+        metricValue: "metricValue"
+        skillId: "string"
     - $ref: "#/definitions/UserSkillUpdateRequestBody"
   UserSkillUpdateRequestBody:
     type: "object"
@@ -3497,17 +3876,33 @@ definitions:
       handle:
         type: "string"
         description: "The handle of the user."
+      firstName:
+        type: "string"
+        description: "The first name of the user."
+      lastName:
+        type: "string"
+        description: "The last name of the user."
     description: "Properties that are provided when creating or editing a User.\n"
     example:
       handle: "handle"
+      firstName: "John"
+      lastName: "Doe"
   UserUpdateRequestBody:
     type: "object"
     properties:
       handle:
         type: "string"
         description: "The handle of the user."
+      firstName:
+        type: "string"
+        description: "The first name of the user."
+      lastName:
+        type: "string"
+        description: "The last name of the user."
     example:
       handle: "handle"
+      firstName: "John"
+      lastName: "Doe"
   AttributeGroup:
     allOf:
     - type: "object"

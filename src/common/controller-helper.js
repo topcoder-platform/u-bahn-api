@@ -32,7 +32,7 @@ function getControllerMethods (service) {
    * @param res the http response
    */
   async function get (req, res) {
-    res.json(await service.get(req.params.id, req.auth))
+    res.json(await service.get(req.params.id, req.auth, req.query))
   }
 
   /**
@@ -41,9 +41,9 @@ function getControllerMethods (service) {
    * @param res the http response
    */
   async function search (req, res) {
-    const { items, meta } = await service.search(req.query, req.auth)
-    injectSearchMeta(res, meta)
-    res.json(items)
+    const result = await service.search(req.query, req.auth)
+    injectSearchMeta(req, res, result)
+    res.send(result.result)
   }
 
   /**
@@ -98,7 +98,9 @@ function getSubControllerMethods (service) {
    * @param res the http response
    */
   async function get (req, res) {
-    res.json(await service.get(req.params.id, req.auth, _.omit(req.params, 'id')))
+    // req.query was added to pass query parameters to ES search in a separate parameter not to impact
+    // the existing DB code.
+    res.json(await service.get(req.params.id, req.auth, _.omit(req.params, 'id'), req.query))
   }
 
   /**
@@ -107,9 +109,9 @@ function getSubControllerMethods (service) {
    * @param res the http response
    */
   async function search (req, res) {
-    const { items, meta } = await service.search(_.extend(req.query, req.params), req.auth)
-    injectSearchMeta(res, meta)
-    res.json(items)
+    const result = await service.search(_.extend(req.query, req.params), req.auth)
+    injectSearchMeta(req, res, result)
+    res.send(result.result)
   }
 
   /**

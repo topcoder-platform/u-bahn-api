@@ -1,20 +1,73 @@
 {
 	"info": {
-		"_postman_id": "67870cba-bdd9-4825-9f61-b747ae6d4757",
+		"_postman_id": "5c139c1e-e3f2-4002-a278-e03c7b7dc97d",
 		"name": "UBahn_API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "users",
+			"name": "search",
 			"item": [
 				{
-					"name": "{{HOST}}/users",
+					"name": "{{HOST}}/search/userAttributes",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"id": "9be82782-7a85-4db7-b4f3-aa3f739abb85",
+								"id": "ba04f45f-dbdf-4398-9750-3eae3161dedf",
+								"exec": [
+									"var rsp = pm.response.json();",
+									"if(rsp.id) pm.environment.set(\"userId\", rsp.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{HOST}}/search/userAttributes?attributeId=c44d4bee-1356-46d6-9f1f-991936dec297&attributeValue=support",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"search",
+								"userAttributes"
+							],
+							"query": [
+								{
+									"key": "attributeId",
+									"value": "c44d4bee-1356-46d6-9f1f-991936dec297"
+								},
+								{
+									"key": "attributeValue",
+									"value": "support"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{HOST}}/search/users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "64aeda82-1df8-41c7-80c9-d5cf8423fdf9",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if(rsp.id) pm.environment.set(\"userId\", rsp.id);"
@@ -40,12 +93,63 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"handle\":\"handle_01\"\n}",
+							"raw": "{\n  \"isAvailable\": \"false\",\n  \"locations\": [\"New York\", \"London\"],\n  \"skills\": [\"Angular (Web Framework)\", \"Python (Programming Language)\"],\n  \"achievements\": [\"Upwork\", \"Topcoder\"],\n  \"attributes\": [{\n    \"id\": \"c44d4bee-1356-46d6-9f1f-991936dec297\",\n    \"value\": [\"Senior Consultant\", \"IT Support Specialist\", \"Consultant\"]\n  }, {\n    \"id\": \"f3fd623f-a613-4e3c-bf2f-9df529ff4317\",\n    \"value\": [\"Bulwark International Inc\"]\n  }]\n}",
 							"options": {
-								"raw": {
-									"language": "json"
-								}
+								"raw": {}
 							}
+						},
+						"url": {
+							"raw": "{{HOST}}/search/users",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"search",
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "{{HOST}}/users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e4f1d08d-a9b5-4efe-b3d9-67d3111608c1",
+								"exec": [
+									"var rsp = pm.response.json();",
+									"if(rsp.id) pm.environment.set(\"userId\", rsp.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"handle\":\"handle_01\"\n}"
 						},
 						"url": {
 							"raw": "{{HOST}}/users",
@@ -71,13 +175,19 @@
 							}
 						],
 						"url": {
-							"raw": "{{HOST}}/users/{{userId}}",
+							"raw": "{{HOST}}/users/{{userId}}?enrich=true",
 							"host": [
 								"{{HOST}}"
 							],
 							"path": [
 								"users",
 								"{{userId}}"
+							],
+							"query": [
+								{
+									"key": "enrich",
+									"value": "true"
+								}
 							]
 						}
 					},
@@ -102,12 +212,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"handle\":\"handle_05\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
+							"raw": "{\n\t\"handle\":\"handle_05\"\n}"
 						},
 						"url": {
 							"raw": "{{HOST}}/users/{{userId}}",
@@ -164,7 +269,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{HOST}}/users?handle=h&roleId=8607ddb3-abf6-4512-a618-c60d4771174b",
+							"raw": "{{HOST}}/users?enrich=true&role.name=role-2",
 							"host": [
 								"{{HOST}}"
 							],
@@ -173,12 +278,134 @@
 							],
 							"query": [
 								{
-									"key": "handle",
-									"value": "h"
+									"key": "enrich",
+									"value": "true"
 								},
 								{
 									"key": "roleId",
-									"value": "8607ddb3-abf6-4512-a618-c60d4771174b"
+									"value": "8607ddb3-abf6-4512-a618-c60d4771174b",
+									"disabled": true
+								},
+								{
+									"key": "userSkill.skillId",
+									"value": "8a8c8d3a-9165-4dae-8a8c-f828cbe01d5d",
+									"disabled": true
+								},
+								{
+									"key": "userSkill.metricValue",
+									"value": "userskill",
+									"disabled": true
+								},
+								{
+									"key": "skill.name",
+									"value": "userskill",
+									"disabled": true
+								},
+								{
+									"key": "skillProvider.name",
+									"value": "skillprovider-2",
+									"disabled": true
+								},
+								{
+									"key": "userrole.roleId",
+									"value": "bbec5193-bef2-4907-93bc-3e82cbf81dc0",
+									"disabled": true
+								},
+								{
+									"key": "role.name",
+									"value": "role-2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{HOST}}/users Search (enrich)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{HOST}}/users?enrich=true&skill=React&skill=skill_name_update&achievement=achievement-name-01&achievement=string&location=London&location=New York&isAvailable=true",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"users"
+							],
+							"query": [
+								{
+									"key": "enrich",
+									"value": "true"
+								},
+								{
+									"key": "roleId",
+									"value": "8607ddb3-abf6-4512-a618-c60d4771174b",
+									"disabled": true
+								},
+								{
+									"key": "userSkill.skillId",
+									"value": "8a8c8d3a-9165-4dae-8a8c-f828cbe01d5d",
+									"disabled": true
+								},
+								{
+									"key": "userSkill.metricValue",
+									"value": "userskill",
+									"disabled": true
+								},
+								{
+									"key": "skill.name",
+									"value": "userskill",
+									"disabled": true
+								},
+								{
+									"key": "skillProvider.name",
+									"value": "skillprovider-2",
+									"disabled": true
+								},
+								{
+									"key": "userrole.roleId",
+									"value": "bbec5193-bef2-4907-93bc-3e82cbf81dc0",
+									"disabled": true
+								},
+								{
+									"key": "role.name",
+									"value": "role-2",
+									"disabled": true
+								},
+								{
+									"key": "skill",
+									"value": "React"
+								},
+								{
+									"key": "skill",
+									"value": "skill_name_update"
+								},
+								{
+									"key": "achievement",
+									"value": "achievement-name-01"
+								},
+								{
+									"key": "achievement",
+									"value": "string"
+								},
+								{
+									"key": "location",
+									"value": "London"
+								},
+								{
+									"key": "location",
+									"value": "New York"
+								},
+								{
+									"key": "isAvailable",
+									"value": "true"
 								}
 							]
 						}
@@ -225,6 +452,10 @@
 								"value": "application/json"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "{{HOST}}/users/{{userId}}",
 							"host": [
@@ -250,7 +481,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "ff8c198b-a5fc-421c-8930-ff4f7ac2cc29",
+								"id": "816c38da-3158-4d9d-828e-bb0644178a98",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if(rsp.id) pm.environment.set(\"roleId\", rsp.id);"
@@ -278,9 +509,7 @@
 							"mode": "raw",
 							"raw": "{\n\t\"name\":\"Admin\"\n}",
 							"options": {
-								"raw": {
-									"language": "json"
-								}
+								"raw": {}
 							}
 						},
 						"url": {
@@ -340,9 +569,7 @@
 							"mode": "raw",
 							"raw": "{\n\t\"name\":\"Admin02\"\n}",
 							"options": {
-								"raw": {
-									"language": "json"
-								}
+								"raw": {}
 							}
 						},
 						"url": {
@@ -457,6 +684,13 @@
 								"value": "application/json"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {}
+							}
+						},
 						"url": {
 							"raw": "{{HOST}}/roles/{{roleId}}",
 							"host": [
@@ -482,7 +716,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "aba26e50-293b-482e-b023-47adba0f4ff3",
+								"id": "7671acab-f1f8-4c29-9824-f1f2bd570028",
 								"exec": [
 									""
 								],
@@ -509,9 +743,7 @@
 							"mode": "raw",
 							"raw": "{\n\t\"roleId\":\"{{roleId}}\"\n}",
 							"options": {
-								"raw": {
-									"language": "json"
-								}
+								"raw": {}
 							}
 						},
 						"url": {
@@ -575,9 +807,7 @@
 							"mode": "raw",
 							"raw": "{\n\t\"roleId\":\"8607ddb3-abf6-4512-a618-c60d4771174b\"\n}",
 							"options": {
-								"raw": {
-									"language": "json"
-								}
+								"raw": {}
 							}
 						},
 						"url": {
@@ -694,6 +924,13 @@
 								"value": "application/json"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {}
+							}
+						},
 						"url": {
 							"raw": "{{HOST}}/users/{{userId}}/roles/{{roleId}}",
 							"host": [
@@ -721,7 +958,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "65a0007b-379b-42f6-801e-cdd2d195a586",
+								"id": "5b67a6ba-63b6-4991-a5ea-d881ea802083",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if(rsp.id) pm.environment.set(\"organizationId\", rsp.id);"
@@ -749,9 +986,7 @@
 							"mode": "raw",
 							"raw": "{\n\t\"name\":\"organization_01\"\n}",
 							"options": {
-								"raw": {
-									"language": "json"
-								}
+								"raw": {}
 							}
 						},
 						"url": {
@@ -778,13 +1013,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{HOST}}/organizations/{{organizationId}}",
+							"raw": "{{HOST}}/organizations/603d4264-cdb0-47f1-914e-f053abc60422",
 							"host": [
 								"{{HOST}}"
 							],
 							"path": [
 								"organizations",
-								"{{organizationId}}"
+								"603d4264-cdb0-47f1-914e-f053abc60422"
 							]
 						}
 					},
@@ -811,9 +1046,7 @@
 							"mode": "raw",
 							"raw": "{\n\t\"name\":\"organization_update\"\n}",
 							"options": {
-								"raw": {
-									"language": "json"
-								}
+								"raw": {}
 							}
 						},
 						"url": {
@@ -928,6 +1161,13 @@
 								"value": "application/json"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {}
+							}
+						},
 						"url": {
 							"raw": "{{HOST}}/organizations/{{organizationId}}",
 							"host": [
@@ -953,7 +1193,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "624175cd-8315-42a3-a316-32a34fbcfadf",
+								"id": "88d7b18f-c5e1-4577-9d03-a93d9f9d5c7e",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if(rsp.id) pm.environment.set(\"skillsProviderId\", rsp.id);"
@@ -981,9 +1221,7 @@
 							"mode": "raw",
 							"raw": "{\n\t\"name\":\"skillsProviders_01\"\n}",
 							"options": {
-								"raw": {
-									"language": "json"
-								}
+								"raw": {}
 							}
 						},
 						"url": {
@@ -1043,9 +1281,7 @@
 							"mode": "raw",
 							"raw": "{\n\t\"name\":\"skillsProviders_update\"\n}",
 							"options": {
-								"raw": {
-									"language": "json"
-								}
+								"raw": {}
 							}
 						},
 						"url": {
@@ -1160,6 +1396,13 @@
 								"value": "application/json"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {}
+							}
+						},
 						"url": {
 							"raw": "{{HOST}}/skillsProviders/{{skillsProviderId}}",
 							"host": [
@@ -1185,7 +1428,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "c7176c3b-5fea-4236-96cb-cfd7ff1383ee",
+								"id": "92b83849-961d-4ad3-bac2-d7f457e5fbd7",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if(rsp.id) pm.environment.set(\"skillId\", rsp.id);"
@@ -1213,9 +1456,7 @@
 							"mode": "raw",
 							"raw": "{\n\t\"skillProviderId\":\"{{skillsProviderId}}\",\n\t\"name\":\"jump\",\n\t\"uri\":\"http://www.google.com\",\n\t\"externalId\":\"externalId\"\n}",
 							"options": {
-								"raw": {
-									"language": "json"
-								}
+								"raw": {}
 							}
 						},
 						"url": {
@@ -1275,9 +1516,7 @@
 							"mode": "raw",
 							"raw": "{\n\t\"name\":\"skill_name_update\"\n}",
 							"options": {
-								"raw": {
-									"language": "json"
-								}
+								"raw": {}
 							}
 						},
 						"url": {
@@ -1341,6 +1580,13 @@
 							],
 							"path": [
 								"skills"
+							],
+							"query": [
+								{
+									"key": "perPage",
+									"value": "2",
+									"disabled": true
+								}
 							]
 						}
 					},
@@ -1386,6 +1632,13 @@
 								"value": "application/json"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {}
+							}
+						},
 						"url": {
 							"raw": "{{HOST}}/skills/{{skillId}}",
 							"host": [
@@ -1411,7 +1664,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "c1c418d7-bcda-4fd0-95ec-62050e002ea7",
+								"id": "d5c59be3-63df-485b-a889-aa4d00c90571",
 								"exec": [
 									""
 								],
@@ -1438,9 +1691,7 @@
 							"mode": "raw",
 							"raw": "{\n\t\"skillId\":\"{{skillId}}\",\n\t\"metricValue\":\"3L\",\n\t\"certifierId\":\"certifier_id\",\n\t\"certifiedDate\":\"2020-05-04T07:36:28.036Z\"\n}",
 							"options": {
-								"raw": {
-									"language": "json"
-								}
+								"raw": {}
 							}
 						},
 						"url": {
@@ -1504,9 +1755,7 @@
 							"mode": "raw",
 							"raw": "{\n\t\"metricValue\":\"4.5L\"\n}",
 							"options": {
-								"raw": {
-									"language": "json"
-								}
+								"raw": {}
 							}
 						},
 						"url": {
@@ -1568,7 +1817,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{HOST}}/users/{{userId}}/skills",
+							"raw": "{{HOST}}/users/{{userId}}/skills?skillName=skill-2",
 							"host": [
 								"{{HOST}}"
 							],
@@ -1580,8 +1829,7 @@
 							"query": [
 								{
 									"key": "skillName",
-									"value": "ju",
-									"disabled": true
+									"value": "skill-2"
 								}
 							]
 						}
@@ -1630,6 +1878,13 @@
 								"value": "application/json"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {}
+							}
+						},
 						"url": {
 							"raw": "{{HOST}}/users/{{userId}}/skills/{{skillId}}",
 							"host": [
@@ -1657,7 +1912,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "84cfec46-193e-4705-9f37-2f1cfae42cd7",
+								"id": "d8143ed1-b600-4ef3-845c-396ed909e821",
 								"exec": [
 									""
 								],
@@ -1684,9 +1939,7 @@
 							"mode": "raw",
 							"raw": "{\n\t\"organizationId\":\"{{organizationId}}\",\n\t\"uri\":\"http://uri.com/uri\"\n}",
 							"options": {
-								"raw": {
-									"language": "json"
-								}
+								"raw": {}
 							}
 						},
 						"url": {
@@ -1750,9 +2003,7 @@
 							"mode": "raw",
 							"raw": "{\n\t\"uri\":\"http://www.new.com/new-uri\"\n}",
 							"options": {
-								"raw": {
-									"language": "json"
-								}
+								"raw": {}
 							}
 						},
 						"url": {
@@ -1814,7 +2065,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{HOST}}/users/{{userId}}/externalProfiles?organizationName=o",
+							"raw": "{{HOST}}/users/{{userId}}/externalProfiles?organizationName=organization",
 							"host": [
 								"{{HOST}}"
 							],
@@ -1826,7 +2077,7 @@
 							"query": [
 								{
 									"key": "organizationName",
-									"value": "o"
+									"value": "organization"
 								}
 							]
 						}
@@ -1875,6 +2126,13 @@
 								"value": "application/json"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {}
+							}
+						},
 						"url": {
 							"raw": "{{HOST}}/users/{{userId}}/externalProfiles/{{organizationId}}",
 							"host": [
@@ -1902,7 +2160,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "d52dbd5e-7b35-42c9-b306-6dade4498eec",
+								"id": "6c13436d-c2ee-4867-98ac-eb513e9edb3e",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if(rsp.id) pm.environment.set(\"achievementsProviderId\", rsp.id);"
@@ -1930,9 +2188,7 @@
 							"mode": "raw",
 							"raw": "{\n\t\"name\":\"achievementsProviders_02\"\n}",
 							"options": {
-								"raw": {
-									"language": "json"
-								}
+								"raw": {}
 							}
 						},
 						"url": {
@@ -1992,9 +2248,7 @@
 							"mode": "raw",
 							"raw": "{\n\t\"name\":\"achievementsProviders_update\"\n}",
 							"options": {
-								"raw": {
-									"language": "json"
-								}
+								"raw": {}
 							}
 						},
 						"url": {
@@ -2109,6 +2363,13 @@
 								"value": "application/json"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {}
+							}
+						},
 						"url": {
 							"raw": "{{HOST}}/achievementsProviders/{{achievementsProviderId}}",
 							"host": [
@@ -2134,7 +2395,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "4e1eecd6-6e64-4e1c-a3bb-b02430030fe2",
+								"id": "4453dd7e-65fc-47c0-9081-7a78a6ed1446",
 								"exec": [
 									""
 								],
@@ -2161,9 +2422,7 @@
 							"mode": "raw",
 							"raw": "{\n\t\"achievementsProviderId\":\"{{achievementsProviderId}}\",\n\t\"name\":\"achievement-name-01\",\n\t\"uri\":\"http://www.google.com/xx\",\n\t\"certifierId\":\"certifierId\",\n\t\"certifiedDate\":\"2020-05-04T07:36:28.036Z\"\n}",
 							"options": {
-								"raw": {
-									"language": "json"
-								}
+								"raw": {}
 							}
 						},
 						"url": {
@@ -2192,7 +2451,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{HOST}}/users/{{userId}}/achievements/{{achievementsProviderId}}",
+							"raw": "{{HOST}}/users/{{userId}}/achievements/7b4f98b1-5831-45fe-a71f-8454d11eb8e8",
 							"host": [
 								"{{HOST}}"
 							],
@@ -2200,7 +2459,7 @@
 								"users",
 								"{{userId}}",
 								"achievements",
-								"{{achievementsProviderId}}"
+								"7b4f98b1-5831-45fe-a71f-8454d11eb8e8"
 							]
 						}
 					},
@@ -2227,9 +2486,7 @@
 							"mode": "raw",
 							"raw": "{\n\t  \"name\": \"string\",\n\t  \"uri\": \"string\",\n\t  \"certifierId\": \"string\",\n\t  \"certifiedDate\": \"2020-05-13T06:33:54.708Z\"\n}",
 							"options": {
-								"raw": {
-									"language": "json"
-								}
+								"raw": {}
 							}
 						},
 						"url": {
@@ -2353,6 +2610,13 @@
 								"value": "application/json"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {}
+							}
+						},
 						"url": {
 							"raw": "{{HOST}}/users/{{userId}}/externalProfiles/{{organizationId}}",
 							"host": [
@@ -2380,7 +2644,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "bedc5acf-f088-400c-8b89-8f1ae915b0e0",
+								"id": "d34d4953-a1f9-41ef-a9dd-6fa7c9431c3f",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if (rsp.id) pm.environment.set(\"attributeGroupId\", rsp.id);"
@@ -2408,9 +2672,7 @@
 							"mode": "raw",
 							"raw": "{\n\t\"organizationId\":\"{{organizationId}}\",\n\t\"name\":\"attributeGroup_01\"\n}",
 							"options": {
-								"raw": {
-									"language": "json"
-								}
+								"raw": {}
 							}
 						},
 						"url": {
@@ -2470,9 +2732,7 @@
 							"mode": "raw",
 							"raw": "{\n\t\"name\":\"group 03\"\n}",
 							"options": {
-								"raw": {
-									"language": "json"
-								}
+								"raw": {}
 							}
 						},
 						"url": {
@@ -2530,7 +2790,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{HOST}}/attributeGroups?name=roup",
+							"raw": "{{HOST}}/attributeGroups",
 							"host": [
 								"{{HOST}}"
 							],
@@ -2540,11 +2800,12 @@
 							"query": [
 								{
 									"key": "name",
-									"value": "roup"
+									"value": "attributegroup",
+									"disabled": true
 								},
 								{
 									"key": "organizationId",
-									"value": "36ed815b-3da1-49f1-a043-aaed0a4e81ad",
+									"value": "603d4264-cdb0-47f1-914e-f053abc60422",
 									"disabled": true
 								}
 							]
@@ -2592,6 +2853,13 @@
 								"value": "application/json"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {}
+							}
+						},
 						"url": {
 							"raw": "{{HOST}}/attributeGroups/{{attributeGroupId}}",
 							"host": [
@@ -2617,7 +2885,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "6b14dfd2-8f67-4806-8c55-b468e78cbf52",
+								"id": "71539226-1b42-4aa3-9f51-d5b488c817d2",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if (rsp.id) pm.environment.set(\"attributeId\", rsp.id);"
@@ -2645,9 +2913,7 @@
 							"mode": "raw",
 							"raw": "{\n\t\"attributeGroupId\":\"{{attributeGroupId}}\",\n\t\"name\":\"attribute_02\"\n}",
 							"options": {
-								"raw": {
-									"language": "json"
-								}
+								"raw": {}
 							}
 						},
 						"url": {
@@ -2707,9 +2973,7 @@
 							"mode": "raw",
 							"raw": "{\n\t\"name\":\"attr-04\"\n}",
 							"options": {
-								"raw": {
-									"language": "json"
-								}
+								"raw": {}
 							}
 						},
 						"url": {
@@ -2829,6 +3093,13 @@
 								"value": "application/json"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {}
+							}
+						},
 						"url": {
 							"raw": "{{HOST}}/attributes/{{attributeId}}",
 							"host": [
@@ -2854,7 +3125,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "f7a05416-fcef-4107-9c35-e83eccbc6f07",
+								"id": "5c987711-36d9-4472-b6d0-db4edc47685e",
 								"exec": [
 									""
 								],
@@ -2881,9 +3152,7 @@
 							"mode": "raw",
 							"raw": "{\n\t\"attributeId\":\"{{attributeId}}\",\n\t\"value\":\"1.23\"\n}",
 							"options": {
-								"raw": {
-									"language": "json"
-								}
+								"raw": {}
 							}
 						},
 						"url": {
@@ -2912,7 +3181,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{HOST}}/users/{{userId}}/attributes/{{attributeId}}",
+							"raw": "{{HOST}}/users/{{userId}}/attributes/b746ef65-336d-4846-b02a-f25f6cff72c9",
 							"host": [
 								"{{HOST}}"
 							],
@@ -2920,7 +3189,7 @@
 								"users",
 								"{{userId}}",
 								"attributes",
-								"{{attributeId}}"
+								"b746ef65-336d-4846-b02a-f25f6cff72c9"
 							]
 						}
 					},
@@ -2947,9 +3216,7 @@
 							"mode": "raw",
 							"raw": "{\n\t\"value\":\"2.56\"\n}",
 							"options": {
-								"raw": {
-									"language": "json"
-								}
+								"raw": {}
 							}
 						},
 						"url": {
@@ -3011,7 +3278,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{HOST}}/users/{{userId}}/attributes?attributeName=attr&attributeGroupName=roup",
+							"raw": "{{HOST}}/users/{{userId}}/attributes?attributeName=attribute&attributeGroupName=attributegroup&attributeGroupId=720c34f9-0fd4-46fd-9293-4a8cfdcd3e96",
 							"host": [
 								"{{HOST}}"
 							],
@@ -3023,16 +3290,15 @@
 							"query": [
 								{
 									"key": "attributeName",
-									"value": "attr"
+									"value": "attribute"
 								},
 								{
 									"key": "attributeGroupName",
-									"value": "roup"
+									"value": "attributegroup"
 								},
 								{
 									"key": "attributeGroupId",
-									"value": "7ce54e9c-5a2a-4c63-9f53-b854234f6bb2",
-									"disabled": true
+									"value": "720c34f9-0fd4-46fd-9293-4a8cfdcd3e96"
 								}
 							]
 						}
@@ -3081,6 +3347,13 @@
 								"value": "application/json"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {}
+							}
+						},
 						"url": {
 							"raw": "{{HOST}}/users/{{userId}}/attributes/{{attributeId}}",
 							"host": [
@@ -3091,6 +3364,39 @@
 								"{{userId}}",
 								"attributes",
 								"{{attributeId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Group API",
+			"item": [
+				{
+					"name": "{{HOST}}/users/:userId/attributes Copy",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik5VSkZORGd4UlRVME5EWTBOVVkzTlRkR05qTXlRamxETmpOQk5UYzVRVUV3UlRFeU56TTJRUSJ9.eyJpc3MiOiJodHRwczovL3RvcGNvZGVyLWRldi5hdXRoMC5jb20vIiwic3ViIjoibWFFMm1hQlN2OWZSVkhqU2xDMzFMRlpTcTZWaGhacUNAY2xpZW50cyIsImF1ZCI6Imh0dHBzOi8vbTJtLnRvcGNvZGVyLWRldi5jb20vIiwiaWF0IjoxNTkwNDczODY5LCJleHAiOjE1OTA1NjAyNjksImF6cCI6Im1hRTJtYUJTdjlmUlZIalNsQzMxTEZaU3E2VmhoWnFDIiwic2NvcGUiOiJyZWFkOmNoYWxsZW5nZXMgd3JpdGU6Y2hhbGxlbmdlcyByZWFkOmdyb3VwcyB1cGRhdGU6c3VibWlzc2lvbiByZWFkOnN1Ym1pc3Npb24gZGVsZXRlOnN1Ym1pc3Npb24gY3JlYXRlOnN1Ym1pc3Npb24gYWxsOnN1Ym1pc3Npb24gdXBkYXRlOnJldmlld190eXBlIHJlYWQ6cmV2aWV3X3R5cGUgZGVsZXRlOnJldmlld190eXBlIGFsbDpyZXZpZXdfdHlwZSB1cGRhdGU6cmV2aWV3X3N1bW1hdGlvbiByZWFkOnJldmlld19zdW1tYXRpb24gZGVsZXRlOnJldmlld19zdW1tYXRpb24gY3JlYXRlOnJldmlld19zdW1tYXRpb24gYWxsOnJldmlld19zdW1tYXRpb24gdXBkYXRlOnJldmlldyByZWFkOnJldmlldyBkZWxldGU6cmV2aWV3IGNyZWF0ZTpyZXZpZXcgYWxsOnJldmlldyByZWFkOmJ1c190b3BpY3Mgd3JpdGU6YnVzX2FwaSByZWFkOnVzZXJfcHJvZmlsZXMiLCJndHkiOiJjbGllbnQtY3JlZGVudGlhbHMifQ.MAhr5GZaOsx5nmkE1wY4QQP2TQWzegw64TJHfth1-ShRJpy7bPG5LPCmY4YDWphi7K4IrjyKril8ZY9BdbDKnpzXbviZvEZzO8eAXgPlemmCoLik8x_DaZjYJ1CjJlEzLIkh4vtJ-H5lxYT36KTTOzN6z6nkvVk8kql2gEMlXzTTipQre8BBtZMyIvegHamYufBZqIO526JxLeCcv77z-0QtCN7uI5KaquJnRt4ijr9Tm72RNDXd_YmlEYVDhTd3brg-KZ8Dtq4BrMKvpru_omqDZeXKZMU4yK5tmAiJ-9VXYbcmMhsqRzJGfIpO-37-pFnYE34J6EGqnoIVmcQTdw"
+							}
+						],
+						"url": {
+							"raw": "https://api.topcoder-dev.com/v5/groups",
+							"protocol": "https",
+							"host": [
+								"api",
+								"topcoder-dev",
+								"com"
+							],
+							"path": [
+								"v5",
+								"groups"
 							]
 						}
 					},
