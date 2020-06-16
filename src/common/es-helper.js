@@ -701,7 +701,7 @@ function buildEsQueryFromFilter (filter) {
  * @param perPage maximum number of matches to return, defaults to 5
  * @return {{}} created ES query object
  */
-function buildEsQueryToGetAttributeValues (attributeId, attributeValue, page = 1, perPage = 5) {
+function buildEsQueryToGetAttributeValues (attributeId, attributeValue, page = 1, perPage = config.PAGE_SIZE) {
   const queryDoc = DOCUMENTS.user
 
   const matchConditions = [{
@@ -1290,11 +1290,15 @@ async function searchAttributeValues ({ attributeId, attributeValue }) {
   logger.debug(`ES query for searching attribute values: ${JSON.stringify(esQuery, null, 2)}`)
 
   const esResult = await esClient.search(esQuery)
-  const result = esResult.hits.hits.map(hit => {
+
+  let result = esResult.hits.hits.map(hit => {
     return hit.inner_hits.attributes.hits.hits[0]._source
   })
 
-  return { total: getTotalCount(esResult.hits.total), result: result }
+  result = _.uniqBy(result, 'value') // de-dupe by value
+  result = result.splice(0, 5) // keep only the first five matches
+
+  return { result }
 }
 
 module.exports = {
