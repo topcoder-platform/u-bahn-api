@@ -597,11 +597,14 @@ function setUserAttributesFiltersToEsQuery (filterClause, attributes) {
                 }
               }
             ],
-            should: attribute.value.map(val => ({
-              term: {
-                [USER_ATTRIBUTE.esDocumentValueQuery]: val
+            should: attribute.value.map(val => {
+              return {
+                query_string: {
+                  default_field: `${[USER_ATTRIBUTE.esDocumentValueStringQuery]}`,
+                  query: `*${val.replace(/  +/g, ' ').split(' ').join('* AND *')}*`
+                }
               }
-            })),
+            }),
             minimum_should_match: 1
           }
         }
@@ -639,6 +642,13 @@ async function searchSkills (keyword) {
 
 async function setUserSearchClausesToEsQuery (boolClause, keyword) {
   const skillIds = await searchSkills(keyword)
+
+  boolClause.should.push({
+    query_string: {
+      fields: ['firstName', 'lastName', 'handle'],
+      query: `*${keyword.replace(/  +/g, ' ').split(' ').join('* AND *')}*`
+    }
+  })
 
   boolClause.should.push({
     nested: {
@@ -783,21 +793,27 @@ async function resolveUserFilterFromDb (filter, { handle }, organizationId) {
       }
     })
 
-    if (typeof filter.values === 'object') {
-      for (const value of filter.values) {
+    if (typeof filter.values !== 'object') {
+      filter.values = [filter.values]
+    }
+
+    for (const value of filter.values) {
+      if (value === 'true' || value === 'false') {
         esQueryClause.bool.should.push({
           term: {
             [filter.esDocumentValueQuery]: value
           }
         })
+      } else {
+        esQueryClause.bool.should.push({
+          query_string: {
+            default_field: `${filter.esDocumentValueQuery}`,
+            query: `*${value.replace(/  +/g, ' ').split(' ').join('* AND *')}*`
+          }
+        })
       }
-    } else {
-      esQueryClause.bool.should.push({
-        term: {
-          [filter.esDocumentValueQuery]: filter.values
-        }
-      })
     }
+
     esQueryClause.bool.minimum_should_match = 1
 
     return {
@@ -815,10 +831,18 @@ async function resolveUserFilterFromDb (filter, { handle }, organizationId) {
     }
 
     const model = filter.model
+
+    let filterValuesQuery = `${filter.queryField} like '%${filter.values[0]}%'`
+    const nFilterValues = filter.values.length
+    for (let i = 1; i < nFilterValues; i++) {
+      filterValuesQuery = `${filterValuesQuery} OR ${filter.queryField} like '%${filter.values[i]}%'`
+    }
+
     // TODO Use the service method instead of raw query
     const dbQueries = [
-      `${filter.queryField} in (${filter.values.map(f => `'${f}'`).join(',')})`
+      filterValuesQuery
     ]
+
     const results = await DBHelper.find(model, dbQueries)
     if (results.length > 0) {
       for (const { id } of results) {
