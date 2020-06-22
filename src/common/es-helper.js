@@ -42,6 +42,10 @@ const USER_ATTRIBUTE = {
   esDocumentId: 'attributes.id'
 }
 
+const USER_ORGANIZATION = {
+  esOrganizationQuery: 'externalProfiles.organizationId.keyword'
+}
+
 const USER_FILTER_TO_MODEL = {
   skill: {
     name: 'skill',
@@ -51,9 +55,7 @@ const USER_FILTER_TO_MODEL = {
     esDocumentQuery: 'skills.skillId.keyword',
     values: []
   },
-  get skills() {
-    return this.skill
-  },
+  get skills () { return this.skill },
   achievement: {
     name: 'achievement',
     isAttribute: false,
@@ -63,9 +65,7 @@ const USER_FILTER_TO_MODEL = {
     esDocumentQuery: 'achievements.id.keyword',
     values: []
   },
-  get achievements() {
-    return this.achievement
-  },
+  get achievements () { return this.achievement },
   location: {
     name: 'location',
     isAttribute: true,
@@ -76,9 +76,7 @@ const USER_FILTER_TO_MODEL = {
     defaultSortOrder: 'asc',
     values: []
   },
-  get locations() {
-    return this.location
-  },
+  get locations () { return this.location },
   isavailable: {
     name: 'isAvailable',
     isAttribute: true,
@@ -280,7 +278,7 @@ const FILTER_CHAIN = {
  * @param modelName the model name
  * @returns {string|*} the resource
  */
-function getResource(modelName) {
+function getResource (modelName) {
   if (MODEL_TO_RESOURCE[modelName]) {
     return MODEL_TO_RESOURCE[modelName]
   } else {
@@ -288,11 +286,11 @@ function getResource(modelName) {
   }
 }
 
-function getTotalCount(total) {
+function getTotalCount (total) {
   return typeof total === 'number' ? total : total.value
 }
 
-async function getOrganizationId(handle) {
+async function getOrganizationId (handle) {
   const DBHelper = require('../models/index').DBHelper
 
   // TODO Use the service method instead of raw query
@@ -309,7 +307,7 @@ async function getOrganizationId(handle) {
   throw new Error('User doesn\'t belong to any organization')
 }
 
-async function getAttributeId(organizationId, attributeName) {
+async function getAttributeId (organizationId, attributeName) {
   const DBHelper = require('../models/index').DBHelper
 
   // TODO Use the service method instead of raw query
@@ -327,7 +325,7 @@ async function getAttributeId(organizationId, attributeName) {
   throw new Error(`Attribute ${attributeName} is invalid for the current users organization`)
 }
 
-function parseUserFilter(params) {
+function parseUserFilter (params) {
   const filters = {}
   _.forOwn(params, (value, key) => {
     key = key.toLowerCase()
@@ -349,7 +347,7 @@ function parseUserFilter(params) {
  * resources which are not in user index.
  * @returns {{}} the resource filters keyed by resource
  */
-function parseEnrichFilter(params) {
+function parseEnrichFilter (params) {
   const filters = {}
   _.forOwn(params, (value, key) => {
     if (key.includes('.')) {
@@ -383,7 +381,7 @@ function parseEnrichFilter(params) {
  * @param item the parent object
  * @returns {Promise<void>} the promise of enriched parent object
  */
-async function enrichResource(resource, enrichIdProp, item) {
+async function enrichResource (resource, enrichIdProp, item) {
   const subDoc = DOCUMENTS[resource]
   const filterChain = FILTER_CHAIN[resource]
   const subResult = await esClient.getSource({
@@ -409,7 +407,7 @@ async function enrichResource(resource, enrichIdProp, item) {
  * @param user the user object to enrich
  * @returns {Promise<*>} the promise of enriched user
  */
-async function enrichUser(user) {
+async function enrichUser (user) {
   for (const subProp of Object.keys(SUB_DOCUMENTS)) {
     const subDoc = SUB_DOCUMENTS[subProp]
     const subData = user[subDoc.userField]
@@ -429,7 +427,7 @@ async function enrichUser(user) {
  * @param users list of users from ES search
  * @returns {Promise<*>} the enriched users
  */
-async function enrichUsers(users) {
+async function enrichUsers (users) {
   const enrichedUsers = []
   for (const user of users) {
     const enriched = await enrichUser(user)
@@ -444,7 +442,7 @@ async function enrichUsers(users) {
  * @param args the request path and query parameters
  * @returns {Promise<*>} the promise of retrieved resource object from ES
  */
-async function getFromElasticSearch(resource, ...args) {
+async function getFromElasticSearch (resource, ...args) {
   logger.debug(`Get from ES first: args ${JSON.stringify(args, null, 2)}`)
   const id = args[0]
   // path and query parameters
@@ -500,7 +498,7 @@ async function getFromElasticSearch(resource, ...args) {
  * @param itself true mean the filter is applied the resource itself
  * @returns {[]} parsed filter array
  */
-function parseResourceFilter(resource, params, itself) {
+function parseResourceFilter (resource, params, itself) {
   const resDefinedFilters = RESOURCE_FILTER[resource]
   const resFilters = []
   if (resDefinedFilters) {
@@ -535,7 +533,7 @@ function parseResourceFilter(resource, params, itself) {
  * @param resFilters the resource filters
  * @param esQuery the ES query
  */
-function setResourceFilterToEsQuery(resFilters, esQuery) {
+function setResourceFilterToEsQuery (resFilters, esQuery) {
   // TODO only current res filter
   if (resFilters.length > 0) {
     for (const filter of resFilters) {
@@ -561,7 +559,7 @@ function setResourceFilterToEsQuery(resFilters, esQuery) {
  * @param queryField the field that the filter applies
  * @returns {*} the ES query
  */
-function setFilterValueToEsQuery(esQuery, matchField, filterValue, queryField) {
+function setFilterValueToEsQuery (esQuery, matchField, filterValue, queryField) {
   if (queryField !== 'name') {
     matchField = matchField + '.keyword'
   }
@@ -590,7 +588,7 @@ function setFilterValueToEsQuery(esQuery, matchField, filterValue, queryField) {
  * @param filterClause the filter clause of the ES query
  * @param attributes array of attribute id and value objects
  */
-function setUserAttributesFiltersToEsQuery(filterClause, attributes) {
+function setUserAttributesFiltersToEsQuery (filterClause, attributes) {
   for (const attribute of attributes) {
     if (typeof attribute.value !== 'object') {
       attribute.value = [attribute.value]
@@ -622,7 +620,15 @@ function setUserAttributesFiltersToEsQuery(filterClause, attributes) {
   }
 }
 
-function hasNonAlphaNumeric(text) {
+function setUserOrganizationFiilterToEsQuery (filterClause, organizationId) {
+  filterClause.push({
+    term: {
+      [USER_ORGANIZATION.esOrganizationQuery]: organizationId
+    }
+  })
+}
+
+function hasNonAlphaNumeric (text) {
   const regex = /^[A-Za-z0-9 ]+$/
   return !regex.test(text)
 }
@@ -633,7 +639,7 @@ function hasNonAlphaNumeric(text) {
  * @param keyword the search keyword
  * @returns array of skillIds
  */
-async function searchSkills(keyword) {
+async function searchSkills (keyword) {
   const queryDoc = DOCUMENTS.skill
 
   const query = hasNonAlphaNumeric(keyword) ? `\\*${keyword}\\*` : `*${keyword}*`
@@ -658,7 +664,7 @@ async function searchSkills(keyword) {
   return results.hits.hits.map(hit => hit._source.id)
 }
 
-async function setUserSearchClausesToEsQuery(boolClause, keyword) {
+async function setUserSearchClausesToEsQuery (boolClause, keyword) {
   const skillIds = await searchSkills(keyword)
 
   boolClause.should.push({
@@ -701,7 +707,7 @@ async function setUserSearchClausesToEsQuery(boolClause, keyword) {
  * @param filter
  * @returns {{}} created ES query object
  */
-function buildEsQueryFromFilter(filter) {
+function buildEsQueryFromFilter (filter) {
   const queryDoc = DOCUMENTS[filter.resource]
   const esQuery = {
     index: queryDoc.index,
@@ -728,7 +734,7 @@ function buildEsQueryFromFilter(filter) {
  * @param size the number of attributes to fetch
  * @return {{}} created ES query object
  */
-function buildEsQueryToGetAttributeValues(attributeId, attributeValue, size) {
+function buildEsQueryToGetAttributeValues (attributeId, attributeValue, size) {
   const queryDoc = DOCUMENTS.user
 
   const esQuery = {
@@ -777,9 +783,7 @@ function buildEsQueryToGetAttributeValues(attributeId, attributeValue, size) {
   return esQuery
 }
 
-async function resolveUserFilterFromDb(filter, {
-  handle
-}, organizationId) {
+async function resolveUserFilterFromDb (filter, { handle }, organizationId) {
   const DBHelper = require('../models/index').DBHelper
 
   if (filter.isAttribute) {
@@ -855,9 +859,7 @@ async function resolveUserFilterFromDb(filter, {
 
     const results = await DBHelper.find(model, dbQueries)
     if (results.length > 0) {
-      for (const {
-          id
-        } of results) {
+      for (const { id } of results) {
         esQueryClause.bool.should.push({
           term: {
             [filter.esDocumentQuery]: id
@@ -872,9 +874,7 @@ async function resolveUserFilterFromDb(filter, {
   }
 }
 
-async function resolveSortClauseFromDb(orderBy, {
-  handle
-}, organizationId) {
+async function resolveSortClauseFromDb (orderBy, { handle }, organizationId) {
   if (orderBy === 'name') {
     return [{
       'firstName.keyword': 'asc'
@@ -913,7 +913,7 @@ async function resolveSortClauseFromDb(orderBy, {
  * @param initialRes the resource that initial request comes in
  * @returns {Promise<*>} the resolved value
  */
-async function resolveResFilter(filter, initialRes) {
+async function resolveResFilter (filter, initialRes) {
   const doc = DOCUMENTS[filter.resource]
   const filterChain = FILTER_CHAIN[filter.resource]
 
@@ -961,7 +961,7 @@ async function resolveResFilter(filter, initialRes) {
  * @param perPage
  * @returns {*}
  */
-function applySubResFilters(results, preResFilterResults, ownResFilters, perPage) {
+function applySubResFilters (results, preResFilterResults, ownResFilters, perPage) {
   let count = 0
   const filtered = results.filter(item => {
     for (const filter of preResFilterResults) {
@@ -989,7 +989,7 @@ function applySubResFilters(results, preResFilterResults, ownResFilters, perPage
  * @param args the request path and query parameters
  * @returns {Promise<*>} the promise of searched results
  */
-async function searchElasticSearch(resource, ...args) {
+async function searchElasticSearch (resource, ...args) {
   const {
     checkIfExists,
     getAuthUser
@@ -1171,10 +1171,8 @@ async function searchElasticSearch(resource, ...args) {
   }
 }
 
-async function publishMessage(op, resource, result) {
-  const {
-    postEvent
-  } = require('./helper')
+async function publishMessage (op, resource, result) {
+  const { postEvent } = require('./helper')
 
   if (!OP_TO_TOPIC[op]) {
     logger.warn(`Invalid operation: ${op}`)
@@ -1184,9 +1182,7 @@ async function publishMessage(op, resource, result) {
   logger.debug(`Publishing message to bus: resource ${resource}, data ${JSON.stringify(result, null, 2)}`)
 
   // Send Kafka message using bus api
-  await postEvent(OP_TO_TOPIC[op], _.assign({
-    resource: resource
-  }, result))
+  await postEvent(OP_TO_TOPIC[op], _.assign({ resource }, result))
 }
 
 /**
@@ -1196,7 +1192,7 @@ async function publishMessage(op, resource, result) {
  * @param Model the model to access
  * @returns {{}} ES wrapped CRUD methods
  */
-function wrapElasticSearchOp(methods, Model) {
+function wrapElasticSearchOp (methods, Model) {
   logger.info('Decorating ES to API methods')
 
   // methods: create, search, patch, get, remove
@@ -1213,10 +1209,7 @@ function wrapElasticSearchOp(methods, Model) {
             throw errors.elasticSearchEnrichError(err.message)
           }
           logger.logFullError(err)
-          const {
-            items,
-            meta
-          } = await func(...args)
+          const { items, meta } = await func(...args)
           // return fromDB:true to indicate it is got from db,
           // and response headers ('X-Total', 'X-Page', etc.) are not set in this case
           return {
@@ -1227,9 +1220,7 @@ function wrapElasticSearchOp(methods, Model) {
         }
       }
     } else if (func.name === 'get') {
-      const {
-        permissionCheck
-      } = require('./helper')
+      const { permissionCheck } = require('./helper')
       return async (...args) => {
         if (args[3]) {
           // merge query to params if exists. req.query was added at the end not to break the existing QLDB code.
@@ -1275,11 +1266,8 @@ function wrapElasticSearchOp(methods, Model) {
   })
 }
 
-async function searchUsers(authUser, filter, params) {
-  const {
-    checkIfExists,
-    getAuthUser
-  } = require('./helper')
+async function searchUsers (authUser, filter, params) {
+  const { checkIfExists, getAuthUser } = require('./helper')
   const queryDoc = DOCUMENTS.user
 
   if (!params.page) {
@@ -1340,6 +1328,10 @@ async function searchUsers(authUser, filter, params) {
     setUserAttributesFiltersToEsQuery(esQuery.body.query.bool.filter, filter.attributes)
   }
 
+  if (filter.organizationId != null) {
+    setUserOrganizationFiilterToEsQuery(esQuery.body.query.bool.filter, filter.organizationId)
+  }
+
   logger.debug(`ES query for searching users: ${JSON.stringify(esQuery, null, 2)}`)
 
   const docs = await esClient.search(esQuery)
@@ -1362,10 +1354,7 @@ async function searchUsers(authUser, filter, params) {
   }
 }
 
-async function searchAttributeValues({
-  attributeId,
-  attributeValue
-}) {
+async function searchAttributeValues ({ attributeId, attributeValue }) {
   const esQuery = buildEsQueryToGetAttributeValues(attributeId, attributeValue, 5)
   logger.debug(`ES query for searching attribute values: ${JSON.stringify(esQuery, null, 2)}`)
 
@@ -1387,9 +1376,7 @@ async function searchAttributeValues({
     }
   }
 
-  return {
-    result
-  }
+  return { result }
 }
 
 module.exports = {
