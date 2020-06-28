@@ -20,8 +20,8 @@ function buildServices (dir) {
     } else if (file.toLowerCase().indexOf('service.js') >= 0) {
       let serviceName = curPath.split('modules')[1]
       serviceName = serviceName.substr(1, serviceName.length - 4)
-      logger.info(`add decorates for service --> ${serviceName}`)
-        logger.buildService(serviceName, require(curPath)); // eslint-disable-line
+      logger.info(`add decorators for service --> ${serviceName}`)
+      logger.buildService(serviceName, require(curPath)); // eslint-disable-line
     }
   })
 }
