@@ -16,6 +16,13 @@ async function insertIntoES (modelName, body) {
   const client = getESClient()
 
   if (_.includes(_.keys(topResources), esResourceName)) {
+    try {
+      await client.indices.delete({
+        index: topResources[esResourceName].index
+      })
+    } catch (error) {
+      // Ignore error. Indice might not exist
+    }
     await client.create({
       index: topResources[esResourceName].index,
       type: topResources[esResourceName].type,
