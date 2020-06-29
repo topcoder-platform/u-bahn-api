@@ -10,7 +10,7 @@ const methods = helper.getServiceMethods(
   {
     skillProviderId: joi.string().required(),
     name: joi.string().required(),
-    uri: joi.string().required(),
+    uri: joi.string(),
     externalId: joi.string().required()
   },
   {
@@ -19,7 +19,10 @@ const methods = helper.getServiceMethods(
     uri: joi.string(),
     externalId: joi.string()
   },
-  {},
+  {
+    skillProviderId: joi.string(),
+    externalId: joi.string()
+  },
   async query => {
     const dbQueries = []
     if (query.externalId) {
