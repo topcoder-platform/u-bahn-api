@@ -1,7 +1,6 @@
 const config = require('config')
 const _ = require('lodash')
 const logger = require('../common/logger')
-const errors = require('./errors')
 const groupApi = require('./group-api')
 const appConst = require('../consts')
 const esClient = require('./es-client').getESClient()
@@ -18,27 +17,16 @@ _.forOwn(DOCUMENTS, (value, key) => {
   }
 })
 
-// mapping operation to topic
-const OP_TO_TOPIC = {
-  create: config.UBAHN_CREATE_TOPIC,
-  patch: config.UBAHN_UPDATE_TOPIC,
-  remove: config.UBAHN_DELETE_TOPIC
-}
-
-// map model name to bus message resource if different
-const MODEL_TO_RESOURCE = {
-  UsersSkill: 'userskill',
-  SkillsProvider: 'skillprovider',
-  AchievementsProvider: 'achievementprovider',
-  UsersAttribute: 'userattribute',
-  UsersRole: 'userrole'
-}
-
 const USER_ATTRIBUTE = {
   esDocumentPath: 'attributes',
   esDocumentQuery: 'attributes.attributeId.keyword',
   esDocumentValueStringQuery: 'attributes.value',
-  esDocumentValueQuery: 'attributes.value.keyword'
+  esDocumentValueQuery: 'attributes.value.keyword',
+  esDocumentId: 'attributes.id'
+}
+
+const USER_ORGANIZATION = {
+  esOrganizationQuery: 'externalProfiles.organizationId.keyword'
 }
 
 const USER_FILTER_TO_MODEL = {
@@ -106,11 +94,6 @@ const RESOURCE_FILTER = {
       resource: 'userrole',
       queryField: 'roleId'
     }
-    // TODO usergroup/group resource is not implemented yet
-    // groupId: {
-    //   resource: 'usergroup',
-    //   queryField: 'groupId'
-    // }
   },
   role: {
     name: {
@@ -177,6 +160,14 @@ const RESOURCE_FILTER = {
     organizationName: {
       resource: 'organization',
       queryField: 'name'
+    },
+    externalId: {
+      resource: 'externalprofile',
+      queryField: 'externalId'
+    },
+    isInactive: {
+      resource: 'externalprofile',
+      queryField: 'isInactive'
     }
   },
   achievement: {
@@ -265,19 +256,6 @@ const FILTER_CHAIN = {
   userattribute: {
     enrichNext: 'attribute',
     idField: 'attributeId'
-  }
-}
-
-/**
- * Get the resource from model name
- * @param modelName the model name
- * @returns {string|*} the resource
- */
-function getResource (modelName) {
-  if (MODEL_TO_RESOURCE[modelName]) {
-    return MODEL_TO_RESOURCE[modelName]
-  } else {
-    return modelName.toLowerCase()
   }
 }
 
@@ -379,7 +357,11 @@ function parseEnrichFilter (params) {
 async function enrichResource (resource, enrichIdProp, item) {
   const subDoc = DOCUMENTS[resource]
   const filterChain = FILTER_CHAIN[resource]
-  const subResult = await esClient.getSource({ index: subDoc.index, type: subDoc.type, id: item[enrichIdProp] })
+  const subResult = await esClient.getSource({
+    index: subDoc.index,
+    type: subDoc.type,
+    id: item[enrichIdProp]
+  })
 
   if (filterChain.enrichNext) {
     const enrichIdProp = filterChain.idField
@@ -525,12 +507,11 @@ function parseResourceFilter (resource, params, itself) {
  * @param esQuery the ES query
  */
 function setResourceFilterToEsQuery (resFilters, esQuery) {
-  // TODO only current res filter
   if (resFilters.length > 0) {
     for (const filter of resFilters) {
       const doc = DOCUMENTS[filter.resource]
-      let matchField = doc.userField ? `${doc.userField}.${doc.queryField}` : `${filter.queryField}`
-      if (filter.queryField !== 'name') {
+      let matchField = doc.userField ? `${doc.userField}.${filter.queryField}` : `${filter.queryField}`
+      if (filter.queryField !== 'name' && filter.queryField !== 'isInactive') {
         matchField = matchField + '.keyword'
       }
       esQuery.body.query.bool.must.push({
@@ -551,7 +532,7 @@ function setResourceFilterToEsQuery (resFilters, esQuery) {
  * @returns {*} the ES query
  */
 function setFilterValueToEsQuery (esQuery, matchField, filterValue, queryField) {
-  if (queryField !== 'name') {
+  if (queryField !== 'name' && queryField !== 'isInactive') {
     matchField = matchField + '.keyword'
   }
   if (Array.isArray(filterValue)) {
@@ -590,13 +571,11 @@ function setUserAttributesFiltersToEsQuery (filterClause, attributes) {
         path: USER_ATTRIBUTE.esDocumentPath,
         query: {
           bool: {
-            filter: [
-              {
-                term: {
-                  [USER_ATTRIBUTE.esDocumentQuery]: attribute.id
-                }
+            filter: [{
+              term: {
+                [USER_ATTRIBUTE.esDocumentQuery]: attribute.id
               }
-            ],
+            }],
             should: attribute.value.map(val => {
               return {
                 query_string: {
@@ -613,7 +592,15 @@ function setUserAttributesFiltersToEsQuery (filterClause, attributes) {
   }
 }
 
-function hasNonAlphaNumeric(text) {
+function setUserOrganizationFiilterToEsQuery (filterClause, organizationId) {
+  filterClause.push({
+    term: {
+      [USER_ORGANIZATION.esOrganizationQuery]: organizationId
+    }
+  })
+}
+
+function hasNonAlphaNumeric (text) {
   const regex = /^[A-Za-z0-9 ]+$/
   return !regex.test(text)
 }
@@ -627,7 +614,7 @@ function hasNonAlphaNumeric(text) {
 async function searchSkills (keyword) {
   const queryDoc = DOCUMENTS.skill
 
-  let query = hasNonAlphaNumeric(keyword) ? `\\*${keyword}\\*` : `*${keyword}*`
+  const query = hasNonAlphaNumeric(keyword) ? `\\*${keyword}\\*` : `*${keyword}*`
 
   const esQuery = {
     index: queryDoc.index,
@@ -716,61 +703,51 @@ function buildEsQueryFromFilter (filter) {
  * Build ES Query to get attribute values by attributeId
  * @param attributeId the attribute whose values to fetch
  * @param attributeValue only fetch values that are case insensitive substrings of attributeValue
- * @param page result page, defaults to 1
- * @param perPage maximum number of matches to return, defaults to 5
+ * @param size the number of attributes to fetch
  * @return {{}} created ES query object
  */
-function buildEsQueryToGetAttributeValues (attributeId, attributeValue, page = 1, perPage = config.PAGE_SIZE) {
+function buildEsQueryToGetAttributeValues (attributeId, attributeValue, size) {
   const queryDoc = DOCUMENTS.user
-
-  const matchConditions = [{
-    match: {
-      [USER_ATTRIBUTE.esDocumentQuery]: attributeId
-    }
-  }]
-
-  if (attributeValue !== null) {
-    matchConditions.push({
-      query_string: {
-        default_field: USER_ATTRIBUTE.esDocumentValueStringQuery,
-        // minimum_should_match: `100%`, /* disallow misspellings */
-        query: `*${attributeValue}*`
-      }
-    })
-  }
 
   const esQuery = {
     index: queryDoc.index,
     type: queryDoc.type,
     body: {
-      query: {
-        nested: {
-          path: USER_ATTRIBUTE.esDocumentPath,
-          query: {
-            bool: {
-              must: matchConditions
-            }
-          },
-          inner_hits: {} // Get the attriute values
-        }
-      },
-      sort: [{
-        [USER_ATTRIBUTE.esDocumentValueQuery]: {
-          order: 'asc',
+      size: 0,
+      aggs: {
+        attributes: {
           nested: {
-            path: USER_ATTRIBUTE.esDocumentPath,
-            filter: {
-              term: {
-                [USER_ATTRIBUTE.esDocumentQuery]: attributeId
+            path: USER_ATTRIBUTE.esDocumentPath
+          },
+          aggs: {
+            ids: {
+              terms: {
+                field: USER_ATTRIBUTE.esDocumentQuery,
+                include: attributeId
+              },
+              aggs: {
+                values: {
+                  terms: {
+                    field: USER_ATTRIBUTE.esDocumentValueQuery,
+                    include: `.*${attributeValue.replace(/[A-Za-z]/g, c => `[${c.toLowerCase()}${c.toUpperCase()}]`)}.*`,
+                    order: {
+                      _key: 'asc'
+                    },
+                    size: size || 1000
+                  },
+                  aggs: {
+                    attribute: {
+                      top_hits: {
+                        size: 1,
+                        _source: USER_ATTRIBUTE.esDocumentId
+                      }
+                    }
+                  }
+                }
               }
             }
           }
         }
-      }],
-      size: perPage,
-      from: (page - 1) * perPage,
-      _source: {
-        excludes: '*' // Parent document matches aren't required
       }
     }
   }
@@ -889,7 +866,9 @@ async function resolveSortClauseFromDb (orderBy, { handle }, organizationId) {
           nested: {
             path: attribute.esDocumentPath,
             filter: {
-              term: { [`${attribute.esDocumentQuery}`]: await getAttributeId(organizationId, attribute.attributeName) }
+              term: {
+                [`${attribute.esDocumentQuery}`]: await getAttributeId(organizationId, attribute.attributeName)
+              }
             }
           }
         }
@@ -983,7 +962,10 @@ function applySubResFilters (results, preResFilterResults, ownResFilters, perPag
  * @returns {Promise<*>} the promise of searched results
  */
 async function searchElasticSearch (resource, ...args) {
-  const { checkIfExists, getAuthUser } = require('./helper')
+  const {
+    checkIfExists,
+    getAuthUser
+  } = require('./helper')
   logger.debug(`Searching ES first: ${JSON.stringify(args, null, 2)}`)
   // path and query parameters
   const params = args[0]
@@ -1127,7 +1109,12 @@ async function searchElasticSearch (resource, ...args) {
   logger.debug(`ES query for search ${resource}: ${JSON.stringify(esQuery, null, 2)}`)
   const docs = await esClient.search(esQuery)
   if (docs.hits && getTotalCount(docs.hits.total) === 0) {
-    return { total: docs.hits.total, page: params.page, perPage: params.perPage, result: [] }
+    return {
+      total: docs.hits.total,
+      page: params.page,
+      perPage: params.perPage,
+      result: []
+    }
   }
 
   let result = []
@@ -1148,100 +1135,22 @@ async function searchElasticSearch (resource, ...args) {
     result = docs.hits.hits.map(hit => hit._source)
   }
 
-  return { total: docs.hits.total, page: params.page, perPage: params.perPage, result }
-}
-
-async function publishMessage (op, resource, result) {
-  const { postEvent } = require('./helper')
-
-  if (!OP_TO_TOPIC[op]) {
-    logger.warn(`Invalid operation: ${op}`)
-    return
+  return {
+    total: docs.hits.total,
+    page: params.page,
+    perPage: params.perPage,
+    result
   }
-
-  logger.debug(`Publishing message to bus: resource ${resource}, data ${JSON.stringify(result, null, 2)}`)
-
-  // Send Kafka message using bus api
-  await postEvent(OP_TO_TOPIC[op], _.assign({ resource: resource }, result))
 }
 
 /**
- * Wrap QLDB methods with ES methods. Specifically read ES before QLDB for read operations, publish message
- * after QLDB for write operations.
- * @param methods QLDB CRUD methods
- * @param Model the model to access
- * @returns {{}} ES wrapped CRUD methods
+ * Searches for users. Returns enriched user information
+ * Difference between this as GET /users is that the latter uses query params to filter data
+ * and has different set of filters to query with.
+ * @param {Object} authUser The auth object
+ * @param {Object} filter The details of the search
+ * @param {Object} params The query params
  */
-function wrapElasticSearchOp (methods, Model) {
-  logger.info('Decorating ES to API methods')
-
-  // methods: create, search, patch, get, remove
-  const resource = getResource(Model.name)
-
-  return _.mapValues(methods, func => {
-    if (func.name === 'search') {
-      return async (...args) => {
-        try {
-          return await searchElasticSearch(resource, ...args)
-        } catch (err) {
-          // return error if enrich fails
-          if (resource === 'user' && args[0].enrich) {
-            throw errors.elasticSearchEnrichError(err.message)
-          }
-          logger.logFullError(err)
-          const { items, meta } = await func(...args)
-          // return fromDB:true to indicate it is got from db,
-          // and response headers ('X-Total', 'X-Page', etc.) are not set in this case
-          return { fromDB: true, total: meta.total, result: items }
-        }
-      }
-    } else if (func.name === 'get') {
-      const { permissionCheck } = require('./helper')
-      return async (...args) => {
-        if (args[3]) {
-          // merge query to params if exists. req.query was added at the end not to break the existing QLDB code.
-          args[2] = _.assign(args[2], args[3])
-        }
-        try {
-          const result = await getFromElasticSearch(resource, ...args)
-          // check permission
-          const authUser = args[1]
-          permissionCheck(authUser, result)
-          return result
-        } catch (err) {
-          // return error if enrich fails or permission fails
-          if ((resource === 'user' && args[2].enrich) || (err.status && err.status === 403)) {
-            throw errors.elasticSearchEnrichError(err.message)
-          }
-          logger.logFullError(err)
-          const result = await func(...args)
-          return result
-        }
-      }
-    } else {
-      return async (...args) => {
-        let result = await func(...args)
-        // remove action returns undefined, pass id to elasticsearch
-        if (func.name === 'remove') {
-          if (SUB_DOCUMENTS[resource]) {
-            result = _.assign({}, args[2])
-          } else {
-            result = {
-              id: args[0]
-            }
-          }
-        }
-        try {
-          await publishMessage(func.name, resource, result)
-        } catch (err) {
-          logger.logFullError(err)
-        }
-        return result
-      }
-    }
-  })
-}
-
 async function searchUsers (authUser, filter, params) {
   const { checkIfExists, getAuthUser } = require('./helper')
   const queryDoc = DOCUMENTS.user
@@ -1304,6 +1213,17 @@ async function searchUsers (authUser, filter, params) {
     setUserAttributesFiltersToEsQuery(esQuery.body.query.bool.filter, filter.attributes)
   }
 
+  if (filter.organizationId != null) {
+    setUserOrganizationFiilterToEsQuery(esQuery.body.query.bool.filter, filter.organizationId)
+  }
+
+  // We never return inactive users
+  esQuery.body.query.bool.filter.push({
+    term: {
+      'externalProfiles.isInactive': false
+    }
+  })
+
   logger.debug(`ES query for searching users: ${JSON.stringify(esQuery, null, 2)}`)
 
   const docs = await esClient.search(esQuery)
@@ -1318,27 +1238,46 @@ async function searchUsers (authUser, filter, params) {
     user.groups = groups
   }
 
-  return { total: getTotalCount(docs.hits.total), page: params.page, perPage: params.perPage, result }
+  return {
+    total: getTotalCount(docs.hits.total),
+    page: params.page,
+    perPage: params.perPage,
+    result
+  }
 }
 
+/**
+ * Searches for matching values for the given attribute value, under the given attribute id
+ * @param {Object} param0 The attribute id and the attribute value properties
+ */
 async function searchAttributeValues ({ attributeId, attributeValue }) {
-  const esQuery = buildEsQueryToGetAttributeValues(attributeId, attributeValue)
+  const esQuery = buildEsQueryToGetAttributeValues(attributeId, attributeValue, 5)
   logger.debug(`ES query for searching attribute values: ${JSON.stringify(esQuery, null, 2)}`)
 
   const esResult = await esClient.search(esQuery)
 
-  let result = esResult.hits.hits.map(hit => {
-    return hit.inner_hits.attributes.hits.hits[0]._source
-  })
+  const result = []
+  const attributes = esResult.aggregations.attributes.ids.buckets
 
-  result = _.uniqBy(result, 'value') // de-dupe by value
-  result = result.splice(0, 5) // keep only the first five matches
+  for (const attribute of attributes) {
+    const id = attribute.key
+    const values = attribute.values.buckets
+
+    for (const value of values) {
+      result.push({
+        attributeId: id,
+        value: value.key,
+        id: value.attribute.hits.hits[0]._source.id
+      })
+    }
+  }
 
   return { result }
 }
 
 module.exports = {
-  wrapElasticSearchOp,
+  searchElasticSearch,
+  getFromElasticSearch,
   searchUsers,
   searchAttributeValues
 }

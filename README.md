@@ -103,7 +103,7 @@ you can use below token to test role and permissions
 
 - token
 
-  ```json
+  ```text
   eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJUb3Bjb2RlciBVc2VyIl0sImlzcyI6Imh0dHBzOi8vYXBpLnRvcGNvZGVyLmNvbSIsImhhbmRsZSI6InRjLXVzZXIiLCJleHAiOjE2ODU1NzE0NjAsInVzZXJJZCI6IjIzMTY2NzY2IiwiaWF0IjoxNTg1NTcwODYwLCJlbWFpbCI6InRjLXVzZXJAZ21haWwuY29tIiwianRpIjoiMGYxZWYxZDMtMmIzMy00OTAwLWJiNDMtNDhmMjI4NWY5NjI3In0.eBhXqSBe8zMRg2nBeGeZDgKiJdAYs0zOMzGfJCjWfcs
   ```
 

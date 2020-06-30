@@ -10,9 +10,9 @@ const methods = helper.getServiceMethods(
   {
     userId: joi.string().required(),
     skillId: joi.string().required(),
-    metricValue: joi.string().required(),
-    certifierId: joi.string().required(),
-    certifiedDate: joi.date().format('iso').required()
+    metricValue: joi.string(),
+    certifierId: joi.string(),
+    certifiedDate: joi.date().format('iso')
   },
   {
     userId: joi.string(),

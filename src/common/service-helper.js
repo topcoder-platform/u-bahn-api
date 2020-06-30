@@ -1,8 +1,47 @@
 const joi = require('@hapi/joi')
+const config = require('config')
 const appConst = require('../consts')
 const _ = require('lodash')
 const errors = require('./errors')
 const esHelper = require('./es-helper')
+const logger = require('./logger')
+
+// mapping operation to topic
+const OP_TO_TOPIC = {
+  create: config.UBAHN_CREATE_TOPIC,
+  patch: config.UBAHN_UPDATE_TOPIC,
+  remove: config.UBAHN_DELETE_TOPIC
+}
+
+// Used for determining the payload structure when posting to bus api
+const SUB_DOCUMENTS = {}
+_.forOwn(config.ES.DOCUMENTS, (value, key) => {
+  if (value.userField) {
+    SUB_DOCUMENTS[key] = value
+  }
+})
+
+// map model name to bus message resource if different
+const MODEL_TO_RESOURCE = {
+  UsersSkill: 'userskill',
+  SkillsProvider: 'skillprovider',
+  AchievementsProvider: 'achievementprovider',
+  UsersAttribute: 'userattribute',
+  UsersRole: 'userrole'
+}
+
+/**
+ * Get the resource from model name
+ * @param modelName the model name
+ * @returns {string|*} the resource
+ */
+function getResource (modelName) {
+  if (MODEL_TO_RESOURCE[modelName]) {
+    return MODEL_TO_RESOURCE[modelName]
+  } else {
+    return modelName.toLowerCase()
+  }
+}
 
 /**
  * make sure reference item exists
@@ -74,6 +113,26 @@ function buildQueryByParams (params) {
 }
 
 /**
+ * Posts the message to bus api
+ * @param {String} op The action
+ * @param {String} resource The name of the resource
+ * @param {Object} result The payload
+ */
+async function publishMessage (op, resource, result) {
+  if (!OP_TO_TOPIC[op]) {
+    logger.warn(`Invalid operation: ${op}`)
+    return
+  }
+
+  const { postEvent } = require('./helper')
+
+  logger.debug(`Publishing message to bus: resource ${resource}, data ${JSON.stringify(result, null, 2)}`)
+
+  // Send Kafka message using bus api
+  await postEvent(OP_TO_TOPIC[op], _.assign({ resource }, result))
+}
+
+/**
  * get service methods
  * @param Model the model
  * @param createSchema the create joi schema
@@ -85,6 +144,7 @@ function buildQueryByParams (params) {
  */
 function getServiceMethods (Model, createSchema, patchSchema, searchSchema, buildDBQuery, uniqueFields) {
   const models = require('../models/index')
+  const resource = getResource(Model.name)
   const { permissionCheck, checkIfExists, getAuthUser } = require('./helper')
 
   /**
@@ -102,6 +162,11 @@ function getServiceMethods (Model, createSchema, patchSchema, searchSchema, buil
     dbEntity.created = new Date()
     dbEntity.createdBy = getAuthUser(auth)
     await models.DBHelper.save(Model, dbEntity)
+    try {
+      await publishMessage('create', resource, dbEntity)
+    } catch (err) {
+      logger.logFullError(err)
+    }
     return dbEntity
   }
 
@@ -128,6 +193,11 @@ function getServiceMethods (Model, createSchema, patchSchema, searchSchema, buil
     newEntity.updatedBy = getAuthUser(auth)
     await makeSureUnique(Model, newEntity, uniqueFields)
     await models.DBHelper.save(Model, newEntity)
+    try {
+      await publishMessage('patch', resource, newEntity)
+    } catch (err) {
+      logger.logFullError(err)
+    }
     return newEntity
   }
 
@@ -146,15 +216,29 @@ function getServiceMethods (Model, createSchema, patchSchema, searchSchema, buil
    * @param query the query parameters
    * @return {Promise} the db device
    */
-  async function get (id, auth, params, query) {
+  async function get (id, auth, params, query = {}) {
     let recordObj
-    if (_.isNil(params) || _.isEmpty(params)) {
+    // Merge path and query params
+    const trueParams = _.assign(params, query)
+    try {
+      const result = await esHelper.getFromElasticSearch(resource, id, auth, trueParams)
+      // check permission
+      permissionCheck(auth, result)
+      return result
+    } catch (err) {
+      // return error if enrich fails or permission fails
+      if ((resource === 'user' && trueParams.enrich) || (err.status && err.status === 403)) {
+        throw errors.elasticSearchEnrichError(err.message)
+      }
+      logger.logFullError(err)
+    }
+    if (_.isNil(trueParams) || _.isEmpty(trueParams)) {
       recordObj = await models.DBHelper.get(Model, id)
     } else {
-      const items = await models.DBHelper.find(Model, buildQueryByParams(params))
+      const items = await models.DBHelper.find(Model, buildQueryByParams(trueParams))
       recordObj = items[0]
       if (!recordObj) {
-        throw errors.newEntityNotFoundError(`cannot find ${Model.tableName} where ${_.map(params, (v, k) => `${k}:${v}`).join(', ')}`)
+        throw errors.newEntityNotFoundError(`cannot find ${Model.tableName} where ${_.map(trueParams, (v, k) => `${k}:${v}`).join(', ')}`)
       }
     }
     permissionCheck(auth, recordObj)
@@ -168,6 +252,17 @@ function getServiceMethods (Model, createSchema, patchSchema, searchSchema, buil
    * @return {Promise} the results
    */
   async function search (query, auth) {
+    try {
+      return await esHelper.searchElasticSearch(resource, query, auth)
+    } catch (err) {
+      // return error if enrich fails
+      if (resource === 'user' && query.enrich) {
+        throw errors.elasticSearchEnrichError(err.message)
+      }
+      logger.logFullError(err)
+    }
+
+    // Elasticsearch failed. Hit the database
     const dbQueries = await buildDBQuery(query, auth)
 
     // user token
@@ -176,7 +271,9 @@ function getServiceMethods (Model, createSchema, patchSchema, searchSchema, buil
       dbQueries.push(`${Model.tableName}.createdBy = '${getAuthUser(auth)}'`)
     }
     const items = await models.DBHelper.find(Model, dbQueries)
-    return { items, meta: { total: items.length } }
+    // return fromDB:true to indicate it is got from db,
+    // and response headers ('X-Total', 'X-Page', etc.) are not set in this case
+    return { fromDb: true, result: items, total: items.length }
   }
 
   search.schema = {
@@ -192,15 +289,26 @@ function getServiceMethods (Model, createSchema, patchSchema, searchSchema, buil
    * @return {Promise<void>} no data returned
    */
   async function remove (id, auth, params) {
+    let payload
     await get(id, auth, params) // check exist
     await models.DBHelper.delete(Model, id, buildQueryByParams(params))
+    if (SUB_DOCUMENTS[resource]) {
+      payload = _.assign({}, params)
+    } else {
+      payload = {
+        id
+      }
+    }
+    try {
+      await publishMessage('remove', resource, payload)
+    } catch (err) {
+      logger.logFullError(err)
+    }
   }
 
-  const methods = {
+  return {
     create, search, patch, get, remove
   }
-
-  return esHelper.wrapElasticSearchOp(methods, Model)
 }
 
 module.exports = {

@@ -11,18 +11,21 @@ const methods = helper.getServiceMethods(
     userId: joi.string().required(),
     organizationId: joi.string().required(),
     externalId: joi.string().required(),
-    uri: joi.string().required()
+    uri: joi.string().required(),
+    isInactive: joi.boolean().default(false)
   },
   { // patch request body joi schema
     userId: joi.string().required(),
     organizationId: joi.string().required(),
     externalId: joi.string(),
-    uri: joi.string()
+    uri: joi.string(),
+    isInactive: joi.boolean()
   },
   { // search request query joi schema
     userId: joi.string().required(),
     externalId: joi.string(),
-    organizationName: joi.string()
+    organizationName: joi.string(),
+    isInactive: joi.boolean()
   },
   async (query) => { // build search query by request
     const dbQueries = ['SELECT * FROM Organization, ExternalProfile',
@@ -33,7 +36,10 @@ const methods = helper.getServiceMethods(
       dbQueries.push(`Organization.name like '%${query.organizationName}%'`)
     }
     if (query.externalId) {
-      dbQueries.push(`ExternalProfile.externalId like '%${query.externalId}%'`)
+      dbQueries.push(`ExternalProfile.externalId = '${query.externalId}'`)
+    }
+    if (query.isInactive) {
+      dbQueries.push(`ExternalProfile.isInactive = '${query.isInactive}'`)
     }
 
     return dbQueries

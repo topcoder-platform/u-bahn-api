@@ -10,6 +10,7 @@ class ExternalProfile extends RecordObject {
     this.organizationId = null
     this.externalId = null
     this.uri = null
+    this.isInactive = null
   }
 }
 
