@@ -2,6 +2,7 @@
 set -eo pipefail
 APP_NAME=$1
 UPDATE_CACHE=""
+echo "" > docker/api.env
 docker-compose -f docker/docker-compose.yml build $APP_NAME
 docker create --name app $APP_NAME:latest
 
