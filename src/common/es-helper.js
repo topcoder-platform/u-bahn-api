@@ -109,6 +109,10 @@ const RESOURCE_FILTER = {
     skillProviderId: {
       resource: 'skill',
       queryField: 'skillProviderId'
+    },
+    name: {
+      resource: 'skill',
+      queryField: 'name'
     }
   },
   skillprovider: {

@@ -11,9 +11,9 @@ const methods = helper.getServiceMethods(
     userId: joi.string().required(),
     achievementsProviderId: joi.string().required(),
     name: joi.string().required(),
-    uri: joi.string().required(),
-    certifierId: joi.string().required(),
-    certifiedDate: joi.date().format('iso').required()
+    uri: joi.string(),
+    certifierId: joi.string(),
+    certifiedDate: joi.date().format('iso')
   },
   { // patch request body joi schema
     userId: joi.string().required(),
