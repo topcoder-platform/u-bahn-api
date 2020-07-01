@@ -47,7 +47,7 @@ module.exports = {
     delete: {
       method: Controller.remove,
       auth: 'jwt',
-      access: consts.AdminUser,
+      access: [...consts.AdminUser, consts.UserRoles.ubahn],
       scopes: ['delete:usersSkill', 'all:usersSkill']
     }
   }
