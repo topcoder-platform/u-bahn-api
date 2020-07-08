@@ -1018,7 +1018,7 @@ async function searchElasticSearch (resource, ...args) {
   const resolvedUserFilters = []
   if (params.enrich && resource === 'user') {
     const filterKey = Object.keys(userFilters)
-    let authUserOrganizationId // Fetch and hold organizationId so subsequent filter resolution needn't make the same DB query to fetch it again
+    const authUserOrganizationId = params.organizationId
     for (const key of filterKey) {
       const resolved = await resolveUserFilterFromDb(userFilters[key], authUser, authUserOrganizationId)
       resolvedUserFilters.push(resolved)
@@ -1173,7 +1173,7 @@ async function searchUsers (authUser, filter, params) {
   const userFilters = parseUserFilter(filter)
   const resolvedUserFilters = []
 
-  let authUserOrganizationId
+  const authUserOrganizationId = filter.organizationId
   const filterKey = Object.keys(userFilters)
   for (const key of filterKey) {
     const resolved = await resolveUserFilterFromDb(userFilters[key], authUser, authUserOrganizationId)
