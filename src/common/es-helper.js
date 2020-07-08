@@ -278,6 +278,8 @@ async function getOrganizationId (handle) {
   ])
 
   if (orgIdLookupResults.length > 0) {
+    throw new Error(`Handle ${handle} is associated with multiple organizations. Cannot select one.`)
+  } else if (orgIdLookupResults.length === 1) {
     return orgIdLookupResults[0].organizationId
   }
 
