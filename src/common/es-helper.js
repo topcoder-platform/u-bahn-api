@@ -707,6 +707,15 @@ function buildEsQueryFromFilter (filter) {
 }
 
 /**
+  * Returns if char is one of the reserved regex characters
+  * @param {*} char the char to check
+  */
+function isRegexReserved (char) {
+  const reserved = '[^$.|?*+(){}\\'
+  return reserved.indexOf(char) !== -1
+}
+
+/**
  * Build ES Query to get attribute values by attributeId
  * @param attributeId the attribute whose values to fetch
  * @param attributeValue only fetch values that are case insensitive substrings of attributeValue
@@ -736,7 +745,7 @@ function buildEsQueryToGetAttributeValues (attributeId, attributeValue, size) {
                 values: {
                   terms: {
                     field: USER_ATTRIBUTE.esDocumentValueQuery,
-                    include: `.*${attributeValue.replace(/[^a-zA-Z]+/gi, c => `[${c}]`).replace(/[A-Za-z]/g, c => `[${c.toLowerCase()}${c.toUpperCase()}]`)}.*`,
+                    include: `.*${attributeValue.replace(/[^a-zA-Z]/g, c => `[${!isRegexReserved(c) ? c : '\\' + c}]`).replace(/[A-Za-z]/g, c => `[${c.toLowerCase()}${c.toUpperCase()}]`)}.*`,
                     order: {
                       _key: 'asc'
                     },
@@ -1263,6 +1272,7 @@ async function searchAttributeValues ({ attributeId, attributeValue }) {
   logger.debug(`ES query for searching attribute values: ${JSON.stringify(esQuery, null, 2)}`)
 
   const esResult = await esClient.search(esQuery)
+  logger.debug(`ES Result: ${JSON.stringify(esResult, null, 2)}`)
   const result = []
   const attributes = esResult.aggregations.attributes.ids.buckets
 
