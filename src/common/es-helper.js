@@ -1263,7 +1263,6 @@ async function searchAttributeValues ({ attributeId, attributeValue }) {
   logger.debug(`ES query for searching attribute values: ${JSON.stringify(esQuery, null, 2)}`)
 
   const esResult = await esClient.search(esQuery)
-  logger.debug(`ES Result: ${JSON.stringify(esResult, null, 2)}`)
   const result = []
   const attributes = esResult.aggregations.attributes.ids.buckets
 
