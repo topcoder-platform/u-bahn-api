@@ -1,5 +1,6 @@
 const config = require('config')
 const _ = require('lodash')
+const querystring = require('querystring')
 const logger = require('../common/logger')
 const groupApi = require('./group-api')
 const appConst = require('../consts')
@@ -706,6 +707,15 @@ function buildEsQueryFromFilter (filter) {
 }
 
 /**
+  * Returns if char is one of the reserved regex characters
+  * @param {*} char the char to check
+  */
+function isRegexReserved (char) {
+  const reserved = '[^$.|?*+(){}\\'
+  return reserved.indexOf(char) !== -1
+}
+
+/**
  * Build ES Query to get attribute values by attributeId
  * @param attributeId the attribute whose values to fetch
  * @param attributeValue only fetch values that are case insensitive substrings of attributeValue
@@ -735,7 +745,7 @@ function buildEsQueryToGetAttributeValues (attributeId, attributeValue, size) {
                 values: {
                   terms: {
                     field: USER_ATTRIBUTE.esDocumentValueQuery,
-                    include: `.*${attributeValue.replace(/[A-Za-z]/g, c => `[${c.toLowerCase()}${c.toUpperCase()}]`)}.*`,
+                    include: `.*${attributeValue.replace(/[^a-zA-Z]/g, c => `[${!isRegexReserved(c) ? c : '\\' + c}]`).replace(/[A-Za-z]/g, c => `[${c.toLowerCase()}${c.toUpperCase()}]`)}.*`,
                     order: {
                       _key: 'asc'
                     },
@@ -1175,6 +1185,7 @@ async function searchUsers (authUser, filter, params) {
 
   const authUserOrganizationId = filter.organizationId
   const filterKey = Object.keys(userFilters)
+
   for (const key of filterKey) {
     const resolved = await resolveUserFilterFromDb(userFilters[key], authUser, authUserOrganizationId)
     resolvedUserFilters.push(resolved)
@@ -1257,11 +1268,11 @@ async function searchUsers (authUser, filter, params) {
  * @param {Object} param0 The attribute id and the attribute value properties
  */
 async function searchAttributeValues ({ attributeId, attributeValue }) {
-  const esQuery = buildEsQueryToGetAttributeValues(attributeId, attributeValue, 5)
+  const esQuery = buildEsQueryToGetAttributeValues(attributeId, querystring.unescape(attributeValue), 5)
   logger.debug(`ES query for searching attribute values: ${JSON.stringify(esQuery, null, 2)}`)
 
   const esResult = await esClient.search(esQuery)
-
+  logger.debug(`ES Result: ${JSON.stringify(esResult, null, 2)}`)
   const result = []
   const attributes = esResult.aggregations.attributes.ids.buckets
 
