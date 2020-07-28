@@ -584,12 +584,6 @@ function setUserAttributesFiltersToEsQuery (filterClause, attributes) {
               }
             }],
             should: attribute.value.map(val => {
-              val = val
-                .replace(/  +/g, ' ')
-                .split(' ')
-                .map(word => word.replace(/[^a-zA-Z]/g, c => `${!isRegexReserved(c) ? c : '\\' + c}`))
-                .join('* AND *')
-
               return {
                 query_string: {
                   default_field: `${[USER_ATTRIBUTE.esDocumentValueStringQuery]}`,
@@ -717,7 +711,7 @@ function buildEsQueryFromFilter (filter) {
   * @param {*} char the char to check
   */
 function isRegexReserved (char) {
-  const reserved = '+-=&|!(){}[]^"~*?:\\/'
+  const reserved = '[^$.|?*+(){}\\'
   return reserved.indexOf(char) !== -1
 }
 
