@@ -268,14 +268,14 @@ function getTotalCount (total) {
   return typeof total === 'number' ? total : total.value
 }
 
-function escapeRegex(str) {
-    return str
-      .replace(/[\*\+\-=~><\"\?^\${}\(\)\:\!\/[\]\\\s]/g, '\\$&') // replace single character special characters
-      .replace(/\|\|/g, '\\||') // replace ||
-      .replace(/\&\&/g, '\\&&') // replace &&
-      .replace(/AND/g, '\\A\\N\\D') // replace AND
-      .replace(/OR/g, '\\O\\R') // replace OR
-      .replace(/NOT/g, '\\N\\O\\T'); // replace NOT
+function escapeRegex (str) {
+  return str
+    .replace(/[\*\+\-=~><\"\?^\${}\(\)\:\!\/[\]\\\s]/g, '\\$&') // replace single character special characters
+    .replace(/\|\|/g, '\\||') // replace ||
+    .replace(/\&\&/g, '\\&&') // replace &&
+    .replace(/AND/g, '\\A\\N\\D') // replace AND
+    .replace(/OR/g, '\\O\\R') // replace OR
+    .replace(/NOT/g, '\\N\\O\\T') // replace NOT
 }
 
 async function getOrganizationId (handle) {
@@ -583,7 +583,6 @@ function setUserAttributesFiltersToEsQuery (filterClause, attributes) {
       attribute.value = [attribute.value]
     }
 
-    
     filterClause.push({
       nested: {
         path: USER_ATTRIBUTE.esDocumentPath,
@@ -660,7 +659,7 @@ async function setUserSearchClausesToEsQuery (boolClause, keyword) {
   boolClause.should.push({
     query_string: {
       fields: ['firstName', 'lastName', 'handle'],
-      query: `*${keyword.replace(/  +/g, ' ').split(' ').join('* AND *')}*`
+      query: `*${keyword.replace(/  +/g, ' ').split(' ').join('* OR *')}*`
     }
   })
 
