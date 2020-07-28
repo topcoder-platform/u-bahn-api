@@ -630,7 +630,7 @@ function hasNonAlphaNumeric (text) {
  */
 async function searchSkills (keyword) {
   const queryDoc = DOCUMENTS.skill
-
+  keyword = escapeRegex(keyword)
   const query = hasNonAlphaNumeric(keyword) ? `\\*${keyword}\\*` : `*${keyword}*`
 
   const esQuery = {
@@ -655,14 +655,14 @@ async function searchSkills (keyword) {
 
 async function setUserSearchClausesToEsQuery (boolClause, keyword) {
   const skillIds = await searchSkills(keyword)
-
   boolClause.should.push({
     query_string: {
       fields: ['firstName', 'lastName', 'handle'],
-      query: `*${keyword.replace(/  +/g, ' ').split(' ').join('* OR *')}*`
+      query: `\\*${escapeRegex(keyword.replace(/  +/g, ' ')).split(' ').join('\\* OR \\*')}\\*`
     }
   })
 
+  keyword = escapeRegex(keyword)
   boolClause.should.push({
     nested: {
       path: USER_ATTRIBUTE.esDocumentPath,
