@@ -717,7 +717,7 @@ function buildEsQueryFromFilter (filter) {
   * @param {*} char the char to check
   */
 function isRegexReserved (char) {
-  const reserved = '+-=&|!(){}[]^"~*?:\\/'
+  const reserved = '+-=&|!(){}[]^"~*?:\\/.$'
   return reserved.indexOf(char) !== -1
 }
 
