@@ -269,7 +269,6 @@ function getTotalCount (total) {
 }
 
 function escapeRegex (str) {
-  console.log('Escape', str)
   return str
     .replace(/[\*\+\-=~><\"\?^\${}\(\)\:\!\/[\]\\\s]/g, '\\$&') // replace single character special characters
     .replace(/\|\|/g, '\\||') // replace ||
