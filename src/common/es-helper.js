@@ -268,6 +268,16 @@ function getTotalCount (total) {
   return typeof total === 'number' ? total : total.value
 }
 
+function escapeRegex(str) {
+    return str
+      .replace(/[\*\+\-=~><\"\?^\${}\(\)\:\!\/[\]\\\s]/g, '\\$&') // replace single character special characters
+      .replace(/\|\|/g, '\\||') // replace ||
+      .replace(/\&\&/g, '\\&&') // replace &&
+      .replace(/AND/g, '\\A\\N\\D') // replace AND
+      .replace(/OR/g, '\\O\\R') // replace OR
+      .replace(/NOT/g, '\\N\\O\\T'); // replace NOT
+}
+
 async function getOrganizationId (handle) {
   const DBHelper = require('../models/index').DBHelper
 
@@ -573,6 +583,7 @@ function setUserAttributesFiltersToEsQuery (filterClause, attributes) {
       attribute.value = [attribute.value]
     }
 
+    
     filterClause.push({
       nested: {
         path: USER_ATTRIBUTE.esDocumentPath,
@@ -586,8 +597,8 @@ function setUserAttributesFiltersToEsQuery (filterClause, attributes) {
             should: attribute.value.map(val => {
               return {
                 query_string: {
-                  default_field: `${[USER_ATTRIBUTE.esDocumentValueStringQuery]}`,
-                  query: `*${val.replace(/  +/g, ' ').split(' ').join('* AND *')}*`
+                  default_field: `${[USER_ATTRIBUTE.esDocumentValueQuery]}`,
+                  query: `*${val.replace(/  +/g, ' ').split(' ').map(p => escapeRegex(p)).join('* AND *')}*`
                 }
               }
             }),
@@ -711,7 +722,7 @@ function buildEsQueryFromFilter (filter) {
   * @param {*} char the char to check
   */
 function isRegexReserved (char) {
-  const reserved = '[^$.|?*+(){}\\'
+  const reserved = '^$#@&<>~.?+*|{}[]()"\\'
   return reserved.indexOf(char) !== -1
 }
 
