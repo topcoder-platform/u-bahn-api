@@ -9,12 +9,17 @@ const esClient = require('./es-client').getESClient()
 const DOCUMENTS = config.ES.DOCUMENTS
 const RESOURCES = Object.keys(DOCUMENTS)
 
-const SUB_DOCUMENTS = {}
-const SUB_PROPERTIES = []
+const SUB_USER_DOCUMENTS = {}
+const SUB_ORG_DOCUMENTS = {}
+const SUB_USER_PROPERTIES = []
+const SUB_ORG_PROPERTIES = []
 _.forOwn(DOCUMENTS, (value, key) => {
   if (value.userField) {
-    SUB_DOCUMENTS[key] = value
-    SUB_PROPERTIES.push(value.userField)
+    SUB_USER_DOCUMENTS[key] = value
+    SUB_USER_PROPERTIES.push(value.userField)
+  } else if (value.orgField) {
+    SUB_ORG_DOCUMENTS[key] = value
+    SUB_ORG_PROPERTIES.push(value.orgField)
   }
 })
 
@@ -197,7 +202,7 @@ const RESOURCE_FILTER = {
   }
 }
 
-// filter chaim config
+// filter chain config
 const FILTER_CHAIN = {
   user: {
     idField: 'id'
@@ -241,7 +246,7 @@ const FILTER_CHAIN = {
   },
   // sub resource
   userskill: {
-    queryFielid: 'skillId',
+    queryField: 'skillId',
     enrichNext: 'skill',
     idField: 'skillId'
   },
@@ -261,6 +266,11 @@ const FILTER_CHAIN = {
   userattribute: {
     enrichNext: 'attribute',
     idField: 'attributeId'
+  },
+  organizationskillprovider: {
+    queryField: 'skillProviderId',
+    enrichNext: 'skillprovider',
+    idField: 'skillProviderId'
   }
 }
 
@@ -269,6 +279,7 @@ function getTotalCount (total) {
 }
 
 function escapeRegex (str) {
+  /* eslint-disable no-useless-escape */
   return str
     .replace(/[\*\+\-=~><\"\?^\${}\(\)\:\!\/[\]\\\s]/g, '\\$&') // replace single character special characters
     .replace(/\|\|/g, '\\||') // replace ||
@@ -276,6 +287,7 @@ function escapeRegex (str) {
     .replace(/AND/g, '\\A\\N\\D') // replace AND
     .replace(/OR/g, '\\O\\R') // replace OR
     .replace(/NOT/g, '\\N\\O\\T') // replace NOT
+  /* eslint-enable no-useless-escape */
 }
 
 async function getOrganizationId (handle) {
@@ -398,8 +410,8 @@ async function enrichResource (resource, enrichIdProp, item) {
  * @returns {Promise<*>} the promise of enriched user
  */
 async function enrichUser (user) {
-  for (const subProp of Object.keys(SUB_DOCUMENTS)) {
-    const subDoc = SUB_DOCUMENTS[subProp]
+  for (const subProp of Object.keys(SUB_USER_DOCUMENTS)) {
+    const subDoc = SUB_USER_DOCUMENTS[subProp]
     const subData = user[subDoc.userField]
     const filterChain = FILTER_CHAIN[subProp]
     if (subData && subData.length > 0) {
@@ -440,23 +452,43 @@ async function getFromElasticSearch (resource, ...args) {
 
   const doc = DOCUMENTS[resource]
   const userDoc = DOCUMENTS.user
-  const subDoc = SUB_DOCUMENTS[resource]
+  const orgDoc = DOCUMENTS.organization
+  const subUserDoc = SUB_USER_DOCUMENTS[resource]
+  const subOrgDoc = SUB_ORG_DOCUMENTS[resource]
   const filterChain = FILTER_CHAIN[resource]
 
+  let esQuery
+
   // construct ES query
-  const esQuery = {
-    index: doc.userField ? userDoc.index : doc.index,
-    type: doc.userField ? userDoc.type : doc.type,
-    id: doc.userField ? params.userId : id
+  if (doc.userField) {
+    esQuery = {
+      index: userDoc.index,
+      type: userDoc.type,
+      id: params.userId
+    }
+  } else if (doc.orgField) {
+    esQuery = {
+      index: orgDoc.index,
+      type: orgDoc.type,
+      id: params.organizationId
+    }
+  } else {
+    esQuery = {
+      index: doc.index,
+      type: doc.type,
+      id: id
+    }
   }
 
   if (resource === 'user') {
     // handle enrich
     if (!params.enrich) {
-      esQuery._source_excludes = SUB_PROPERTIES.join(',')
+      esQuery._source_excludes = SUB_USER_PROPERTIES.join(',')
     }
-  } else if (subDoc) {
-    esQuery._source_includes = subDoc.userField
+  } else if (subUserDoc) {
+    esQuery._source_includes = subUserDoc.userField
+  } else if (subOrgDoc) {
+    esQuery._source_includes = subOrgDoc.orgField
   }
 
   logger.debug(`ES query for get ${resource}: ${JSON.stringify(esQuery, null, 2)}`)
@@ -469,13 +501,21 @@ async function getFromElasticSearch (resource, ...args) {
     const groups = await groupApi.getGroups(user.id)
     user.groups = groups
     return user
-  } else if (subDoc) {
+  } else if (subUserDoc) {
     // find top sub doc by sub.id
-    const found = result[subDoc.userField].find(sub => sub[filterChain.idField] === params[filterChain.idField])
+    const found = result[subUserDoc.userField].find(sub => sub[filterChain.idField] === params[filterChain.idField])
     if (found) {
       return found
     } else {
       throw new Error(`${resource} of userId ${params.userId}, ${params[filterChain.idField]} is not found from ES`)
+    }
+  } else if (subOrgDoc) {
+    // find top sub doc by sub.id
+    const found = result[subOrgDoc.orgField].find(sub => sub[filterChain.idField] === params[filterChain.idField])
+    if (found) {
+      return found
+    } else {
+      throw new Error(`${resource} of organizationId ${params.organizationId}, ${params[filterChain.idField]} is not found from ES`)
     }
   }
   return result
@@ -527,7 +567,14 @@ function setResourceFilterToEsQuery (resFilters, esQuery) {
   if (resFilters.length > 0) {
     for (const filter of resFilters) {
       const doc = DOCUMENTS[filter.resource]
-      let matchField = doc.userField ? `${doc.userField}.${filter.queryField}` : `${filter.queryField}`
+      let matchField
+      if (doc.userField) {
+        matchField = `${doc.userField}.${filter.queryField}`
+      } else if (doc.orgField) {
+        matchField = `${doc.orgField}.${filter.queryField}`
+      } else {
+        matchField = `${filter.queryField}`
+      }
       if (filter.queryField !== 'name' && filter.queryField !== 'isInactive') {
         matchField = matchField + '.keyword'
       }
@@ -917,11 +964,20 @@ async function resolveResFilter (filter, initialRes) {
 
   // return the value if this is end of the filter
   if (filter.resource === initialRes || !filterChain.filterNext) {
-    return {
-      resource: filter.resource,
-      userField: doc.userField,
-      queryField: filter.queryField,
-      value: filter.value
+    if (doc.orgField) {
+      return {
+        resource: filter.resource,
+        orgField: doc.orgField,
+        queryField: filter.queryField,
+        value: filter.value
+      }
+    } else {
+      return {
+        resource: filter.resource,
+        userField: doc.userField,
+        queryField: filter.queryField,
+        value: filter.value
+      }
     }
   }
 
@@ -998,7 +1054,9 @@ async function searchElasticSearch (resource, ...args) {
   const authUser = args[1]
   const doc = DOCUMENTS[resource]
   const userDoc = DOCUMENTS.user
-  const topSubDoc = SUB_DOCUMENTS[resource]
+  const orgDoc = DOCUMENTS.organization
+  const topUserSubDoc = SUB_USER_DOCUMENTS[resource]
+  const topOrgSubDoc = SUB_ORG_DOCUMENTS[resource]
   if (!params.page) {
     params.page = 1
   }
@@ -1051,8 +1109,8 @@ async function searchElasticSearch (resource, ...args) {
 
   // construct ES query
   const esQuery = {
-    index: doc.userField ? userDoc.index : doc.index,
-    type: doc.userField ? userDoc.type : doc.type,
+    index: doc.userField ? userDoc.index : (doc.orgField ? orgDoc.index : doc.index),
+    type: doc.userField ? userDoc.type : (doc.orgField ? orgDoc.type : doc.type),
     size: params.perPage,
     from: (params.page - 1) * params.perPage, // Es Index starts from 0
     body: {
@@ -1104,9 +1162,9 @@ async function searchElasticSearch (resource, ...args) {
       })
     } else {
       // do not return sub-resources
-      esQuery._source_excludes = SUB_PROPERTIES.join(',')
+      esQuery._source_excludes = SUB_USER_PROPERTIES.join(',')
     }
-  } else if (topSubDoc) {
+  } else if (topUserSubDoc) {
     // add userId match
     const userFC = FILTER_CHAIN.user
     const userIdMatchField = `${userFC.idField}.keyword`
@@ -1115,13 +1173,30 @@ async function searchElasticSearch (resource, ...args) {
         [userIdMatchField]: params.userId
       }
     })
-    esQuery._source_includes = topSubDoc.userField
+    esQuery._source_includes = topUserSubDoc.userField
+  } else if (topOrgSubDoc) {
+    // add organizationId match
+    const orgFC = FILTER_CHAIN.organization
+    const orgIdMatchField = `${orgFC.idField}.keyword`
+    esQuery.body.query.bool.must.push({
+      match: {
+        [orgIdMatchField]: params.organizationId
+      }
+    })
+    esQuery._source_includes = topOrgSubDoc.orgField
   }
 
   // set pre res filter results
   if (!params.enrich && preResFilterResults.length > 0) {
     for (const filter of preResFilterResults) {
-      const matchField = filter.userField ? `${filter.userField}.${filter.queryField}` : `${filter.queryField}`
+      let matchField
+      if (filter.userField) {
+        matchField = `${filter.userField}.${filter.queryField}`
+      } else if (filter.orgField) {
+        matchField = `${filter.orgField}.${filter.queryField}`
+      } else {
+        matchField = `${filter.queryField}`
+      }
       setFilterValueToEsQuery(esQuery, matchField, filter.value, filter.queryField)
     }
   }
@@ -1152,9 +1227,14 @@ async function searchElasticSearch (resource, ...args) {
       const groups = await groupApi.getGroups(user.id)
       user.groups = groups
     }
-  } else if (topSubDoc) {
-    result = docs.hits.hits[0]._source[topSubDoc.userField]
+  } else if (topUserSubDoc) {
+    result = docs.hits.hits[0]._source[topUserSubDoc.userField]
     // for sub-resource query, it returns all sub-resource items in one user,
+    // so needs filtering and also page size
+    result = applySubResFilters(result, preResFilterResults, ownResFilters, params.perPage)
+  } else if (topOrgSubDoc) {
+    result = docs.hits.hits[0]._source[topOrgSubDoc.orgField]
+    // for sub-resource query, it returns all sub-resource items in one organization,
     // so needs filtering and also page size
     result = applySubResFilters(result, preResFilterResults, ownResFilters, params.perPage)
   } else {
