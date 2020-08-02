@@ -64,6 +64,13 @@ const userResources = {
   }
 }
 
+const organizationResources = {
+  organizationskillprovider: {
+    propertyName: config.get('ES.DOCUMENTS.organizationskillprovider.orgField'),
+    relateKey: 'skillProviderId'
+  }
+}
+
 const modelToESIndexMapping = {
   User: 'user',
   Role: 'role',
@@ -82,5 +89,8 @@ const modelToESIndexMapping = {
 }
 
 module.exports = {
-  topResources, userResources, modelToESIndexMapping
+  topResources,
+  userResources,
+  organizationResources,
+  modelToESIndexMapping
 }

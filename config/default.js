@@ -89,6 +89,10 @@ module.exports = {
       },
       userskill: {
         userField: process.env.USER_SKILL_PROPERTY_NAME || 'skills'
+      },
+      // sub resources under organization
+      organizationskillprovider: {
+        orgField: process.env.ORGANIZATION_SKILLPROVIDER_PROPERTY_NAME || 'skillProviders'
       }
     }
   }

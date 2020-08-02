@@ -14,10 +14,13 @@ const OP_TO_TOPIC = {
 }
 
 // Used for determining the payload structure when posting to bus api
-const SUB_DOCUMENTS = {}
+const SUB_USER_DOCUMENTS = {}
+const SUB_ORG_DOCUMENTS = {}
 _.forOwn(config.ES.DOCUMENTS, (value, key) => {
   if (value.userField) {
-    SUB_DOCUMENTS[key] = value
+    SUB_USER_DOCUMENTS[key] = value
+  } else if (value.orgField) {
+    SUB_ORG_DOCUMENTS[key] = value
   }
 })
 
@@ -293,7 +296,7 @@ function getServiceMethods (Model, createSchema, patchSchema, searchSchema, buil
     let payload
     await get(id, auth, params) // check exist
     await models.DBHelper.delete(Model, id, buildQueryByParams(params))
-    if (SUB_DOCUMENTS[resource]) {
+    if (SUB_USER_DOCUMENTS[resource] || SUB_ORG_DOCUMENTS[resource]) {
       payload = _.assign({}, params)
     } else {
       payload = {
@@ -313,10 +316,5 @@ function getServiceMethods (Model, createSchema, patchSchema, searchSchema, buil
 }
 
 module.exports = {
-  getServiceMethods,
-  makeSureRefExist,
-  makeSureUnique,
-  getResource,
-  buildQueryByParams,
-  publishMessage
+  getServiceMethods
 }
