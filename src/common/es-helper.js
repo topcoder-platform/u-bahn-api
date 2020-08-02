@@ -52,6 +52,7 @@ const USER_FILTER_TO_MODEL = {
     queryField: 'name',
     esDocumentValueQuery: 'achievements.name',
     esDocumentQuery: 'achievements.id.keyword',
+    esDocumentId: 'achievements.id',
     values: []
   },
   get achievements () { return this.achievement },
@@ -791,6 +792,13 @@ function buildEsQueryToGetAchievements (organizationId, keyword, size) {
             field: `${USER_FILTER_TO_MODEL.achievement.esDocumentValueQuery}.keyword`,
             include: `.*${keyword.replace(/[^a-zA-Z]/g, c => `[${!isRegexReserved(c) ? c : '\\' + c}]`).replace(/[A-Za-z]/g, c => `[${c.toLowerCase()}${c.toUpperCase()}]`)}.*`,
             size: size || 1000
+          },
+          aggs: {
+            ids: {
+              top_hits: {
+                _source: [USER_FILTER_TO_MODEL.achievement.esDocumentId, USER_FILTER_TO_MODEL.achievement.esDocumentValueQuery]
+              }
+            }
           }
         }
       }
@@ -1418,7 +1426,21 @@ async function searchAchievementValues ({ organizationId, keyword }) {
 
   const esResult = await esClient.search(esQuery)
   logger.debug(`ES response ${JSON.stringify(esResult, null, 2)}`)
-  const result = esResult.aggregations.achievements.buckets.map(a => ({ name: a.key }))
+  const result = esResult.aggregations.achievements.buckets.map(a => {
+    let achievementName = a.key
+    let achievementId = null
+    
+    for (let achievement of a.ids.hits.hits[0]._source.achievements) {
+      if (achievement.name == achievementName) {
+        achievementId = achievement.id
+        break;
+      }
+    }
+    return {
+      id: achievementId,
+      name: achievementName
+    };
+  })
 
   return {
     result
