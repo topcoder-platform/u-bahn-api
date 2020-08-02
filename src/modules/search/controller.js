@@ -21,7 +21,16 @@ async function searchAttributeValues (req, res) {
   res.send(result.result)
 }
 
+/**
+ * Search for achievement values
+ */
+async function searchAchievementValues (req, res) {
+  const result = await esHelper.searchAchievementValues(req.query)
+  res.send(result.result)
+}
+
 module.exports = {
   searchUsers,
-  searchAttributeValues
+  searchAttributeValues,
+  searchAchievementValues
 }

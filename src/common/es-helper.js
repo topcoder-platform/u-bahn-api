@@ -52,6 +52,7 @@ const USER_FILTER_TO_MODEL = {
     queryField: 'name',
     esDocumentValueQuery: 'achievements.name',
     esDocumentQuery: 'achievements.id.keyword',
+    esDocumentId: 'achievements.id',
     values: []
   },
   get achievements () { return this.achievement },
@@ -772,6 +773,43 @@ function isRegexReserved (char) {
   return reserved.indexOf(char) !== -1
 }
 
+function buildEsQueryToGetAchievements (organizationId, keyword, size) {
+  const queryDoc = DOCUMENTS.user
+
+  const esQuery = {
+    index: queryDoc.index,
+    type: queryDoc.type,
+    body: {
+      size: 0,
+      query: {
+        bool: {
+          filter: []
+        }
+      },
+      aggs: {
+        achievements: {
+          terms: {
+            field: `${USER_FILTER_TO_MODEL.achievement.esDocumentValueQuery}.keyword`,
+            include: `.*${keyword.replace(/[^a-zA-Z]/g, c => `[${!isRegexReserved(c) ? c : '\\' + c}]`).replace(/[A-Za-z]/g, c => `[${c.toLowerCase()}${c.toUpperCase()}]`)}.*`,
+            size: size || 1000
+          },
+          aggs: {
+            ids: {
+              top_hits: {
+                _source: [USER_FILTER_TO_MODEL.achievement.esDocumentId, USER_FILTER_TO_MODEL.achievement.esDocumentValueQuery]
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  setUserOrganizationFiilterToEsQuery(esQuery.body.query.bool.filter, organizationId)
+
+  return esQuery
+}
+
 /**
  * Build ES Query to get attribute values by attributeId
  * @param attributeId the attribute whose values to fetch
@@ -1382,9 +1420,37 @@ async function searchAttributeValues ({ attributeId, attributeValue }) {
   return { result }
 }
 
+async function searchAchievementValues ({ organizationId, keyword }) {
+  const esQuery = buildEsQueryToGetAchievements(organizationId, querystring.unescape(keyword), 5)
+  logger.debug(`ES query for searching achievement values; ${JSON.stringify(esQuery, null, 2)}`)
+
+  const esResult = await esClient.search(esQuery)
+  logger.debug(`ES response ${JSON.stringify(esResult, null, 2)}`)
+  const result = esResult.aggregations.achievements.buckets.map(a => {
+    let achievementName = a.key
+    let achievementId = null
+    
+    for (let achievement of a.ids.hits.hits[0]._source.achievements) {
+      if (achievement.name == achievementName) {
+        achievementId = achievement.id
+        break;
+      }
+    }
+    return {
+      id: achievementId,
+      name: achievementName
+    };
+  })
+
+  return {
+    result
+  }
+}
+
 module.exports = {
   searchElasticSearch,
   getFromElasticSearch,
   searchUsers,
-  searchAttributeValues
+  searchAttributeValues,
+  searchAchievementValues
 }
