@@ -197,7 +197,7 @@ const RESOURCE_FILTER = {
   }
 }
 
-// filter chaim config
+// filter chain config
 const FILTER_CHAIN = {
   user: {
     idField: 'id'

@@ -77,7 +77,8 @@ const modelToESIndexMapping = {
   AchievementsProvider: 'achievementprovider',
   AttributeGroup: 'attributegroup',
   Attribute: 'attribute',
-  UserAttribute: 'userattribute'
+  UserAttribute: 'userattribute',
+  OrganizationSkillsProvider: 'organizationskillprovider'
 }
 
 module.exports = {

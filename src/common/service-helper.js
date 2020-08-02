@@ -27,7 +27,8 @@ const MODEL_TO_RESOURCE = {
   SkillsProvider: 'skillprovider',
   AchievementsProvider: 'achievementprovider',
   UsersAttribute: 'userattribute',
-  UsersRole: 'userrole'
+  UsersRole: 'userrole',
+  OrganizationSkillsProvider: 'organizationskillprovider'
 }
 
 /**
@@ -312,5 +313,10 @@ function getServiceMethods (Model, createSchema, patchSchema, searchSchema, buil
 }
 
 module.exports = {
-  getServiceMethods
+  getServiceMethods,
+  makeSureRefExist,
+  makeSureUnique,
+  getResource,
+  buildQueryByParams,
+  publishMessage
 }

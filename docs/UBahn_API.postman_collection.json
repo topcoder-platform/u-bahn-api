@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "5c139c1e-e3f2-4002-a278-e03c7b7dc97d",
+		"_postman_id": "66538223-0d2c-42f0-a3e0-cccc51c21b4f",
 		"name": "UBahn_API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -14,7 +14,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "ba04f45f-dbdf-4398-9750-3eae3161dedf",
+								"id": "05164ddd-c806-4bad-aea0-1bfd6e43e82c",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if(rsp.id) pm.environment.set(\"userId\", rsp.id);"
@@ -67,7 +67,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "64aeda82-1df8-41c7-80c9-d5cf8423fdf9",
+								"id": "df73daae-0b9d-4381-a261-07b1ebc7eccc",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if(rsp.id) pm.environment.set(\"userId\", rsp.id);"
@@ -123,7 +123,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "e4f1d08d-a9b5-4efe-b3d9-67d3111608c1",
+								"id": "b37624d4-9657-4dad-9ddf-2d383a8e6d0d",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if(rsp.id) pm.environment.set(\"userId\", rsp.id);"
@@ -481,7 +481,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "816c38da-3158-4d9d-828e-bb0644178a98",
+								"id": "dff9ccbc-34d7-47c1-9ceb-48d7472e693d",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if(rsp.id) pm.environment.set(\"roleId\", rsp.id);"
@@ -716,7 +716,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "7671acab-f1f8-4c29-9824-f1f2bd570028",
+								"id": "cce4f7a5-d16c-4bb4-bb46-e8e519f9ec11",
 								"exec": [
 									""
 								],
@@ -958,7 +958,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "5b67a6ba-63b6-4991-a5ea-d881ea802083",
+								"id": "d6b690ec-4b75-4a8f-9099-16464365f51f",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if(rsp.id) pm.environment.set(\"organizationId\", rsp.id);"
@@ -1193,7 +1193,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "88d7b18f-c5e1-4577-9d03-a93d9f9d5c7e",
+								"id": "e401a38a-b4cb-4b5b-8fdd-24e91249f6ff",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if(rsp.id) pm.environment.set(\"skillsProviderId\", rsp.id);"
@@ -1428,7 +1428,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "92b83849-961d-4ad3-bac2-d7f457e5fbd7",
+								"id": "a4db0fe1-638f-4d8d-81c8-08967498d1de",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if(rsp.id) pm.environment.set(\"skillId\", rsp.id);"
@@ -1664,7 +1664,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "d5c59be3-63df-485b-a889-aa4d00c90571",
+								"id": "95226f08-c8a4-4915-91bb-8018ba933ac3",
 								"exec": [
 									""
 								],
@@ -1912,7 +1912,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "d8143ed1-b600-4ef3-845c-396ed909e821",
+								"id": "63cd9db1-0910-4834-a3a6-519a8e2bea9f",
 								"exec": [
 									""
 								],
@@ -2160,7 +2160,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "6c13436d-c2ee-4867-98ac-eb513e9edb3e",
+								"id": "b6c6134f-a0af-4f0e-b5b2-90c6c2409491",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if(rsp.id) pm.environment.set(\"achievementsProviderId\", rsp.id);"
@@ -2395,7 +2395,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "4453dd7e-65fc-47c0-9081-7a78a6ed1446",
+								"id": "33ed1f80-a4b5-4984-89b4-4c53836b9966",
 								"exec": [
 									""
 								],
@@ -2644,7 +2644,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "d34d4953-a1f9-41ef-a9dd-6fa7c9431c3f",
+								"id": "a0d7915e-0e12-4108-bf56-5d4767c03974",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if (rsp.id) pm.environment.set(\"attributeGroupId\", rsp.id);"
@@ -2885,7 +2885,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "71539226-1b42-4aa3-9f51-d5b488c817d2",
+								"id": "d6d57cb8-63a2-4778-b1e2-4dbc361aee0f",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if (rsp.id) pm.environment.set(\"attributeId\", rsp.id);"
@@ -3125,7 +3125,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "5c987711-36d9-4472-b6d0-db4edc47685e",
+								"id": "0da60ea8-92b2-43e4-985a-4a507b26b59a",
 								"exec": [
 									""
 								],
@@ -3397,6 +3397,174 @@
 							"path": [
 								"v5",
 								"groups"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "organizationSkillsProvider",
+			"item": [
+				{
+					"name": "{{HOST}}/organizations/{{organizationId}}/skillProviders",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{HOST}}/organizations/{{organizationId}}/skillProviders",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"organizations",
+								"{{organizationId}}",
+								"skillProviders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{HOST}}/organizations/{{organizationId}}/skillProviders",
+					"request": {
+						"method": "HEAD",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{HOST}}/organizations/{{organizationId}}/skillProviders",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"organizations",
+								"{{organizationId}}",
+								"skillProviders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{HOST}}/organizations/{{organizationId}}/skillProviders",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"skillProviderId\": \"{{skillsProviderId}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/organizations/{{organizationId}}/skillProviders",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"organizations",
+								"{{organizationId}}",
+								"skillProviders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{HOST}}/organizations/{{organizationId}}/skillProviders",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{HOST}}/organizations/{{organizationId}}/skillProviders/{{skillsProviderId}}",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"organizations",
+								"{{organizationId}}",
+								"skillProviders",
+								"{{skillsProviderId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{HOST}}/organizations/{{organizationId}}/skillProviders",
+					"request": {
+						"method": "HEAD",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{HOST}}/organizations/{{organizationId}}/skillProviders/{{skillsProviderId}}",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"organizations",
+								"{{organizationId}}",
+								"skillProviders",
+								"{{skillsProviderId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{HOST}}/organizations/{{organizationId}}/skillProviders",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{HOST}}/organizations/{{organizationId}}/skillProviders/{{skillsProviderId}}",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"organizations",
+								"{{organizationId}}",
+								"skillProviders",
+								"{{skillsProviderId}}"
 							]
 						}
 					},
