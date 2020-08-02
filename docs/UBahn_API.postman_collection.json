@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "66538223-0d2c-42f0-a3e0-cccc51c21b4f",
+		"_postman_id": "2e9d0d1e-22b4-4b5c-af7d-8e5d407de79b",
 		"name": "UBahn_API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -14,7 +14,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "05164ddd-c806-4bad-aea0-1bfd6e43e82c",
+								"id": "256b27ab-e629-429f-ad93-372eaaa46239",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if(rsp.id) pm.environment.set(\"userId\", rsp.id);"
@@ -62,12 +62,64 @@
 					"response": []
 				},
 				{
+					"name": "{{HOST}}/search/userAchievements",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d1951826-476c-4149-bfa7-2a853c30df4e",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{HOST}}/search/userAchievements?organizationId=36ed815b-3da1-49f1-a043-aaed0a4e81ad&keyword=Topcoder",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"search",
+								"userAchievements"
+							],
+							"query": [
+								{
+									"key": "organizationId",
+									"value": "36ed815b-3da1-49f1-a043-aaed0a4e81ad"
+								},
+								{
+									"key": "keyword",
+									"value": "Topcoder"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "{{HOST}}/search/users",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"id": "df73daae-0b9d-4381-a261-07b1ebc7eccc",
+								"id": "75560f72-efeb-438e-ac29-24d7c6ab540e",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if(rsp.id) pm.environment.set(\"userId\", rsp.id);"
@@ -123,7 +175,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "b37624d4-9657-4dad-9ddf-2d383a8e6d0d",
+								"id": "5db9dc16-daad-4768-a3af-ea8983487bec",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if(rsp.id) pm.environment.set(\"userId\", rsp.id);"
@@ -149,7 +201,10 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"handle\":\"handle_01\"\n}"
+							"raw": "{\n\t\"handle\":\"handle_01\"\n}",
+							"options": {
+								"raw": {}
+							}
 						},
 						"url": {
 							"raw": "{{HOST}}/users",
@@ -212,7 +267,10 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"handle\":\"handle_05\"\n}"
+							"raw": "{\n\t\"handle\":\"handle_05\"\n}",
+							"options": {
+								"raw": {}
+							}
 						},
 						"url": {
 							"raw": "{{HOST}}/users/{{userId}}",
@@ -454,7 +512,10 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": ""
+							"raw": "",
+							"options": {
+								"raw": {}
+							}
 						},
 						"url": {
 							"raw": "{{HOST}}/users/{{userId}}",
@@ -481,7 +542,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "dff9ccbc-34d7-47c1-9ceb-48d7472e693d",
+								"id": "8469c20d-3ef5-4868-af50-d603584ed8a7",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if(rsp.id) pm.environment.set(\"roleId\", rsp.id);"
@@ -716,7 +777,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "cce4f7a5-d16c-4bb4-bb46-e8e519f9ec11",
+								"id": "d4ca59b9-f350-4c91-9667-a5e749eed956",
 								"exec": [
 									""
 								],
@@ -958,7 +1019,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "d6b690ec-4b75-4a8f-9099-16464365f51f",
+								"id": "ff10985c-75c8-48ba-b522-2c8213b0c6cd",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if(rsp.id) pm.environment.set(\"organizationId\", rsp.id);"
@@ -1193,7 +1254,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "e401a38a-b4cb-4b5b-8fdd-24e91249f6ff",
+								"id": "0a875ba8-b4dc-42cc-b8ba-deb560b73556",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if(rsp.id) pm.environment.set(\"skillsProviderId\", rsp.id);"
@@ -1428,7 +1489,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "a4db0fe1-638f-4d8d-81c8-08967498d1de",
+								"id": "909e2488-3801-4b57-90c5-6a6ae2e91f13",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if(rsp.id) pm.environment.set(\"skillId\", rsp.id);"
@@ -1664,7 +1725,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "95226f08-c8a4-4915-91bb-8018ba933ac3",
+								"id": "e3241acb-646f-4ec8-83fb-8a3d63da4990",
 								"exec": [
 									""
 								],
@@ -1912,7 +1973,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "63cd9db1-0910-4834-a3a6-519a8e2bea9f",
+								"id": "ee9256b0-cdc2-4194-9da7-c0b363082385",
 								"exec": [
 									""
 								],
@@ -2160,7 +2221,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "b6c6134f-a0af-4f0e-b5b2-90c6c2409491",
+								"id": "3c959e64-93e9-480d-b92e-44eacb46c2b1",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if(rsp.id) pm.environment.set(\"achievementsProviderId\", rsp.id);"
@@ -2395,7 +2456,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "33ed1f80-a4b5-4984-89b4-4c53836b9966",
+								"id": "9b4f70b8-3ca8-4c1c-a65a-8a8b37e2fa62",
 								"exec": [
 									""
 								],
@@ -2644,7 +2705,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "a0d7915e-0e12-4108-bf56-5d4767c03974",
+								"id": "fb796928-9848-47a3-be88-61a8fc9e60f7",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if (rsp.id) pm.environment.set(\"attributeGroupId\", rsp.id);"
@@ -2885,7 +2946,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "d6d57cb8-63a2-4778-b1e2-4dbc361aee0f",
+								"id": "eb028137-ee03-496c-a812-2966380bca42",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if (rsp.id) pm.environment.set(\"attributeId\", rsp.id);"
@@ -3125,7 +3186,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "0da60ea8-92b2-43e4-985a-4a507b26b59a",
+								"id": "06c18b73-b9e6-46a8-acfa-74fc7ae68ac5",
 								"exec": [
 									""
 								],

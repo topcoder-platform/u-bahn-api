@@ -21,5 +21,13 @@ module.exports = {
       access: consts.AdminUser,
       scopes: ['create:userAttribute', 'all:userAttribute']
     }
+  },
+  '/search/userAchievements': {
+    get: {
+      method: Controller.searchAchievementValues,
+      auth: 'jwt',
+      access: consts.AdminUser,
+      scopes: ['create:userAttribute', 'all:userAttribute']
+    }
   }
 }
