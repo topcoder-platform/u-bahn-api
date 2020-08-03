@@ -14,6 +14,14 @@ module.exports = {
       scopes: ['read:user', 'all:user']
     }
   },
+  '/search/skills': {
+    get: {
+      method: Controller.searchSkills
+      auth: 'jwt',
+      access: consts.AdminUser,
+      scopes: ['create:userAttribute', 'all:userAttribute']
+    }
+  },
   '/search/userAttributes': {
     get: {
       method: Controller.searchAttributeValues,

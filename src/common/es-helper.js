@@ -676,33 +676,53 @@ function hasNonAlphaNumeric (text) {
  * @param keyword the search keyword
  * @returns array of skillIds
  */
-async function searchSkills (keyword) {
+async function searchSkills (keyword, skillProviderIds) {
   const queryDoc = DOCUMENTS.skill
   keyword = escapeRegex(keyword)
   const query = hasNonAlphaNumeric(keyword) ? `\\*${keyword}\\*` : `*${keyword}*`
 
+  const keywordSearchClause = {
+    query_string: {
+      default_field: 'name',
+      minimum_should_match: '100%',
+      query
+    }
+  }
+
+  const searchClause = {
+    query: {}
+  }
+
+  if (skillProviderIds == null) {
+    searchClause.query = keywordSearchClause
+    searchClause._source = 'id'
+  } else {
+    searchClause.query = {
+      bool: {
+        filter: [{
+          terms: {
+            [`${RESOURCE_FILTER.skill.skillProviderId.queryField}.keyword`]: skillProviderIds
+          }
+        }],
+        must: [keywordSearchClause]
+      }
+    }
+  }
+
   const esQuery = {
     index: queryDoc.index,
     type: queryDoc.type,
-    body: {
-      query: {
-        query_string: {
-          default_field: 'name',
-          minimum_should_match: '100%',
-          query
-        }
-      },
-      _source: 'id'
-    }
+    body: searchClause
   }
 
   logger.debug(`ES query for searching skills: ${JSON.stringify(esQuery, null, 2)}`)
   const results = await esClient.search(esQuery)
-  return results.hits.hits.map(hit => hit._source.id)
+
+  return results.hits.hits.map(hit => hit._source)
 }
 
 async function setUserSearchClausesToEsQuery (boolClause, keyword) {
-  const skillIds = await searchSkills(keyword)
+  const skillIds = (await searchSkills(keyword)).map(skill => skill.id)
   boolClause.should.push({
     query_string: {
       fields: ['firstName', 'lastName', 'handle'],
@@ -857,6 +877,27 @@ function buildEsQueryToGetAttributeValues (attributeId, attributeValue, size) {
                 }
               }
             }
+          }
+        }
+      }
+    }
+  }
+
+  return esQuery
+}
+
+function buildEsQueryToGetSkillProviderIds (organizationId) {
+  const queryDoc = DOCUMENTS.organization
+
+  const esQuery = {
+    index: queryDoc.index,
+    type: queryDoc.type,
+    body: {
+      size: 1000,
+      query: {
+        term: {
+          'id.keyword': {
+            value: organizationId
           }
         }
       }
@@ -1392,6 +1433,33 @@ async function searchUsers (authUser, filter, params) {
 }
 
 /**
+ * Search for skills matching the given keyword and are part of the given organization
+ * @param {Object} param0 the organizationId and keyword
+ */
+
+async function searchSkillsInOrganization ({ organizationId, keyword }) {
+  const esQueryToGetSkillProviders = buildEsQueryToGetSkillProviderIds(organizationId)
+  logger.debug(`ES query to get skill provider ids: ${JSON.stringify(esQueryToGetSkillProviders, null, 2)}`)
+
+  const esResultOfQueryToGetSkillProviders = await esClient.search(esQueryToGetSkillProviders)
+  logger.debug(`ES result: ${JSON.stringify(esResultOfQueryToGetSkillProviders, null, 2)}`)
+
+  const skillProviderIds = _.flatten(esResultOfQueryToGetSkillProviders.hits.hits.map(hit => hit._source.skillProviders == null ? [] : hit._source.skillProviders.map(sp => sp.id)))
+  logger.debug(`Organization ${organizationId} yielded skillProviderIds: ${JSON.stringify(skillProviderIds, null, 2)}`)
+
+  const skills = await searchSkills(keyword, skillProviderIds)
+
+  return {
+    result: skills.map(skill => ({
+      name: skill.name,
+      skillId: skill.id,
+      skillProviderId: skill.skillProviderId
+      // skillProviderName: 'TODO'
+    }))
+  }
+}
+
+/**
  * Searches for matching values for the given attribute value, under the given attribute id
  * @param {Object} param0 The attribute id and the attribute value properties
  */
@@ -1427,19 +1495,19 @@ async function searchAchievementValues ({ organizationId, keyword }) {
   const esResult = await esClient.search(esQuery)
   logger.debug(`ES response ${JSON.stringify(esResult, null, 2)}`)
   const result = esResult.aggregations.achievements.buckets.map(a => {
-    let achievementName = a.key
+    const achievementName = a.key
     let achievementId = null
-    
-    for (let achievement of a.ids.hits.hits[0]._source.achievements) {
-      if (achievement.name == achievementName) {
+
+    for (const achievement of a.ids.hits.hits[0]._source.achievements) {
+      if (achievement.name === achievementName) {
         achievementId = achievement.id
-        break;
+        break
       }
     }
     return {
       id: achievementId,
       name: achievementName
-    };
+    }
   })
 
   return {
@@ -1451,6 +1519,7 @@ module.exports = {
   searchElasticSearch,
   getFromElasticSearch,
   searchUsers,
+  searchSkillsInOrganization,
   searchAttributeValues,
   searchAchievementValues
 }

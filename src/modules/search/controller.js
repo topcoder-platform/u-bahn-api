@@ -14,6 +14,14 @@ async function searchUsers (req, res) {
 }
 
 /**
+ * Search for skills in organization
+ */
+async function searchSkills (req, res) {
+  const result = await esHelper.searchSkillsInOrganization(req.query)
+  res.send(result.result)
+}
+
+/**
  * Search for attribute values
  */
 async function searchAttributeValues (req, res) {
@@ -31,6 +39,7 @@ async function searchAchievementValues (req, res) {
 
 module.exports = {
   searchUsers,
+  searchSkills,
   searchAttributeValues,
   searchAchievementValues
 }

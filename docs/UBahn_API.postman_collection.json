@@ -114,6 +114,58 @@
 					"response": []
 				},
 				{
+					"name": "{{HOST}}/search/skills",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d56349bd-a797-47cf-b6bf-2ecfbd342815",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{HOST}}/search/userAchievements?organizationId=36ed815b-3da1-49f1-a043-aaed0a4e81ad&keyword=Topcoder",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"search",
+								"userAchievements"
+							],
+							"query": [
+								{
+									"key": "organizationId",
+									"value": "36ed815b-3da1-49f1-a043-aaed0a4e81ad"
+								},
+								{
+									"key": "keyword",
+									"value": "Topcoder"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "{{HOST}}/search/users",
 					"event": [
 						{
