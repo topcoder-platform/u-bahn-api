@@ -16,7 +16,7 @@ module.exports = {
   },
   '/search/skills': {
     get: {
-      method: Controller.searchSkills
+      method: Controller.searchSkills,
       auth: 'jwt',
       access: consts.AdminUser,
       scopes: ['create:userAttribute', 'all:userAttribute']
