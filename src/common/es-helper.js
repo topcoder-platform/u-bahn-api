@@ -1436,7 +1436,6 @@ async function searchUsers (authUser, filter, params) {
  * Search for skills matching the given keyword and are part of the given organization
  * @param {Object} param0 the organizationId and keyword
  */
-
 async function searchSkillsInOrganization ({ organizationId, keyword }) {
   const esQueryToGetSkillProviders = buildEsQueryToGetSkillProviderIds(organizationId)
   logger.debug(`ES query to get skill provider ids: ${JSON.stringify(esQueryToGetSkillProviders, null, 2)}`)
@@ -1444,7 +1443,7 @@ async function searchSkillsInOrganization ({ organizationId, keyword }) {
   const esResultOfQueryToGetSkillProviders = await esClient.search(esQueryToGetSkillProviders)
   logger.debug(`ES result: ${JSON.stringify(esResultOfQueryToGetSkillProviders, null, 2)}`)
 
-  const skillProviderIds = _.flatten(esResultOfQueryToGetSkillProviders.hits.hits.map(hit => hit._source.skillProviders == null ? [] : hit._source.skillProviders.map(sp => sp.id)))
+  const skillProviderIds = _.flatten(esResultOfQueryToGetSkillProviders.hits.hits.map(hit => hit._source.skillProviders == null ? [] : hit._source.skillProviders.map(sp => sp.skillProviderId)))
   logger.debug(`Organization ${organizationId} yielded skillProviderIds: ${JSON.stringify(skillProviderIds, null, 2)}`)
 
   const skills = await searchSkills(keyword, skillProviderIds)
