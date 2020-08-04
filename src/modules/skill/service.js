@@ -11,7 +11,7 @@ const methods = helper.getServiceMethods(
     skillProviderId: joi.string().required(),
     name: joi.string().required(),
     uri: joi.string(),
-    externalId: joi.string().required()
+    externalId: joi.string()
   },
   {
     skillProviderId: joi.string(),
