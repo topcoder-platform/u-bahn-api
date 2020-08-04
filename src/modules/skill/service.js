@@ -37,7 +37,7 @@ const methods = helper.getServiceMethods(
     }
     return dbQueries
   },
-  [['skillProviderId', 'externalId']]
+  [['skillProviderId', 'externalId', 'name']]
 )
 
 module.exports = {
