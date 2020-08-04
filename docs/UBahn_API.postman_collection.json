@@ -143,13 +143,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{HOST}}/search/userAchievements?organizationId=36ed815b-3da1-49f1-a043-aaed0a4e81ad&keyword=Topcoder",
+							"raw": "{{HOST}}/search/skills?organizationId=36ed815b-3da1-49f1-a043-aaed0a4e81ad&keyword=net",
 							"host": [
 								"{{HOST}}"
 							],
 							"path": [
 								"search",
-								"userAchievements"
+								"skills"
 							],
 							"query": [
 								{
@@ -158,7 +158,7 @@
 								},
 								{
 									"key": "keyword",
-									"value": "Topcoder"
+									"value": "net"
 								}
 							]
 						}
