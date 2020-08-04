@@ -3,6 +3,7 @@
  */
 const esHelper = require('../../common/es-helper')
 const { injectSearchMeta } = require('../../common/helper')
+const service = require('./service')
 
 /**
  * Search for users. Returns enriched users
@@ -17,7 +18,7 @@ async function searchUsers (req, res) {
  * Search for skills in organization
  */
 async function searchSkills (req, res) {
-  const result = await esHelper.searchSkillsInOrganization(req.query)
+  const result = await service.getSkills(req.query, req.auth)
   res.send(result.result)
 }
 
