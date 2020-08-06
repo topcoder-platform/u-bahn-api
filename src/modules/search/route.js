@@ -10,7 +10,7 @@ module.exports = {
     post: {
       method: Controller.searchUsers,
       auth: 'jwt',
-      access: consts.AdminUser,
+      access: [...consts.AdminUser, consts.UserRoles.ubahn],
       scopes: ['read:user', 'all:user']
     }
   },
@@ -18,7 +18,7 @@ module.exports = {
     get: {
       method: Controller.searchSkills,
       auth: 'jwt',
-      access: consts.AdminUser,
+      access: [...consts.AdminUser, consts.UserRoles.ubahn],
       scopes: ['create:userAttribute', 'all:userAttribute']
     }
   },
@@ -26,7 +26,7 @@ module.exports = {
     get: {
       method: Controller.searchAttributeValues,
       auth: 'jwt',
-      access: consts.AdminUser,
+      access: [...consts.AdminUser, consts.UserRoles.ubahn],
       scopes: ['create:userAttribute', 'all:userAttribute']
     }
   },
@@ -34,7 +34,7 @@ module.exports = {
     get: {
       method: Controller.searchAchievementValues,
       auth: 'jwt',
-      access: consts.AdminUser,
+      access: [...consts.AdminUser, consts.UserRoles.ubahn],
       scopes: ['create:userAttribute', 'all:userAttribute']
     }
   }
