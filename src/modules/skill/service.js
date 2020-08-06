@@ -11,7 +11,7 @@ const methods = helper.getServiceMethods(
     skillProviderId: joi.string().required(),
     name: joi.string().required(),
     uri: joi.string(),
-    externalId: joi.string().required()
+    externalId: joi.string()
   },
   {
     skillProviderId: joi.string(),
@@ -21,6 +21,7 @@ const methods = helper.getServiceMethods(
   },
   {
     skillProviderId: joi.string(),
+    name: joi.string(),
     externalId: joi.string()
   },
   async query => {
@@ -31,9 +32,12 @@ const methods = helper.getServiceMethods(
     if (query.skillProviderId) {
       dbQueries.push(`skillProviderId like '%${query.skillProviderId}%'`)
     }
+    if (query.name) {
+      dbQueries.push(`name = '${query.skillProviderId}'`)
+    }
     return dbQueries
   },
-  [['skillProviderId', 'externalId']]
+  [['skillProviderId', 'externalId', 'name']]
 )
 
 module.exports = {

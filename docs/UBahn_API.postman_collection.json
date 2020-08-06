@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "5c139c1e-e3f2-4002-a278-e03c7b7dc97d",
+		"_postman_id": "2e9d0d1e-22b4-4b5c-af7d-8e5d407de79b",
 		"name": "UBahn_API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -14,7 +14,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "ba04f45f-dbdf-4398-9750-3eae3161dedf",
+								"id": "256b27ab-e629-429f-ad93-372eaaa46239",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if(rsp.id) pm.environment.set(\"userId\", rsp.id);"
@@ -62,12 +62,116 @@
 					"response": []
 				},
 				{
+					"name": "{{HOST}}/search/userAchievements",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d1951826-476c-4149-bfa7-2a853c30df4e",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{HOST}}/search/userAchievements?organizationId=36ed815b-3da1-49f1-a043-aaed0a4e81ad&keyword=Topcoder",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"search",
+								"userAchievements"
+							],
+							"query": [
+								{
+									"key": "organizationId",
+									"value": "36ed815b-3da1-49f1-a043-aaed0a4e81ad"
+								},
+								{
+									"key": "keyword",
+									"value": "Topcoder"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{HOST}}/search/skills",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d56349bd-a797-47cf-b6bf-2ecfbd342815",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{HOST}}/search/skills?organizationId=36ed815b-3da1-49f1-a043-aaed0a4e81ad&keyword=net",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"search",
+								"skills"
+							],
+							"query": [
+								{
+									"key": "organizationId",
+									"value": "36ed815b-3da1-49f1-a043-aaed0a4e81ad"
+								},
+								{
+									"key": "keyword",
+									"value": "net"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "{{HOST}}/search/users",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"id": "64aeda82-1df8-41c7-80c9-d5cf8423fdf9",
+								"id": "75560f72-efeb-438e-ac29-24d7c6ab540e",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if(rsp.id) pm.environment.set(\"userId\", rsp.id);"
@@ -123,7 +227,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "e4f1d08d-a9b5-4efe-b3d9-67d3111608c1",
+								"id": "5db9dc16-daad-4768-a3af-ea8983487bec",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if(rsp.id) pm.environment.set(\"userId\", rsp.id);"
@@ -149,7 +253,10 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"handle\":\"handle_01\"\n}"
+							"raw": "{\n\t\"handle\":\"handle_01\"\n}",
+							"options": {
+								"raw": {}
+							}
 						},
 						"url": {
 							"raw": "{{HOST}}/users",
@@ -212,7 +319,10 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"handle\":\"handle_05\"\n}"
+							"raw": "{\n\t\"handle\":\"handle_05\"\n}",
+							"options": {
+								"raw": {}
+							}
 						},
 						"url": {
 							"raw": "{{HOST}}/users/{{userId}}",
@@ -454,7 +564,10 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": ""
+							"raw": "",
+							"options": {
+								"raw": {}
+							}
 						},
 						"url": {
 							"raw": "{{HOST}}/users/{{userId}}",
@@ -481,7 +594,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "816c38da-3158-4d9d-828e-bb0644178a98",
+								"id": "8469c20d-3ef5-4868-af50-d603584ed8a7",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if(rsp.id) pm.environment.set(\"roleId\", rsp.id);"
@@ -716,7 +829,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "7671acab-f1f8-4c29-9824-f1f2bd570028",
+								"id": "d4ca59b9-f350-4c91-9667-a5e749eed956",
 								"exec": [
 									""
 								],
@@ -958,7 +1071,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "5b67a6ba-63b6-4991-a5ea-d881ea802083",
+								"id": "ff10985c-75c8-48ba-b522-2c8213b0c6cd",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if(rsp.id) pm.environment.set(\"organizationId\", rsp.id);"
@@ -1193,7 +1306,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "88d7b18f-c5e1-4577-9d03-a93d9f9d5c7e",
+								"id": "0a875ba8-b4dc-42cc-b8ba-deb560b73556",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if(rsp.id) pm.environment.set(\"skillsProviderId\", rsp.id);"
@@ -1428,7 +1541,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "92b83849-961d-4ad3-bac2-d7f457e5fbd7",
+								"id": "909e2488-3801-4b57-90c5-6a6ae2e91f13",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if(rsp.id) pm.environment.set(\"skillId\", rsp.id);"
@@ -1664,7 +1777,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "d5c59be3-63df-485b-a889-aa4d00c90571",
+								"id": "e3241acb-646f-4ec8-83fb-8a3d63da4990",
 								"exec": [
 									""
 								],
@@ -1912,7 +2025,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "d8143ed1-b600-4ef3-845c-396ed909e821",
+								"id": "ee9256b0-cdc2-4194-9da7-c0b363082385",
 								"exec": [
 									""
 								],
@@ -2160,7 +2273,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "6c13436d-c2ee-4867-98ac-eb513e9edb3e",
+								"id": "3c959e64-93e9-480d-b92e-44eacb46c2b1",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if(rsp.id) pm.environment.set(\"achievementsProviderId\", rsp.id);"
@@ -2395,7 +2508,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "4453dd7e-65fc-47c0-9081-7a78a6ed1446",
+								"id": "9b4f70b8-3ca8-4c1c-a65a-8a8b37e2fa62",
 								"exec": [
 									""
 								],
@@ -2644,7 +2757,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "d34d4953-a1f9-41ef-a9dd-6fa7c9431c3f",
+								"id": "fb796928-9848-47a3-be88-61a8fc9e60f7",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if (rsp.id) pm.environment.set(\"attributeGroupId\", rsp.id);"
@@ -2885,7 +2998,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "71539226-1b42-4aa3-9f51-d5b488c817d2",
+								"id": "eb028137-ee03-496c-a812-2966380bca42",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if (rsp.id) pm.environment.set(\"attributeId\", rsp.id);"
@@ -3125,7 +3238,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "5c987711-36d9-4472-b6d0-db4edc47685e",
+								"id": "06c18b73-b9e6-46a8-acfa-74fc7ae68ac5",
 								"exec": [
 									""
 								],
@@ -3397,6 +3510,174 @@
 							"path": [
 								"v5",
 								"groups"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "organizationSkillsProvider",
+			"item": [
+				{
+					"name": "{{HOST}}/organizations/{{organizationId}}/skillProviders",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{HOST}}/organizations/{{organizationId}}/skillProviders",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"organizations",
+								"{{organizationId}}",
+								"skillProviders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{HOST}}/organizations/{{organizationId}}/skillProviders",
+					"request": {
+						"method": "HEAD",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{HOST}}/organizations/{{organizationId}}/skillProviders",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"organizations",
+								"{{organizationId}}",
+								"skillProviders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{HOST}}/organizations/{{organizationId}}/skillProviders",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"skillProviderId\": \"{{skillsProviderId}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/organizations/{{organizationId}}/skillProviders",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"organizations",
+								"{{organizationId}}",
+								"skillProviders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{HOST}}/organizations/{{organizationId}}/skillProviders",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{HOST}}/organizations/{{organizationId}}/skillProviders/{{skillsProviderId}}",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"organizations",
+								"{{organizationId}}",
+								"skillProviders",
+								"{{skillsProviderId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{HOST}}/organizations/{{organizationId}}/skillProviders",
+					"request": {
+						"method": "HEAD",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{HOST}}/organizations/{{organizationId}}/skillProviders/{{skillsProviderId}}",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"organizations",
+								"{{organizationId}}",
+								"skillProviders",
+								"{{skillsProviderId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{HOST}}/organizations/{{organizationId}}/skillProviders",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{HOST}}/organizations/{{organizationId}}/skillProviders/{{skillsProviderId}}",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"organizations",
+								"{{organizationId}}",
+								"skillProviders",
+								"{{skillsProviderId}}"
 							]
 						}
 					},

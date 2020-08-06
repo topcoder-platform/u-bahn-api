@@ -11,7 +11,7 @@ const methods = helper.getServiceMethods(
     userId: joi.string().required(),
     organizationId: joi.string().required(),
     externalId: joi.string().required(),
-    uri: joi.string().required(),
+    uri: joi.string(),
     isInactive: joi.boolean().default(false)
   },
   { // patch request body joi schema

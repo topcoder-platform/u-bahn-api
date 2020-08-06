@@ -1,48 +1,48 @@
 /**
- * the users role routes
+ * the organization skills provider routes
  */
 
 const Controller = require('./controller')
 const consts = require('../../consts')
 module.exports = {
-  '/users/:userId/roles': {
+  '/organizations/:organizationId/skillProviders': {
     get: {
       method: Controller.search,
       auth: 'jwt',
       access: consts.AllAuthenticatedUsers,
-      scopes: ['read:usersRole', 'all:usersRole']
+      scopes: ['read:organizationSkillsProvider', 'all:organizationSkillsProvider']
     },
     post: {
       method: Controller.create,
       auth: 'jwt',
       access: consts.AllAuthenticatedUsers,
-      scopes: ['create:usersRole', 'all:usersRole']
+      scopes: ['create:organizationSkillsProvider', 'all:organizationSkillsProvider']
     },
     head: {
       method: Controller.search,
       auth: 'jwt',
       access: consts.AllAuthenticatedUsers,
-      scopes: ['read:usersRole', 'all:usersRole']
+      scopes: ['read:organizationSkillsProvider', 'all:organizationSkillsProvider']
     }
   },
-  '/users/:userId/roles/:roleId': {
+  '/organizations/:organizationId/skillProviders/:skillProviderId': {
     get: {
       method: Controller.get,
       auth: 'jwt',
       access: consts.AllAuthenticatedUsers,
-      scopes: ['read:usersRole', 'all:usersRole']
+      scopes: ['read:organizationSkillsProvider', 'all:organizationSkillsProvider']
     },
     head: {
       method: Controller.get,
       auth: 'jwt',
       access: consts.AllAuthenticatedUsers,
-      scopes: ['read:usersRole', 'all:usersRole']
+      scopes: ['read:organizationSkillsProvider', 'all:organizationSkillsProvider']
     },
     delete: {
       method: Controller.remove,
       auth: 'jwt',
       access: consts.AdminUser,
-      scopes: ['delete:usersRole', 'all:usersRole']
+      scopes: ['delete:organizationSkillsProvider', 'all:organizationSkillsProvider']
     }
   }
 }

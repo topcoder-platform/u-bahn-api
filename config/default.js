@@ -36,6 +36,17 @@ module.exports = {
   UBAHN_UPDATE_TOPIC: process.env.UBAHN_UPDATE_TOPIC || 'u-bahn.action.update',
   UBAHN_DELETE_TOPIC: process.env.UBAHN_DELETE_TOPIC || 'u-bahn.action.delete',
 
+  EMSI: {
+    CLIENT_ID: process.env.EMSI_CLIENT_ID,
+    CLIENT_SECRET: process.env.EMSI_CLIENT_SECRET,
+    GRANT_TYPE: process.env.EMSI_GRANT_TYPE || 'client_credentials',
+    SCOPE: process.env.EMSI_SCOPE || 'emsi_open',
+    AUTH_URL: process.env.EMSI_AUTH_URL || 'https://auth.emsicloud.com/connect/token',
+    BASE_URL: process.env.EMSI_BASE_URL || 'https://skills.emsicloud.com/versions/latest'
+  },
+
+  EMSI_SKILLPROVIDER_ID: process.env.EMSI_SKILLPROVIDER_ID || '7637ae1a-3b7c-44eb-a5ed-10ea02f1885d',
+
   // ElasticSearch
   ES: {
     HOST: process.env.ES_HOST || 'localhost:9200',
@@ -89,6 +100,10 @@ module.exports = {
       },
       userskill: {
         userField: process.env.USER_SKILL_PROPERTY_NAME || 'skills'
+      },
+      // sub resources under organization
+      organizationskillprovider: {
+        orgField: process.env.ORGANIZATION_SKILLPROVIDER_PROPERTY_NAME || 'skillProviders'
       }
     }
   }

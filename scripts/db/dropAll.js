@@ -15,13 +15,13 @@ async function main () {
     if (models[key].tableName) {
       const esResourceName = modelToESIndexMapping[key]
       try {
-        await models.DBHelper.clear(models[key])
-
         if (_.includes(_.keys(topResources), esResourceName)) {
           await client.indices.delete({
             index: topResources[esResourceName].index
           })
         }
+
+        await models.DBHelper.clear(models[key])
       } catch (e) {
         console.error(e)
         logger.warn(`drop table ${key} failed`)

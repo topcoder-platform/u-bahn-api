@@ -2,7 +2,12 @@ const _ = require('lodash')
 const models = require('../../src/models')
 const logger = require('../../src/common/logger')
 const { getESClient } = require('../../src/common/es-client')
-const { topResources, userResources, modelToESIndexMapping } = require('../constants')
+const {
+  topResources,
+  userResources,
+  organizationResources,
+  modelToESIndexMapping
+} = require('../constants')
 
 async function insertIntoES (modelName, body) {
   const esResourceName = modelToESIndexMapping[modelName]
@@ -63,6 +68,33 @@ async function insertIntoES (modelName, body) {
         type: topResources.user.type,
         id: body.userId,
         body: { doc: user },
+        refresh: 'true'
+      })
+    }
+  } else if (_.includes(_.keys(organizationResources), esResourceName)) {
+    const orgResource = organizationResources[esResourceName]
+
+    const organization = await client.getSource({
+      index: topResources.organization.index,
+      type: topResources.organization.type,
+      id: body.organizationId
+    })
+
+    const relateId = body[orgResource.relateKey]
+
+    if (!organization[orgResource.propertyName]) {
+      organization[orgResource.propertyName] = []
+    }
+
+    if (_.some(organization[orgResource.propertyName], [orgResource.relateKey, relateId])) {
+      logger.error(`Can't create existing ${esResourceName} with the ${orgResource.relateKey}: ${relateId}, organizationId: ${body.organizationId}`)
+    } else {
+      organization[orgResource.propertyName].push(body)
+      await client.update({
+        index: topResources.organization.index,
+        type: topResources.organization.type,
+        id: body.organizationId,
+        body: { doc: organization },
         refresh: 'true'
       })
     }
