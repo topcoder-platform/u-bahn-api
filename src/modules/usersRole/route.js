@@ -38,12 +38,6 @@ module.exports = {
       access: consts.AllAuthenticatedUsers,
       scopes: ['read:usersRole', 'all:usersRole']
     },
-    patch: {
-      method: Controller.patch,
-      auth: 'jwt',
-      access: consts.AllAuthenticatedUsers,
-      scopes: ['update:usersRole', 'all:usersRole']
-    },
     delete: {
       method: Controller.remove,
       auth: 'jwt',

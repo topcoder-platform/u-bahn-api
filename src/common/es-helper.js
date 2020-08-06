@@ -1340,6 +1340,10 @@ async function searchUsers (authUser, filter, params) {
   const { checkIfExists, getAuthUser } = require('./helper')
   const queryDoc = DOCUMENTS.user
 
+  if (!filter.organizationId) {
+    throw new Error('Cannot search for users without organization info')
+  }
+
   if (!params.page) {
     params.page = 1
   }
@@ -1437,6 +1441,9 @@ async function searchUsers (authUser, filter, params) {
  * @param {Object} param0 the organizationId and keyword
  */
 async function searchSkillsInOrganization ({ organizationId, keyword }) {
+  if (!organizationId) {
+    throw Error('Cannot search for skills without organization info')
+  }
   const esQueryToGetSkillProviders = buildEsQueryToGetSkillProviderIds(organizationId)
   logger.debug(`ES query to get skill provider ids: ${JSON.stringify(esQueryToGetSkillProviders, null, 2)}`)
 
@@ -1488,6 +1495,9 @@ async function searchAttributeValues ({ attributeId, attributeValue }) {
 }
 
 async function searchAchievementValues ({ organizationId, keyword }) {
+  if (!organizationId) {
+    throw Error('Cannot search for achievements without organization info')
+  }
   const esQuery = buildEsQueryToGetAchievements(organizationId, querystring.unescape(keyword), 5)
   logger.debug(`ES query for searching achievement values; ${JSON.stringify(esQuery, null, 2)}`)
 
