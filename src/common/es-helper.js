@@ -1042,7 +1042,11 @@ async function searchElasticSearch (resource, ...args) {
   }
 
   // for non-admin, only return entities that the user created
-  if (authUser.roles && !checkIfExists(authUser.roles, [appConst.UserRoles.admin, appConst.UserRoles.administrator])) {
+  if (
+    authUser.roles &&
+    !checkIfExists(authUser.roles, appConst.AdminUser) &&
+    !checkIfExists(authUser.roles, [appConst.UserRoles.ubahn])
+  ) {
     setFilterValueToEsQuery(esQuery, 'createdBy', getAuthUser(authUser), 'createdBy')
   }
 
@@ -1197,7 +1201,11 @@ async function searchUsers (authUser, filter, params) {
   }
 
   // for non-admin, only return entities that the user created
-  if (authUser.roles && !checkIfExists(authUser.roles, [appConst.UserRoles.admin, appConst.UserRoles.administrator])) {
+  if (
+    authUser.roles &&
+    !checkIfExists(authUser.roles, appConst.AdminUser) &&
+    !checkIfExists(authUser.roles, [appConst.UserRoles.ubahn])
+  ) {
     setFilterValueToEsQuery(esQuery, 'createdBy', getAuthUser(authUser), 'createdBy')
   }
 

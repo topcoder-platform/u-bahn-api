@@ -267,7 +267,11 @@ function getServiceMethods (Model, createSchema, patchSchema, searchSchema, buil
 
     // user token
     // for non-admin users, this endpoint will only return entities that the user has created.
-    if (auth.roles && !checkIfExists(auth.roles, [appConst.UserRoles.admin, appConst.UserRoles.administrator])) {
+    if (
+      auth.roles &&
+      !checkIfExists(auth.roles, appConst.AdminUser) &&
+      !checkIfExists(auth.roles, [appConst.UserRoles.ubahn])
+    ) {
       dbQueries.push(`${Model.tableName}.createdBy = '${getAuthUser(auth)}'`)
     }
     const items = await models.DBHelper.find(Model, dbQueries)
