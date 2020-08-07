@@ -3746,7 +3746,7 @@ paths:
           schema:
             type: "array"
             items:
-              $ref: "#/definitions/User"
+              $ref: "#/definitions/EnhancedUser"
         "400":
           $ref: "#/definitions/BadRequest"
         "401":
@@ -3783,7 +3783,7 @@ paths:
           schema:
             type: "array"
             items:
-              $ref: "#/definitions/UserAttribute"
+              $ref: "#/definitions/LookupAttribute"
         "400":
           $ref: "#/definitions/BadRequest"
         "401":
@@ -3821,7 +3821,7 @@ paths:
           schema:
             type: "array"
             items:
-              $ref: "#/definitions/Achievement"
+              $ref: "#/definitions/LookupAchievement"
         "400":
           $ref: "#/definitions/BadRequest"
         "401":
@@ -3859,7 +3859,7 @@ paths:
           schema:
             type: "array"
             items:
-              $ref: "#/definitions/Skill"
+              $ref: "#/definitions/LookupSkill"
         "400":
           $ref: "#/definitions/BadRequest"
         "401":
@@ -3953,6 +3953,17 @@ definitions:
           format: "date-time"
           description: "The date when certification occurred."
     - $ref: "#/definitions/AuditFields"
+  LookupAchievement:
+    allOf:
+    - type: "object"
+      properties:
+        id:
+          type: "string"
+          format: "UUID"
+          description: "The id of the user achievement."
+        name:
+          type: "string"
+          description: "Name of achievement."
   AchievementRequestBody:
     allOf:
     - type: "object"
@@ -4028,6 +4039,21 @@ definitions:
           type: "string"
           description: "The uri for the skill"
     - $ref: "#/definitions/AuditFields"
+  LookupSkill:
+    allOf:
+    - type: "object"
+      properties:
+        skillId:
+          type: "string"
+          format: "UUID"
+          description: "The skill id"
+        skillProviderId:
+          type: "string"
+          format: "UUID"
+          description: "The referenced skill provider id"
+        name:
+          type: "string"
+          description: "The name of the skill"
   SkillRequestBody:
     allOf:
     - type: "object"
@@ -4117,7 +4143,6 @@ definitions:
         description: "If the external profile is inactive."
     example:
       organizationId: "organizationId"
-      userId: "userId"
       uri: "uri"
       externalId: "externalId"
       isInactive: false
@@ -4208,6 +4233,49 @@ definitions:
           type: "string"
           description: "The last name of the user."
     - $ref: "#/definitions/AuditFields"
+  EnhancedUser:
+    allOf:
+    - type: "object"
+      properties:
+        id:
+          type: "string"
+          format: "UUID"
+          description: "The id of the user."
+        handle:
+          type: "string"
+          description: "The handle of the user."
+        firstName:
+          type: "string"
+          description: "The first name of the user."
+        lastName:
+          type: "string"
+          description: "The last name of the user."
+        skills:
+          type: "array"
+          items:
+            type: "object"
+          description: "Array of skill objects"
+        achievements:
+          type: "array"
+          items:
+            type: "object"
+          description: "Array of achievement objects"
+        groups:
+          type: "array"
+          items:
+            type: "object"
+          description: "Array of group objects"
+        externalProfiles:
+          type: "array"
+          items:
+            type: "object"
+          description: "Array of external profile objects"
+        attributes:
+          type: "array"
+          items:
+            type: "object"
+          description: "Array of attribute objects"
+    - $ref: "#/definitions/AuditFields"
   UserSkill:
     allOf:
     - type: "object"
@@ -4288,6 +4356,21 @@ definitions:
           type: "string"
           description: "The user attribute value."
     - $ref: "#/definitions/AuditFields"
+  LookupAttribute:
+    allOf:
+    - type: "object"
+      properties:
+        id:
+          type: "string"
+          format: "UUID"
+          description: "The id of the user attribute."
+        attributeId:
+          type: "string"
+          format: "UUID"
+          description: "The attribute id."
+        value:
+          type: "string"
+          description: "The user attribute value."
   UserAttributeRequestBody:
     allOf:
     - type: "object"
