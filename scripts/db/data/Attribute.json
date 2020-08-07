@@ -1,0 +1,74 @@
+[
+  {
+    "id": "89b3c78f-d71b-4fc6-88cb-701c25e54dac",
+    "created": "2020-05-13T08:46:39.030Z",
+    "updated": null,
+    "createdBy": "tc-user",
+    "updatedBy": null,
+    "attributeGroupId": "84634bbd-8191-40cf-a03e-9962d7e39fda",
+    "name": "isAvailable"
+  },
+  {
+    "id": "f3fd623f-a613-4e3c-bf2f-9df529ff4317",
+    "created": "2020-05-13T08:35:45.512Z",
+    "updated": null,
+    "createdBy": "tc-Admin",
+    "updatedBy": null,
+    "attributeGroupId": "84634bbd-8191-40cf-a03e-9962d7e39fda",
+    "name": "company"
+  },
+  {
+    "id": "ed1c98da-1876-49b9-a565-583fafd9cd4c",
+    "created": "2020-05-13T07:32:03.128Z",
+    "updated": null,
+    "createdBy": "tc-Admin",
+    "updatedBy": null,
+    "attributeGroupId": "84634bbd-8191-40cf-a03e-9962d7e39fda",
+    "name": "location"
+  },
+  {
+    "id": "c44d4bee-1356-46d6-9f1f-991936dec297",
+    "created": "2020-05-13T07:32:03.128Z",
+    "updated": null,
+    "createdBy": "tc-Admin",
+    "updatedBy": null,
+    "attributeGroupId": "84634bbd-8191-40cf-a03e-9962d7e39fda",
+    "name": "title"
+  },
+  {
+    "id": "d709276a-80c3-491c-9b29-a4f065b2a56f",
+    "created": "2020-05-13T07:32:03.128Z",
+    "updated": null,
+    "createdBy": "tc-Admin",
+    "updatedBy": null,
+    "attributeGroupId": "84634bbd-8191-40cf-a03e-9962d7e39fda",
+    "name": "Billing Account"
+  },
+  {
+    "id": "09a51576-91ab-4f8e-ac34-36c19d8f4390",
+    "created": "2020-05-13T07:32:03.128Z",
+    "updated": null,
+    "createdBy": "tc-Admin",
+    "updatedBy": null,
+    "attributeGroupId": "84634bbd-8191-40cf-a03e-9962d7e39fda",
+    "name": "Gender"
+  },
+  {
+    "id": "7b524afa-69ac-49d5-a624-701e4cdc4e92",
+    "created": "2020-05-13T07:32:03.128Z",
+    "updated": null,
+    "createdBy": "tc-Admin",
+    "updatedBy": null,
+    "attributeGroupId": "84634bbd-8191-40cf-a03e-9962d7e39fda",
+    "name": "Experience (in months)"
+  },
+  {
+    "id": "7bfbf2a8-42bc-4ac0-a90e-ab4b13658d32",
+    "created": "2020-05-13T07:32:03.128Z",
+    "updated": null,
+    "createdBy": "tc-Admin",
+    "updatedBy": null,
+    "attributeGroupId": "84634bbd-8191-40cf-a03e-9962d7e39fda",
+    "name": "On internship"
+  }
+]

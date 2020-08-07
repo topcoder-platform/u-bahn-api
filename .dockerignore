@@ -1,8 +1,5 @@
 node_modules
 .idea
 **/.DS_Store
-upload
-scripts/generate
-.nyc_output
 .env
 coverage
