@@ -9,7 +9,7 @@
 
 ## Configuration
 
-Configuration for the application is at config/default.js and config/production.js. The following parameters can be set in config files or in env variables:
+Configuration for  the application is at config/default.js and config/production.js. The following parameters can be set in config files or in env variables:
 
 - LOG_LEVEL: the log level
 - PORT: the server port
