@@ -17,6 +17,8 @@ async function getM2Mtoken () {
 async function getGroups (universalUID) {
   const m2mToken = await getM2Mtoken()
 
+  logger.debug(`The m2m token is ${m2mToken} for user ${universalUID} with group api endpoint ${config.GROUP_API_URL}`)
+
   try {
     const resp = await axios({
       method: 'get',
