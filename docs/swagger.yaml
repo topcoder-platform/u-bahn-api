@@ -29,12 +29,16 @@ tags:
   description: "Achievement providers registered in the system"
 - name: "Organizations"
   description: "Organizations registered in the system"
+- name: "Organizations Skills Provider"
+  description: "Skill providers of Organizations"
 - name: "User Attributes"
   description: "Attributes of users"
 - name: "Attributes"
   description: "Attributes registered in the system"
 - name: "Attribute Groups"
   description: "Attribute groups registered in the system"
+- name: "Search"
+  description: "Search info registered in the system"
 schemes:
 - "https"
 consumes:
@@ -873,6 +877,10 @@ paths:
       - name: "externalId"
         in: "query"
         description: "The external id of the skill"
+        type: "string"
+      - name: "name"
+        in: "query"
+        description: "The name of the skill"
         type: "string"
       responses:
         "200":
@@ -1764,6 +1772,17 @@ paths:
         description: "The organization name"
         required: false
         type: "string"
+      - name: "externalId"
+        in: "query"
+        required: false
+        type: "string"
+        format: "UUID"
+        description: "The external id of the external profile."
+      - name: "isInactive"
+        in: "query"
+        required: false
+        type: "boolean"
+        description: "If the external profile is inactive."
       responses:
         "200":
           description: "OK - the request was successful"
@@ -1798,6 +1817,22 @@ paths:
         required: true
         type: "string"
         format: "UUID"
+      - name: "organizationName"
+        in: "query"
+        description: "The organization name"
+        required: false
+        type: "string"
+      - name: "externalId"
+        in: "query"
+        required: false
+        type: "string"
+        format: "UUID"
+        description: "The external id of the external profile."
+      - name: "isInactive"
+        in: "query"
+        required: false
+        type: "boolean"
+        description: "If the external profile is inactive."
       responses:
         "200":
           description: "OK - the request was successful"
@@ -2724,6 +2759,217 @@ paths:
       security:
       - Bearer: []
       x-swagger-router-controller: "Organizations"
+  /organizations/{organizationId}/skillProviders:
+    get:
+      tags:
+      - "Organizations Skills Provider"
+      description: "Search Organizations Skills Provider in the application.  If no results, then\
+        \ empty array is returned.\n\n**Security** - Note that for non-admin users,\
+        \ this endpoint will only return entities that\nthe user has created.\n"
+      operationId: "organizationsOrganizationIdSkillProvidersGET"
+      parameters:
+      - $ref: '#/parameters/page'
+      - $ref: '#/parameters/perPage'
+      - name: "organizationId"
+        in: "path"
+        description: "The organization id"
+        required: true
+        type: "string"
+        format: "UUID"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/OrganizationSkillsProvider"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "OrganizationSkillsProvider"
+    head:
+      tags:
+      - "Organizations Skills Provider"
+      description: "Retrieve header information for a search operation on organizations skills providers\
+        \ in the application.\n\n**Security** - Note that for non-admin users, this\
+        \ endpoint will only return entities that\nthe user has created.\n"
+      operationId: "organizationsOrganizationIdSkillProvidersHEAD"
+      parameters:
+      - $ref: '#/parameters/page'
+      - $ref: '#/parameters/perPage'
+      - name: "organizationId"
+        in: "path"
+        description: "The organization id"
+        required: true
+        type: "string"
+        format: "UUID"
+      responses:
+        "200":
+          description: "Success response"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "OrganizationSkillsProvider"
+    post:
+      tags:
+      - "Organizations Skills Provider"
+      description: "Create a new Organization Skills Provider.\n\n**Security** - This endpoint\
+        \ is accessible by all authenticated users.        \n"
+      operationId: "organizationsOrganizationIdSkillProvidersPOST"
+      parameters:
+      - name: "organizationId"
+        in: "path"
+        description: "The organization id"
+        required: true
+        type: "string"
+        format: "UUID"
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/OrganizationSkillsProviderRequestBody"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            $ref: "#/definitions/OrganizationSkillsProvider"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "409":
+          $ref: "#/definitions/Conflict"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "OrganizationSkillsProvider"
+  /organizations/{organizationId}/skillProviders/{skillProviderId}:
+    get:
+      tags:
+      - "Organizations Skills Provider"
+      description: "Get organization skills provider with given id.\n\n**Security** - Note that\
+        \ for non-admin users, this endpoint will only return entities that\nthe user\
+        \ has created.        \n"
+      operationId: "organizationsOrganizationIdSkillProvidersSkillProviderIdGET"
+      parameters:
+      - name: "organizationId"
+        in: "path"
+        description: "The organization id"
+        required: true
+        type: "string"
+        format: "UUID"
+      - name: "skillProviderId"
+        in: "path"
+        description: "The provider id"
+        required: true
+        type: "string"
+        format: "UUID"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            $ref: "#/definitions/OrganizationSkillsProvider"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "OrganizationSkillsProvider"
+    head:
+      tags:
+      - "Organizations Skills Provider"
+      description: "Get organization skills provider with given id, but only header information\
+        \ is returned.\n\n**Security** - Note that for non-admin users, this endpoint\
+        \ will only return entities that\nthe user has created.        \n"
+      operationId: "organizationsOrganizationIdSkillProvidersSkillProviderIdHEAD"
+      parameters:
+      - name: "organizationId"
+        in: "path"
+        description: "The organization id"
+        required: true
+        type: "string"
+        format: "UUID"
+      - name: "skillProviderId"
+        in: "path"
+        description: "The provider id"
+        required: true
+        type: "string"
+        format: "UUID"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "OrganizationSkillsProvider"
+    delete:
+      tags:
+      - "Organizations Skills Provider"
+      description: "Remove an existing organization skills provider with given id.\n\n**Security**\
+        \ - Note that this endpoint is only available for admin users.  \n"
+      operationId: "organizationsOrganizationIdSkillProvidersSkillProviderIdDELETE"
+      parameters:
+      - name: "organizationId"
+        in: "path"
+        description: "The organization id"
+        required: true
+        type: "string"
+        format: "UUID"
+      - name: "skillProviderId"
+        in: "path"
+        description: "The provider id"
+        required: true
+        type: "string"
+        format: "UUID"
+      responses:
+        "204":
+          description: "OK - the request was successful"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "404":
+          $ref: "#/definitions/NotFound"
+        "409":
+          $ref: "#/definitions/Conflict"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "OrganizationSkillsProvider"
   /users/{userId}/attributes:
     get:
       tags:
@@ -3472,6 +3718,159 @@ paths:
       security:
       - Bearer: []
       x-swagger-router-controller: "AttributeGroups"
+  /search/users:
+    post:
+      tags:
+      - "Search"
+      description: "Search for users in the application.  If no results, then empty\
+        \ array is returned.  Multiple filters are\nsupported.\n\n**Security** - Note\
+        \ that for non-admin users, this endpoint will only return entities that\n\
+        the user has created.\n"
+      operationId: "searchUsersGET"
+      parameters:
+      - $ref: '#/parameters/page'
+      - $ref: '#/parameters/perPage'
+      - name: "orderBy"
+        in: "query"
+        description: "Sort order"
+        enum: ["name", "location", "isAvailable"]
+        type: "string"
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/SearchUserRequestBody"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/EnhancedUser"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Search"
+  /search/userAttributes:
+    get:
+      tags:
+      - "Search"
+      description: "Search for user attributes in the application.  If no results, then empty\
+        \ array is returned.  Multiple filters are\nsupported.\n\n**Security** - Note\
+        \ that for non-admin users, this endpoint will only return entities that\n\
+        the user has created.\n"
+      operationId: "searchUserAttributesGET"
+      parameters:
+      - name: "attributeId"
+        in: "query"
+        description: "The attribute id"
+        type: "string"
+        format: "UUID"
+      - name: "attributeValue"
+        in: "query"
+        description: "The attribute value"
+        type: "string"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/LookupAttribute"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Search"
+  /search/userAchievements:
+    get:
+      tags:
+      - "Search"
+      description: "Search for user achievements in the application.  If no results, then empty\
+        \ array is returned.  Multiple filters are\nsupported.\n\n**Security** - Note\
+        \ that for non-admin users, this endpoint will only return entities that\n\
+        the user has created.\n"
+      operationId: "searchUserAchievementsGET"
+      parameters:
+      - name: "organizationId"
+        in: "query"
+        description: "The organization id"
+        type: "string"
+        format: "UUID"
+        required: true
+      - name: "keyword"
+        in: "query"
+        description: "The query keyword"
+        type: "string"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/LookupAchievement"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Search"
+  /search/skills:
+    get:
+      tags:
+      - "Search"
+      description: "Search for skills associated with an org in the application.  If no results, then empty\
+        \ array is returned.  Multiple filters are\nsupported.\n\n**Security** - Note\
+        \ that for non-admin users, this endpoint will only return entities that\n\
+        the user has created.\n"
+      operationId: "searchSkillsGET"
+      parameters:
+      - name: "organizationId"
+        in: "query"
+        description: "The organization id"
+        type: "string"
+        format: "UUID"
+        required: true
+      - name: "keyword"
+        in: "query"
+        description: "The query keyword"
+        type: "string"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/LookupSkill"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Search"
 securityDefinitions:
   Bearer:
     type: "apiKey"
@@ -3554,6 +3953,17 @@ definitions:
           format: "date-time"
           description: "The date when certification occurred."
     - $ref: "#/definitions/AuditFields"
+  LookupAchievement:
+    allOf:
+    - type: "object"
+      properties:
+        id:
+          type: "string"
+          format: "UUID"
+          description: "The id of the user achievement."
+        name:
+          type: "string"
+          description: "Name of achievement."
   AchievementRequestBody:
     allOf:
     - type: "object"
@@ -3562,6 +3972,8 @@ definitions:
           type: "string"
           format: "UUID"
           description: "The id of provider for this Achievement."
+      example:
+        achievementsProviderId: "string"
     - $ref: "#/definitions/AchievementUpdateRequestBody"
   AchievementUpdateRequestBody:
     type: "object"
@@ -3627,6 +4039,21 @@ definitions:
           type: "string"
           description: "The uri for the skill"
     - $ref: "#/definitions/AuditFields"
+  LookupSkill:
+    allOf:
+    - type: "object"
+      properties:
+        skillId:
+          type: "string"
+          format: "UUID"
+          description: "The skill id"
+        skillProviderId:
+          type: "string"
+          format: "UUID"
+          description: "The referenced skill provider id"
+        name:
+          type: "string"
+          description: "The name of the skill"
   SkillRequestBody:
     allOf:
     - type: "object"
@@ -3672,8 +4099,8 @@ definitions:
     - type: "object"
       required:
       - "organizationId"
-      - "uri"
       - "userId"
+      - "externalId"
       properties:
         userId:
           type: "string"
@@ -3686,12 +4113,19 @@ definitions:
         uri:
           type: "string"
           description: "The uri of the external profile."
+        externalId:
+          type: "string"
+          format: "UUID"
+          description: "The external id of the external profile."
+        isInactive:
+          type: "boolean"
+          description: "If the external profile is inactive."
     - $ref: "#/definitions/AuditFields"
   ExternalProfileRequestBody:
     type: "object"
     required:
     - "organizationId"
-    - "uri"
+    - "externalId"
     properties:
       organizationId:
         type: "string"
@@ -3700,17 +4134,43 @@ definitions:
       uri:
         type: "string"
         description: "The uri of the external profile."
+      externalId:
+        type: "string"
+        format: "UUID"
+        description: "The external id of the external profile."
+      isInactive:
+        type: "boolean"
+        description: "If the external profile is inactive."
     example:
       organizationId: "organizationId"
       uri: "uri"
+      externalId: "externalId"
+      isInactive: false
   ExternalProfileUpdateRequestBody:
     type: "object"
+    required:
+    - "organizationId"
     properties:
+      organizationId:
+        type: "string"
+        format: "UUID"
+        description: "The id of the organization this profile belongs to."
       uri:
         type: "string"
         description: "The uri of the external profile."
+      externalId:
+        type: "string"
+        format: "UUID"
+        description: "The external id of the external profile."
+      isInactive:
+        type: "boolean"
+        description: "If the external profile is inactive."
     example:
+      organizationId: "organizationId"
+      userId: "userId"
       uri: "uri"
+      externalId: "externalId"
+      isInactive: false
   Role:
     allOf:
     - type: "object"
@@ -3772,6 +4232,49 @@ definitions:
         lastName:
           type: "string"
           description: "The last name of the user."
+    - $ref: "#/definitions/AuditFields"
+  EnhancedUser:
+    allOf:
+    - type: "object"
+      properties:
+        id:
+          type: "string"
+          format: "UUID"
+          description: "The id of the user."
+        handle:
+          type: "string"
+          description: "The handle of the user."
+        firstName:
+          type: "string"
+          description: "The first name of the user."
+        lastName:
+          type: "string"
+          description: "The last name of the user."
+        skills:
+          type: "array"
+          items:
+            type: "object"
+          description: "Array of skill objects"
+        achievements:
+          type: "array"
+          items:
+            type: "object"
+          description: "Array of achievement objects"
+        groups:
+          type: "array"
+          items:
+            type: "object"
+          description: "Array of group objects"
+        externalProfiles:
+          type: "array"
+          items:
+            type: "object"
+          description: "Array of external profile objects"
+        attributes:
+          type: "array"
+          items:
+            type: "object"
+          description: "Array of attribute objects"
     - $ref: "#/definitions/AuditFields"
   UserSkill:
     allOf:
@@ -3853,6 +4356,21 @@ definitions:
           type: "string"
           description: "The user attribute value."
     - $ref: "#/definitions/AuditFields"
+  LookupAttribute:
+    allOf:
+    - type: "object"
+      properties:
+        id:
+          type: "string"
+          format: "UUID"
+          description: "The id of the user attribute."
+        attributeId:
+          type: "string"
+          format: "UUID"
+          description: "The attribute id."
+        value:
+          type: "string"
+          description: "The user attribute value."
   UserAttributeRequestBody:
     allOf:
     - type: "object"
@@ -3861,6 +4379,8 @@ definitions:
           type: "string"
           format: "UUID"
           description: "The attribute id."
+      example:
+        attributeId: "string"
     - $ref: "#/definitions/UserAttributeUpdateRequestBody"
   UserAttributeUpdateRequestBody:
     type: "object"
@@ -3955,6 +4475,31 @@ definitions:
           type: "string"
           description: "Name of the organization"
     - $ref: "#/definitions/AuditFields"
+  OrganizationSkillsProviderRequestBody:
+    type: "object"
+    required:
+    - "skillProviderId"
+    properties:
+      skillProviderId:
+        type: "string"
+        format: "UUID"
+        description: "Id of the organization skills provider."
+  OrganizationSkillsProvider:
+    allOf:
+    - type: "object"
+      required:
+      - "skillProviderId"
+      - "organizationId"
+      properties:
+        skillProviderId:
+          type: "string"
+          format: "UUID"
+          description: "Id of the organization skills provider."
+        organizationId:
+          type: "string"
+          format: "UUID"
+          description: "The organization id."
+    - $ref: "#/definitions/AuditFields"
   NameRequestBody:
     type: "object"
     required:
@@ -4003,6 +4548,45 @@ definitions:
     example:
       name: "name"
       attributeGroupId: "attributeGroupId"
+  SearchUserRequestBody:
+    type: "object"
+    required:
+    - organizationId
+    properties:
+      achievements:
+        type: "array"
+        items:
+          type: "string"
+        description: "The achievement name to filter users with. Specify multiple times to provide multiple values"
+      attributes:
+        type: "array"
+        items:
+          type: "object"
+          properties:
+            id:
+              type: "string"
+              format: "UUID"
+            value:
+              type: "string"
+        description: "Filter by user attributes"
+      isAvailable:
+        type: "string"
+        enum: ["true", "false"]
+        description: "`true` corresponds to users that are available. `false` corresponds to users that are not available. `isAvailable` here is an attribute of the user"
+      locations:
+        type: "array"
+        items:
+          type: "string"
+        description: "The location name to filter users with. Specify multiple times to provide multiple values. `location` here is an attribute of the user"
+      organizationId:
+        description: "The organization id"
+        type: "string"
+        format: "UUID"
+      skills:
+        type: "array"
+        items:
+          type: "string"
+        description: "The skill name to filter users with. Specify multiple times to provide multiple values"
   Unauthorized:
     type: "object"
     properties:
