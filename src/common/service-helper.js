@@ -285,7 +285,11 @@ function getServiceMethods (Model, createSchema, patchSchema, searchSchema, buil
   }
 
   search.schema = {
-    query: searchSchema,
+    query: {
+      page: joi.id(),
+      perPage: joi.pageSize(),
+      ...searchSchema
+    },
     auth: joi.object()
   }
 
