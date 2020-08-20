@@ -16,6 +16,7 @@ Configuration for the application is at config/default.js and config/production.
 - AUTH_SECRET: TC Authentication secret
 - VALID_ISSUERS: valid issuers for TC authentication
 - PAGE_SIZE: the default pagination limit
+- MAX_PAGE_SIZE: the maximum pagination size
 - API_VERSION: the API version
 - AWS_ACCESS_KEY_ID: The AWS access key
 - AWS_SECRET_ACCESS_KEY: The AWS secret key

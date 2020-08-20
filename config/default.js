@@ -11,6 +11,7 @@ module.exports = {
     : '["https://topcoder-dev.auth0.com/", "https://api.topcoder.com"]',
 
   PAGE_SIZE: process.env.PAGE_SIZE || 20,
+  MAX_PAGE_SIZE: parseInt(process.env.MAX_PAGE_SIZE) || 100,
   API_VERSION: process.env.API_VERSION || 'api/1.0',
 
   AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
