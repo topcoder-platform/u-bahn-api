@@ -6,7 +6,7 @@ const config = require('config')
 const fs = require('fs')
 const path = require('path')
 const logger = require('./common/logger')
-const joi = require('joi')
+const joi = require('@hapi/joi')
 
 joi.id = () => joi.number().integer().min(1)
 joi.pageSize = () => joi.number().integer().min(1).max(config.get('MAX_PAGE_SIZE'))
