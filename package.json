@@ -7,7 +7,8 @@
     "start": "node app.js",
     "lint": "standard \"**/*.js\"",
     "insert-data": "node scripts/db/genData.js",
-    "delete-data": "node scripts/db/dropAll.js"
+    "delete-data": "node scripts/db/dropAll.js",
+    "migrate-db-to-es": "node scripts/db/dumpDbToEs.js"
   },
   "repository": {
     "type": "git",
