@@ -58,4 +58,10 @@ module.exports.init = async () => {
   await DBHelper.createTable(Attribute)
   await DBHelper.createTable(UserAttribute)
   await DBHelper.createTable(OrganizationSkillsProvider)
+
+  // Debug code - to remove invalid entries from db
+  let data = DBHelper.find(ExternalProfile, [])
+  logger.info(console.log(data, null, 4))
+  data = DBHelper.find(UserAttribute, [])
+  logger.info(console.log(data, null, 4))
 }
