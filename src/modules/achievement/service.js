@@ -12,7 +12,7 @@ const methods = helper.getServiceMethods(
     achievementsProviderId: joi.string().required(),
     name: joi.string().required(),
     uri: joi.string(),
-    certifierId: joi.string(),
+    certifierId: joi.string().allow(),
     certifiedDate: joi.date().format('iso')
   },
   { // patch request body joi schema
@@ -20,7 +20,7 @@ const methods = helper.getServiceMethods(
     achievementsProviderId: joi.string().required(),
     name: joi.string(),
     uri: joi.string(),
-    certifierId: joi.string(),
+    certifierId: joi.string().allow(),
     certifiedDate: joi.date().format('iso')
   },
   { // search request query joi schema
