@@ -246,6 +246,12 @@ async function postEvent (topic, payload) {
     payload
   }
   await busApiClient.postEvent(message)
+
+  // Post to the aggregate topic
+  message.payload.originalTopic = topic
+  message.topic = config.UBAHN_AGGREGATE_TOPIC
+  logger.debug(`Posting event to aggregate topic ${message.topic}`)
+  await busApiClient.postEvent(message)
 }
 
 module.exports = {
