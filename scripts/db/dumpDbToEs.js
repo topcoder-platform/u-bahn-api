@@ -11,15 +11,12 @@ const {
 
 async function cleanupES () {
   const client = getESClient()
-  client.indices.delete({
+
+  await client.indices.delete({
     index: '_all'
-  }, function (err, res) {
-    if (err) {
-      console.error(err.message)
-    } else {
-      console.log('Existing indices have been deleted!')
-    }
   })
+
+  console.log('Existing indices have been deleted!')
 }
 
 async function insertIntoES (modelName, body) {

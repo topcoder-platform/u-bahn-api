@@ -35,6 +35,7 @@ Configuration for the application is at config/default.js and config/production.
 - UBAHN_CREATE_TOPIC: Kafka topic for create message
 - UBAHN_UPDATE_TOPIC: Kafka topic for update message
 - UBAHN_DELETE_TOPIC: Kafka topic for delete message
+- UBAHN_AGGREGATE_TOPIC: Kafka topic that is used to combine all create, update and delete message(s)
 - ES.HOST: Elasticsearch host
 - ES.API_VERSION: Elasticsearch API version
 - ES.DOCUMENTS: Elasticsearch index, type and id mapping for resources.
