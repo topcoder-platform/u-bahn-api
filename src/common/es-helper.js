@@ -1127,7 +1127,7 @@ async function searchElasticSearch (resource, ...args) {
     checkIfExists,
     getAuthUser
   } = require('./helper')
-  logger.debug(`Searching ES first: ${JSON.stringify(args, null, 2)}`)
+  logger.debug(`Searching ES first with query args: ${JSON.stringify(args[0], null, 2)}`)
   // path and query parameters
   const params = args[0]
   const authUser = args[1]
