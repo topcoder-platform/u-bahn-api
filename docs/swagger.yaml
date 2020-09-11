@@ -37,7 +37,7 @@ tags:
   description: "Attributes registered in the system"
 - name: "Attribute Groups"
   description: "Attribute groups registered in the system"
-- name: "Search"
+- name: "Skill Search"
   description: "Search info registered in the system"
 schemes:
 - "https"
@@ -3718,10 +3718,10 @@ paths:
       security:
       - Bearer: []
       x-swagger-router-controller: "AttributeGroups"
-  /search/users:
+  /skill-search/users:
     post:
       tags:
-      - "Search"
+      - "Skill Search"
       description: "Search for users in the application.  If no results, then empty\
         \ array is returned.  Multiple filters are\nsupported.\n\n**Security** - Note\
         \ that for non-admin users, this endpoint will only return entities that\n\
@@ -3758,10 +3758,10 @@ paths:
       security:
       - Bearer: []
       x-swagger-router-controller: "Search"
-  /search/userAttributes:
+  /skill-search/userAttributes:
     get:
       tags:
-      - "Search"
+      - "Skill Search"
       description: "Search for user attributes in the application.  If no results, then empty\
         \ array is returned.  Multiple filters are\nsupported.\n\n**Security** - Note\
         \ that for non-admin users, this endpoint will only return entities that\n\
@@ -3795,10 +3795,10 @@ paths:
       security:
       - Bearer: []
       x-swagger-router-controller: "Search"
-  /search/userAchievements:
+  /skill-search/userAchievements:
     get:
       tags:
-      - "Search"
+      - "Skill Search"
       description: "Search for user achievements in the application.  If no results, then empty\
         \ array is returned.  Multiple filters are\nsupported.\n\n**Security** - Note\
         \ that for non-admin users, this endpoint will only return entities that\n\
@@ -3833,10 +3833,10 @@ paths:
       security:
       - Bearer: []
       x-swagger-router-controller: "Search"
-  /search/skills:
+  /skill-search/skills:
     get:
       tags:
-      - "Search"
+      - "Skill Search"
       description: "Search for skills associated with an org in the application.  If no results, then empty\
         \ array is returned.  Multiple filters are\nsupported.\n\n**Security** - Note\
         \ that for non-admin users, this endpoint will only return entities that\n\
