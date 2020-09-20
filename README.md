@@ -28,7 +28,6 @@ Configuration for the application is at config/default.js and config/production.
 - AUTH0_CLIENT_ID: Auth0 client id, used to get TC M2M token
 - AUTH0_CLIENT_SECRET: Auth0 client secret, used to get TC M2M token
 - AUTH0_PROXY_SERVER_URL: Proxy Auth0 URL, used to get TC M2M token
-- GROUP_API_URL: Topcoder Group API URL
 - BUSAPI_URL: Topcoder Bus API URL
 - KAFKA_ERROR_TOPIC: The error topic at which bus api will publish any errors
 - KAFKA_MESSAGE_ORIGINATOR: The originator value for the kafka messages

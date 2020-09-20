@@ -2,7 +2,6 @@ const config = require('config')
 const _ = require('lodash')
 const querystring = require('querystring')
 const logger = require('../common/logger')
-const groupApi = require('./group-api')
 const appConst = require('../consts')
 const esClient = require('./es-client').getESClient()
 
@@ -499,8 +498,6 @@ async function getFromElasticSearch (resource, ...args) {
 
   if (params.enrich && resource === 'user') {
     const user = await enrichUser(result)
-    const groups = await groupApi.getGroups(user.id)
-    user.groups = groups
     return user
   } else if (subUserDoc) {
     // find top sub doc by sub.id
@@ -1305,11 +1302,6 @@ async function searchElasticSearch (resource, ...args) {
   if (resource === 'user' && params.enrich) {
     const users = docs.hits.hits.map(hit => hit._source)
     result = await enrichUsers(users)
-    // enrich groups
-    for (const user of users) {
-      const groups = await groupApi.getGroups(user.id)
-      user.groups = groups
-    }
   } else if (topUserSubDoc) {
     result = docs.hits.hits[0]._source[topUserSubDoc.userField]
     // for sub-resource query, it returns all sub-resource items in one user,
@@ -1430,11 +1422,6 @@ async function searchUsers (authUser, filter, params) {
   logger.debug('Enrich users')
 
   const result = await enrichUsers(users)
-  // enrich groups
-  for (const user of users) {
-    const groups = await groupApi.getGroups(user.id)
-    user.groups = groups
-  }
 
   return {
     total: getTotalCount(docs.hits.total),
