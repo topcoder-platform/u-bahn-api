@@ -9,7 +9,9 @@ const service = require('./service')
  * Search for users. Returns enriched users
  */
 async function searchUsers (req, res) {
+  console.time('searchusers')
   const result = await esHelper.searchUsers(req.auth, req.body, req.query)
+  console.timeEnd('searchusers')
   injectSearchMeta(req, res, result)
   res.send(result.result)
 }
