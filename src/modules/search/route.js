@@ -6,7 +6,7 @@ const Controller = require('./controller')
 const consts = require('../../consts')
 
 module.exports = {
-  '/search/users': {
+  '/skill-search/users': {
     post: {
       method: Controller.searchUsers,
       auth: 'jwt',
@@ -14,7 +14,7 @@ module.exports = {
       scopes: ['read:user', 'all:user']
     }
   },
-  '/search/skills': {
+  '/skill-search/skills': {
     get: {
       method: Controller.searchSkills,
       auth: 'jwt',
@@ -22,7 +22,7 @@ module.exports = {
       scopes: ['create:userAttribute', 'all:userAttribute']
     }
   },
-  '/search/userAttributes': {
+  '/skill-search/userAttributes': {
     get: {
       method: Controller.searchAttributeValues,
       auth: 'jwt',
@@ -30,7 +30,7 @@ module.exports = {
       scopes: ['create:userAttribute', 'all:userAttribute']
     }
   },
-  '/search/userAchievements': {
+  '/skill-search/userAchievements': {
     get: {
       method: Controller.searchAchievementValues,
       auth: 'jwt',

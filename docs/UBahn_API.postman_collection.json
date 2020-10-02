@@ -1,20 +1,20 @@
 {
 	"info": {
-		"_postman_id": "2e9d0d1e-22b4-4b5c-af7d-8e5d407de79b",
+		"_postman_id": "6d99ffc9-3c8b-4c0a-a006-5f1d3d23801d",
 		"name": "UBahn_API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "search",
+			"name": "skillSearch",
 			"item": [
 				{
-					"name": "{{HOST}}/search/userAttributes",
+					"name": "{{HOST}}/skill-search/userAttributes",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"id": "256b27ab-e629-429f-ad93-372eaaa46239",
+								"id": "769b9779-be21-4518-9276-f8b13c44c0d0",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if(rsp.id) pm.environment.set(\"userId\", rsp.id);"
@@ -39,12 +39,12 @@
 							}
 						],
 						"url": {
-							"raw": "{{HOST}}/search/userAttributes?attributeId=c44d4bee-1356-46d6-9f1f-991936dec297&attributeValue=support",
+							"raw": "{{HOST}}/skill-search/userAttributes?attributeId=c44d4bee-1356-46d6-9f1f-991936dec297&attributeValue=support",
 							"host": [
 								"{{HOST}}"
 							],
 							"path": [
-								"search",
+								"skill-search",
 								"userAttributes"
 							],
 							"query": [
@@ -62,12 +62,12 @@
 					"response": []
 				},
 				{
-					"name": "{{HOST}}/search/userAchievements",
+					"name": "{{HOST}}/skill-search/userAchievements",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"id": "d1951826-476c-4149-bfa7-2a853c30df4e",
+								"id": "b2b52a88-23c3-4547-89b5-0a0afa0dad19",
 								"exec": [
 									""
 								],
@@ -91,12 +91,12 @@
 							}
 						],
 						"url": {
-							"raw": "{{HOST}}/search/userAchievements?organizationId=36ed815b-3da1-49f1-a043-aaed0a4e81ad&keyword=Topcoder",
+							"raw": "{{HOST}}/skill-search/userAchievements?organizationId=36ed815b-3da1-49f1-a043-aaed0a4e81ad&keyword=Topcoder",
 							"host": [
 								"{{HOST}}"
 							],
 							"path": [
-								"search",
+								"skill-search",
 								"userAchievements"
 							],
 							"query": [
@@ -114,12 +114,12 @@
 					"response": []
 				},
 				{
-					"name": "{{HOST}}/search/skills",
+					"name": "{{HOST}}/skill-search/skills",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"id": "d56349bd-a797-47cf-b6bf-2ecfbd342815",
+								"id": "35cfaef0-78f5-4ff9-83f3-c2a705dc0e9d",
 								"exec": [
 									""
 								],
@@ -143,12 +143,12 @@
 							}
 						],
 						"url": {
-							"raw": "{{HOST}}/search/skills?organizationId=36ed815b-3da1-49f1-a043-aaed0a4e81ad&keyword=net",
+							"raw": "{{HOST}}/skill-search/skills?organizationId=36ed815b-3da1-49f1-a043-aaed0a4e81ad&keyword=net",
 							"host": [
 								"{{HOST}}"
 							],
 							"path": [
-								"search",
+								"skill-search",
 								"skills"
 							],
 							"query": [
@@ -166,12 +166,12 @@
 					"response": []
 				},
 				{
-					"name": "{{HOST}}/search/users",
+					"name": "{{HOST}}/skill-search/users",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"id": "75560f72-efeb-438e-ac29-24d7c6ab540e",
+								"id": "23733012-4565-480e-9c0c-66b7c2fd2933",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if(rsp.id) pm.environment.set(\"userId\", rsp.id);"
@@ -203,17 +203,39 @@
 							}
 						},
 						"url": {
-							"raw": "{{HOST}}/search/users",
+							"raw": "{{HOST}}/skill-search/users",
 							"host": [
 								"{{HOST}}"
 							],
 							"path": [
-								"search",
+								"skill-search",
 								"users"
 							]
 						}
 					},
 					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "e1951d10-6818-4d2d-8d49-452f3eb31f74",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "bb0d8108-d90a-4b16-ac59-7d0720a86c81",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
 				}
 			],
 			"protocolProfileBehavior": {}
@@ -227,7 +249,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "5db9dc16-daad-4768-a3af-ea8983487bec",
+								"id": "a80d76a2-572f-47e8-bb5b-7594906e6f17",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if(rsp.id) pm.environment.set(\"userId\", rsp.id);"
@@ -594,7 +616,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "8469c20d-3ef5-4868-af50-d603584ed8a7",
+								"id": "021253da-d913-43df-b490-28001f14b233",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if(rsp.id) pm.environment.set(\"roleId\", rsp.id);"
@@ -829,7 +851,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "d4ca59b9-f350-4c91-9667-a5e749eed956",
+								"id": "4a70f27f-df1b-43cf-a0fa-a2ca58a5521a",
 								"exec": [
 									""
 								],
@@ -1071,7 +1093,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "ff10985c-75c8-48ba-b522-2c8213b0c6cd",
+								"id": "9194de70-291f-4660-82d3-5883c23d12bb",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if(rsp.id) pm.environment.set(\"organizationId\", rsp.id);"
@@ -1306,7 +1328,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "0a875ba8-b4dc-42cc-b8ba-deb560b73556",
+								"id": "f40cae85-9ad1-4c54-ad87-b592395027ac",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if(rsp.id) pm.environment.set(\"skillsProviderId\", rsp.id);"
@@ -1541,7 +1563,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "909e2488-3801-4b57-90c5-6a6ae2e91f13",
+								"id": "a0153fe7-82ee-4a03-af43-19cf44fab4f0",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if(rsp.id) pm.environment.set(\"skillId\", rsp.id);"
@@ -1777,7 +1799,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "e3241acb-646f-4ec8-83fb-8a3d63da4990",
+								"id": "b4d7a5cc-9e17-4d45-84c3-6dfbdcf09579",
 								"exec": [
 									""
 								],
@@ -2025,7 +2047,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "ee9256b0-cdc2-4194-9da7-c0b363082385",
+								"id": "08a6d74a-268c-403b-8cb1-85bee3c88855",
 								"exec": [
 									""
 								],
@@ -2273,7 +2295,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "3c959e64-93e9-480d-b92e-44eacb46c2b1",
+								"id": "680443d3-c817-4939-8461-445fbeea6b00",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if(rsp.id) pm.environment.set(\"achievementsProviderId\", rsp.id);"
@@ -2508,7 +2530,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "9b4f70b8-3ca8-4c1c-a65a-8a8b37e2fa62",
+								"id": "4ccce827-71ed-4373-b14f-e103b334e73f",
 								"exec": [
 									""
 								],
@@ -2757,7 +2779,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "fb796928-9848-47a3-be88-61a8fc9e60f7",
+								"id": "6670cb30-0276-4625-9688-8cb1aa78d8fb",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if (rsp.id) pm.environment.set(\"attributeGroupId\", rsp.id);"
@@ -2998,7 +3020,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "eb028137-ee03-496c-a812-2966380bca42",
+								"id": "bad538df-7c33-4d34-a90e-9e60e279f40d",
 								"exec": [
 									"var rsp = pm.response.json();",
 									"if (rsp.id) pm.environment.set(\"attributeId\", rsp.id);"
@@ -3238,7 +3260,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "06c18b73-b9e6-46a8-acfa-74fc7ae68ac5",
+								"id": "b91ea1ce-88a2-48fa-8e90-ed689232b5e5",
 								"exec": [
 									""
 								],

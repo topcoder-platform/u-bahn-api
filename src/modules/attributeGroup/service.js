@@ -23,7 +23,7 @@ const methods = helper.getServiceMethods(
     const dbQueries = []
     // filter by provider name
     if (query.name) {
-      dbQueries.push(`name like '%${query.name}%'`)
+      dbQueries.push(`name = '${query.name}'`)
     }
     if (query.organizationId) {
       dbQueries.push(`organizationId = '${query.organizationId}'`)
