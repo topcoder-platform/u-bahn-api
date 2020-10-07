@@ -3,7 +3,12 @@ swagger: "2.0"
 info:
   description: "API for an employee management system to determine employees that\
     \ are no longer working on active projects and to understand their qualifications\
-    \ and expertise for suitability in other projects"
+    \ and expertise for suitability in other projects
+    \n\n**Pagination**\n\n
+      Requests that return multiple items will be paginated to 20 items by default. You can specify
+      further pages with the `page` parameter. You can also set a custom page
+      size up to 100 with the `perPage` parameter.
+      \n\nPagination response data is included in http headers. By Default, the response header contains links with `next`, `last`, `first`, `prev` resource links.\n\n**Point to note** - the page attributes will have no effect if the data is fetched from db and not from es."
   version: "1.0.0"
   title: "UBahn API"
 host: "ubahn-api-dev.herokuapp.com"
@@ -226,6 +231,28 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/User"
+          headers:
+            X-Next-Page:
+              type: integer
+              description: The index of the next page
+            X-Page:
+              type: integer
+              description: The index of the current page (starting at 1)
+            X-Per-Page:
+              type: integer
+              description: The number of items to list per page
+            X-Prev-Page:
+              type: integer
+              description: The index of the previous page
+            X-Total:
+              type: integer
+              description: The total number of items
+            X-Total-Pages:
+              type: integer
+              description: The total number of pages
+            Link:
+              type: string
+              description: Pagination link header.
         "400":
           $ref: "#/definitions/BadRequest"
         "401":
@@ -411,6 +438,28 @@ paths:
       responses:
         "200":
           description: "Success response"
+          headers:
+            X-Next-Page:
+              type: integer
+              description: The index of the next page
+            X-Page:
+              type: integer
+              description: The index of the current page (starting at 1)
+            X-Per-Page:
+              type: integer
+              description: The number of items to list per page
+            X-Prev-Page:
+              type: integer
+              description: The index of the previous page
+            X-Total:
+              type: integer
+              description: The total number of items
+            X-Total-Pages:
+              type: integer
+              description: The total number of pages
+            Link:
+              type: string
+              description: Pagination link header.
         "400":
           $ref: "#/definitions/BadRequest"
         "401":
@@ -622,6 +671,28 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/UserSkill"
+          headers:
+            X-Next-Page:
+              type: integer
+              description: The index of the next page
+            X-Page:
+              type: integer
+              description: The index of the current page (starting at 1)
+            X-Per-Page:
+              type: integer
+              description: The number of items to list per page
+            X-Prev-Page:
+              type: integer
+              description: The index of the previous page
+            X-Total:
+              type: integer
+              description: The total number of items
+            X-Total-Pages:
+              type: integer
+              description: The total number of pages
+            Link:
+              type: string
+              description: Pagination link header.
         "400":
           $ref: "#/definitions/BadRequest"
         "401":
@@ -655,6 +726,28 @@ paths:
       responses:
         "200":
           description: "Success response"
+          headers:
+            X-Next-Page:
+              type: integer
+              description: The index of the next page
+            X-Page:
+              type: integer
+              description: The index of the current page (starting at 1)
+            X-Per-Page:
+              type: integer
+              description: The number of items to list per page
+            X-Prev-Page:
+              type: integer
+              description: The index of the previous page
+            X-Total:
+              type: integer
+              description: The total number of items
+            X-Total-Pages:
+              type: integer
+              description: The total number of pages
+            Link:
+              type: string
+              description: Pagination link header.
         "400":
           $ref: "#/definitions/BadRequest"
         "401":
@@ -889,6 +982,28 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/Skill"
+          headers:
+            X-Next-Page:
+              type: integer
+              description: The index of the next page
+            X-Page:
+              type: integer
+              description: The index of the current page (starting at 1)
+            X-Per-Page:
+              type: integer
+              description: The number of items to list per page
+            X-Prev-Page:
+              type: integer
+              description: The index of the previous page
+            X-Total:
+              type: integer
+              description: The total number of items
+            X-Total-Pages:
+              type: integer
+              description: The total number of pages
+            Link:
+              type: string
+              description: Pagination link header.
         "400":
           $ref: "#/definitions/BadRequest"
         "401":
@@ -922,6 +1037,28 @@ paths:
       responses:
         "200":
           description: "Success response"
+          headers:
+            X-Next-Page:
+              type: integer
+              description: The index of the next page
+            X-Page:
+              type: integer
+              description: The index of the current page (starting at 1)
+            X-Per-Page:
+              type: integer
+              description: The number of items to list per page
+            X-Prev-Page:
+              type: integer
+              description: The index of the previous page
+            X-Total:
+              type: integer
+              description: The total number of items
+            X-Total-Pages:
+              type: integer
+              description: The total number of pages
+            Link:
+              type: string
+              description: Pagination link header.
         "400":
           $ref: "#/definitions/BadRequest"
         "401":
@@ -1118,6 +1255,28 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/SkillsProvider"
+          headers:
+            X-Next-Page:
+              type: integer
+              description: The index of the next page
+            X-Page:
+              type: integer
+              description: The index of the current page (starting at 1)
+            X-Per-Page:
+              type: integer
+              description: The number of items to list per page
+            X-Prev-Page:
+              type: integer
+              description: The index of the previous page
+            X-Total:
+              type: integer
+              description: The total number of items
+            X-Total-Pages:
+              type: integer
+              description: The total number of pages
+            Link:
+              type: string
+              description: Pagination link header.
         "400":
           $ref: "#/definitions/BadRequest"
         "401":
@@ -1145,6 +1304,28 @@ paths:
       responses:
         "200":
           description: "Success response"
+          headers:
+            X-Next-Page:
+              type: integer
+              description: The index of the next page
+            X-Page:
+              type: integer
+              description: The index of the current page (starting at 1)
+            X-Per-Page:
+              type: integer
+              description: The number of items to list per page
+            X-Prev-Page:
+              type: integer
+              description: The index of the previous page
+            X-Total:
+              type: integer
+              description: The total number of items
+            X-Total-Pages:
+              type: integer
+              description: The total number of pages
+            Link:
+              type: string
+              description: Pagination link header.
         "400":
           $ref: "#/definitions/BadRequest"
         "401":
@@ -1340,6 +1521,28 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/Role"
+          headers:
+            X-Next-Page:
+              type: integer
+              description: The index of the next page
+            X-Page:
+              type: integer
+              description: The index of the current page (starting at 1)
+            X-Per-Page:
+              type: integer
+              description: The number of items to list per page
+            X-Prev-Page:
+              type: integer
+              description: The index of the previous page
+            X-Total:
+              type: integer
+              description: The total number of items
+            X-Total-Pages:
+              type: integer
+              description: The total number of pages
+            Link:
+              type: string
+              description: Pagination link header.
         "400":
           $ref: "#/definitions/BadRequest"
         "401":
@@ -1367,6 +1570,28 @@ paths:
       responses:
         "200":
           description: "Success response"
+          headers:
+            X-Next-Page:
+              type: integer
+              description: The index of the next page
+            X-Page:
+              type: integer
+              description: The index of the current page (starting at 1)
+            X-Per-Page:
+              type: integer
+              description: The number of items to list per page
+            X-Prev-Page:
+              type: integer
+              description: The index of the previous page
+            X-Total:
+              type: integer
+              description: The total number of items
+            X-Total-Pages:
+              type: integer
+              description: The total number of pages
+            Link:
+              type: string
+              description: Pagination link header.
         "400":
           $ref: "#/definitions/BadRequest"
         "401":
@@ -1563,6 +1788,28 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/UserRole"
+          headers:
+            X-Next-Page:
+              type: integer
+              description: The index of the next page
+            X-Page:
+              type: integer
+              description: The index of the current page (starting at 1)
+            X-Per-Page:
+              type: integer
+              description: The number of items to list per page
+            X-Prev-Page:
+              type: integer
+              description: The index of the previous page
+            X-Total:
+              type: integer
+              description: The total number of items
+            X-Total-Pages:
+              type: integer
+              description: The total number of pages
+            Link:
+              type: string
+              description: Pagination link header.
         "400":
           $ref: "#/definitions/BadRequest"
         "401":
@@ -1593,6 +1840,28 @@ paths:
       responses:
         "200":
           description: "OK - the request was successful"
+          headers:
+            X-Next-Page:
+              type: integer
+              description: The index of the next page
+            X-Page:
+              type: integer
+              description: The index of the current page (starting at 1)
+            X-Per-Page:
+              type: integer
+              description: The number of items to list per page
+            X-Prev-Page:
+              type: integer
+              description: The index of the previous page
+            X-Total:
+              type: integer
+              description: The total number of items
+            X-Total-Pages:
+              type: integer
+              description: The total number of pages
+            Link:
+              type: string
+              description: Pagination link header.
         "400":
           $ref: "#/definitions/BadRequest"
         "401":
@@ -1790,6 +2059,28 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/ExternalProfile"
+          headers:
+            X-Next-Page:
+              type: integer
+              description: The index of the next page
+            X-Page:
+              type: integer
+              description: The index of the current page (starting at 1)
+            X-Per-Page:
+              type: integer
+              description: The number of items to list per page
+            X-Prev-Page:
+              type: integer
+              description: The index of the previous page
+            X-Total:
+              type: integer
+              description: The total number of items
+            X-Total-Pages:
+              type: integer
+              description: The total number of pages
+            Link:
+              type: string
+              description: Pagination link header.
         "400":
           $ref: "#/definitions/BadRequest"
         "401":
@@ -1836,6 +2127,28 @@ paths:
       responses:
         "200":
           description: "OK - the request was successful"
+          headers:
+            X-Next-Page:
+              type: integer
+              description: The index of the next page
+            X-Page:
+              type: integer
+              description: The index of the current page (starting at 1)
+            X-Per-Page:
+              type: integer
+              description: The number of items to list per page
+            X-Prev-Page:
+              type: integer
+              description: The index of the previous page
+            X-Total:
+              type: integer
+              description: The total number of items
+            X-Total-Pages:
+              type: integer
+              description: The total number of pages
+            Link:
+              type: string
+              description: Pagination link header.
         "400":
           $ref: "#/definitions/BadRequest"
         "401":
@@ -2071,6 +2384,28 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/Achievement"
+          headers:
+            X-Next-Page:
+              type: integer
+              description: The index of the next page
+            X-Page:
+              type: integer
+              description: The index of the current page (starting at 1)
+            X-Per-Page:
+              type: integer
+              description: The number of items to list per page
+            X-Prev-Page:
+              type: integer
+              description: The index of the previous page
+            X-Total:
+              type: integer
+              description: The total number of items
+            X-Total-Pages:
+              type: integer
+              description: The total number of pages
+            Link:
+              type: string
+              description: Pagination link header.
         "400":
           $ref: "#/definitions/BadRequest"
         "401":
@@ -2106,6 +2441,28 @@ paths:
       responses:
         "200":
           description: "OK - the request was successful"
+          headers:
+            X-Next-Page:
+              type: integer
+              description: The index of the next page
+            X-Page:
+              type: integer
+              description: The index of the current page (starting at 1)
+            X-Per-Page:
+              type: integer
+              description: The number of items to list per page
+            X-Prev-Page:
+              type: integer
+              description: The index of the previous page
+            X-Total:
+              type: integer
+              description: The total number of items
+            X-Total-Pages:
+              type: integer
+              description: The total number of pages
+            Link:
+              type: string
+              description: Pagination link header.
         "400":
           $ref: "#/definitions/BadRequest"
         "401":
@@ -2338,6 +2695,28 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/AchievementsProvider"
+          headers:
+            X-Next-Page:
+              type: integer
+              description: The index of the next page
+            X-Page:
+              type: integer
+              description: The index of the current page (starting at 1)
+            X-Per-Page:
+              type: integer
+              description: The number of items to list per page
+            X-Prev-Page:
+              type: integer
+              description: The index of the previous page
+            X-Total:
+              type: integer
+              description: The total number of items
+            X-Total-Pages:
+              type: integer
+              description: The total number of pages
+            Link:
+              type: string
+              description: Pagination link header.
         "400":
           $ref: "#/definitions/BadRequest"
         "401":
@@ -2365,6 +2744,28 @@ paths:
       responses:
         "200":
           description: "Success response"
+          headers:
+            X-Next-Page:
+              type: integer
+              description: The index of the next page
+            X-Page:
+              type: integer
+              description: The index of the current page (starting at 1)
+            X-Per-Page:
+              type: integer
+              description: The number of items to list per page
+            X-Prev-Page:
+              type: integer
+              description: The index of the previous page
+            X-Total:
+              type: integer
+              description: The total number of items
+            X-Total-Pages:
+              type: integer
+              description: The total number of pages
+            Link:
+              type: string
+              description: Pagination link header.
         "400":
           $ref: "#/definitions/BadRequest"
         "401":
@@ -2560,6 +2961,28 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/Organization"
+          headers:
+            X-Next-Page:
+              type: integer
+              description: The index of the next page
+            X-Page:
+              type: integer
+              description: The index of the current page (starting at 1)
+            X-Per-Page:
+              type: integer
+              description: The number of items to list per page
+            X-Prev-Page:
+              type: integer
+              description: The index of the previous page
+            X-Total:
+              type: integer
+              description: The total number of items
+            X-Total-Pages:
+              type: integer
+              description: The total number of pages
+            Link:
+              type: string
+              description: Pagination link header.
         "400":
           $ref: "#/definitions/BadRequest"
         "401":
@@ -2587,6 +3010,28 @@ paths:
       responses:
         "200":
           description: "success response"
+          headers:
+            X-Next-Page:
+              type: integer
+              description: The index of the next page
+            X-Page:
+              type: integer
+              description: The index of the current page (starting at 1)
+            X-Per-Page:
+              type: integer
+              description: The number of items to list per page
+            X-Prev-Page:
+              type: integer
+              description: The index of the previous page
+            X-Total:
+              type: integer
+              description: The total number of items
+            X-Total-Pages:
+              type: integer
+              description: The total number of pages
+            Link:
+              type: string
+              description: Pagination link header.
         "400":
           $ref: "#/definitions/BadRequest"
         "401":
@@ -2783,6 +3228,28 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/OrganizationSkillsProvider"
+          headers:
+            X-Next-Page:
+              type: integer
+              description: The index of the next page
+            X-Page:
+              type: integer
+              description: The index of the current page (starting at 1)
+            X-Per-Page:
+              type: integer
+              description: The number of items to list per page
+            X-Prev-Page:
+              type: integer
+              description: The index of the previous page
+            X-Total:
+              type: integer
+              description: The total number of items
+            X-Total-Pages:
+              type: integer
+              description: The total number of pages
+            Link:
+              type: string
+              description: Pagination link header.
         "400":
           $ref: "#/definitions/BadRequest"
         "401":
@@ -2813,6 +3280,28 @@ paths:
       responses:
         "200":
           description: "Success response"
+          headers:
+            X-Next-Page:
+              type: integer
+              description: The index of the next page
+            X-Page:
+              type: integer
+              description: The index of the current page (starting at 1)
+            X-Per-Page:
+              type: integer
+              description: The number of items to list per page
+            X-Prev-Page:
+              type: integer
+              description: The index of the previous page
+            X-Total:
+              type: integer
+              description: The total number of items
+            X-Total-Pages:
+              type: integer
+              description: The total number of pages
+            Link:
+              type: string
+              description: Pagination link header.
         "400":
           $ref: "#/definitions/BadRequest"
         "401":
@@ -3012,6 +3501,28 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/UserAttribute"
+          headers:
+            X-Next-Page:
+              type: integer
+              description: The index of the next page
+            X-Page:
+              type: integer
+              description: The index of the current page (starting at 1)
+            X-Per-Page:
+              type: integer
+              description: The number of items to list per page
+            X-Prev-Page:
+              type: integer
+              description: The index of the previous page
+            X-Total:
+              type: integer
+              description: The total number of items
+            X-Total-Pages:
+              type: integer
+              description: The total number of pages
+            Link:
+              type: string
+              description: Pagination link header.
         "400":
           $ref: "#/definitions/BadRequest"
         "401":
@@ -3056,6 +3567,28 @@ paths:
       responses:
         "200":
           description: "Success response"
+          headers:
+            X-Next-Page:
+              type: integer
+              description: The index of the next page
+            X-Page:
+              type: integer
+              description: The index of the current page (starting at 1)
+            X-Per-Page:
+              type: integer
+              description: The number of items to list per page
+            X-Prev-Page:
+              type: integer
+              description: The index of the previous page
+            X-Total:
+              type: integer
+              description: The total number of items
+            X-Total-Pages:
+              type: integer
+              description: The total number of pages
+            Link:
+              type: string
+              description: Pagination link header.
         "400":
           $ref: "#/definitions/BadRequest"
         "401":
@@ -3287,6 +3820,28 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/Attribute"
+          headers:
+            X-Next-Page:
+              type: integer
+              description: The index of the next page
+            X-Page:
+              type: integer
+              description: The index of the current page (starting at 1)
+            X-Per-Page:
+              type: integer
+              description: The number of items to list per page
+            X-Prev-Page:
+              type: integer
+              description: The index of the previous page
+            X-Total:
+              type: integer
+              description: The total number of items
+            X-Total-Pages:
+              type: integer
+              description: The total number of pages
+            Link:
+              type: string
+              description: Pagination link header.
         "400":
           $ref: "#/definitions/BadRequest"
         "401":
@@ -3309,6 +3864,28 @@ paths:
       responses:
         "200":
           description: "Success response"
+          headers:
+            X-Next-Page:
+              type: integer
+              description: The index of the next page
+            X-Page:
+              type: integer
+              description: The index of the current page (starting at 1)
+            X-Per-Page:
+              type: integer
+              description: The number of items to list per page
+            X-Prev-Page:
+              type: integer
+              description: The index of the previous page
+            X-Total:
+              type: integer
+              description: The total number of items
+            X-Total-Pages:
+              type: integer
+              description: The total number of pages
+            Link:
+              type: string
+              description: Pagination link header.
         "400":
           $ref: "#/definitions/BadRequest"
         "401":
@@ -3512,6 +4089,28 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/AttributeGroup"
+          headers:
+            X-Next-Page:
+              type: integer
+              description: The index of the next page
+            X-Page:
+              type: integer
+              description: The index of the current page (starting at 1)
+            X-Per-Page:
+              type: integer
+              description: The number of items to list per page
+            X-Prev-Page:
+              type: integer
+              description: The index of the previous page
+            X-Total:
+              type: integer
+              description: The total number of items
+            X-Total-Pages:
+              type: integer
+              description: The total number of pages
+            Link:
+              type: string
+              description: Pagination link header.
         "400":
           $ref: "#/definitions/BadRequest"
         "401":
@@ -3545,6 +4144,28 @@ paths:
       responses:
         "200":
           description: "Success response"
+          headers:
+            X-Next-Page:
+              type: integer
+              description: The index of the next page
+            X-Page:
+              type: integer
+              description: The index of the current page (starting at 1)
+            X-Per-Page:
+              type: integer
+              description: The number of items to list per page
+            X-Prev-Page:
+              type: integer
+              description: The index of the previous page
+            X-Total:
+              type: integer
+              description: The total number of items
+            X-Total-Pages:
+              type: integer
+              description: The total number of pages
+            Link:
+              type: string
+              description: Pagination link header.
         "400":
           $ref: "#/definitions/BadRequest"
         "401":
@@ -3747,6 +4368,28 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/EnhancedUser"
+          headers:
+            X-Next-Page:
+              type: integer
+              description: The index of the next page
+            X-Page:
+              type: integer
+              description: The index of the current page (starting at 1)
+            X-Per-Page:
+              type: integer
+              description: The number of items to list per page
+            X-Prev-Page:
+              type: integer
+              description: The index of the previous page
+            X-Total:
+              type: integer
+              description: The total number of items
+            X-Total-Pages:
+              type: integer
+              description: The total number of pages
+            Link:
+              type: string
+              description: Pagination link header.
         "400":
           $ref: "#/definitions/BadRequest"
         "401":
@@ -3784,6 +4427,37 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/LookupAttribute"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Search"
+    head:
+      tags:
+      - "Skill Search"
+      description: "Retrieve header information for a search operation on user attributes in the application.  Multiple filters are supported.\n\n**Security** - Note\
+        \ that for non-admin users, this endpoint will only return entities that\n\
+        the user has created.\n"
+      operationId: "searchUserAttributesHEAD"
+      parameters:
+      - name: "attributeId"
+        in: "query"
+        description: "The attribute id"
+        type: "string"
+        format: "UUID"
+      - name: "attributeValue"
+        in: "query"
+        description: "The attribute value"
+        type: "string"
+      responses:
+        "200":
+          description: "OK - the request was successful"
         "400":
           $ref: "#/definitions/BadRequest"
         "401":
@@ -3833,6 +4507,38 @@ paths:
       security:
       - Bearer: []
       x-swagger-router-controller: "Search"
+    head:
+      tags:
+      - "Skill Search"
+      description: "Retrieve header information for a search operation on user achievements in the application. Multiple filters are\nsupported.\n\n**Security** - Note\
+        \ that for non-admin users, this endpoint will only return entities that\n\
+        the user has created.\n"
+      operationId: "searchUserAchievementsHEAD"
+      parameters:
+      - name: "organizationId"
+        in: "query"
+        description: "The organization id"
+        type: "string"
+        format: "UUID"
+        required: true
+      - name: "keyword"
+        in: "query"
+        description: "The query keyword"
+        type: "string"
+      responses:
+        "200":
+          description: "OK - the request was successful"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Search"
   /skill-search/skills:
     get:
       tags:
@@ -3860,6 +4566,38 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/LookupSkill"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "500":
+          $ref: "#/definitions/ServerError"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Search"
+    head:
+      tags:
+      - "Skill Search"
+      description: "Retrieve header information for a search operation on skills associated with an org in the application.  Multiple filters are\nsupported.\n\n**Security** - Note\
+        \ that for non-admin users, this endpoint will only return entities that\n\
+        the user has created.\n"
+      operationId: "searchSkillsHEAD"
+      parameters:
+      - name: "organizationId"
+        in: "query"
+        description: "The organization id"
+        type: "string"
+        format: "UUID"
+        required: true
+      - name: "keyword"
+        in: "query"
+        description: "The query keyword"
+        type: "string"
+      responses:
+        "200":
+          description: "OK - the request was successful"
         "400":
           $ref: "#/definitions/BadRequest"
         "401":
