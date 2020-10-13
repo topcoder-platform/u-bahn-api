@@ -20,7 +20,8 @@ const methods = helper.getServiceMethods(
   {
     handle: joi.string(),
     roleId: joi.string(),
-    enrich: joi.boolean()
+    enrich: joi.boolean(),
+    'externalProfile.externalId': joi.string()
   },
   async query => {
     let prefix = 'select * from DUser'
