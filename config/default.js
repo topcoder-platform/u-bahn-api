@@ -50,8 +50,8 @@ module.exports = {
 
   // ElasticSearch
   ES: {
-    HOST: process.env.ES_HOST || 'localhost:9200',
-    API_VERSION: process.env.ES_API_VERSION || '7.4',
+    HOST: process.env.ES_HOST || 'http://localhost:9200',
+    ENRICH_USER_PIPELINE_NAME: process.env.ENRICH_USER_PIPELINE_NAME || 'enrich_user',
     // es mapping: _index, _type, _id
     DOCUMENTS: {
       achievementprovider: {

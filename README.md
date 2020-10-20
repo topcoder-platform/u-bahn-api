@@ -5,7 +5,7 @@
 - node 12.x
 - npm 6.x
 - docker
-- elasticsearch 6.x
+- elasticsearch 7.7
 
 ## Configuration
 
@@ -36,7 +36,6 @@ Configuration for the application is at config/default.js and config/production.
 - UBAHN_DELETE_TOPIC: Kafka topic for delete message
 - UBAHN_AGGREGATE_TOPIC: Kafka topic that is used to combine all create, update and delete message(s)
 - ES.HOST: Elasticsearch host
-- ES.API_VERSION: Elasticsearch API version
 - ES.DOCUMENTS: Elasticsearch index, type and id mapping for resources.
 
 For `ES.DOCUMENTS` configuration, you will find multiple other configurations below it. Each has default values that you can override using the environment variables

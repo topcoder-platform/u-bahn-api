@@ -8,10 +8,12 @@ const config = require('config')
 const topResources = {
   achievementprovider: {
     index: config.get('ES.DOCUMENTS.achievementprovider.index'),
+    enrichPolicy: 'achievementprovider-policy',
     type: config.get('ES.DOCUMENTS.achievementprovider.type')
   },
   attribute: {
     index: config.get('ES.DOCUMENTS.attribute.index'),
+    enrichPolicy: 'attribute-policy',
     type: config.get('ES.DOCUMENTS.attribute.type')
   },
   attributegroup: {
@@ -20,14 +22,17 @@ const topResources = {
   },
   organization: {
     index: config.get('ES.DOCUMENTS.organization.index'),
+    enrichPolicy: 'organization-policy',
     type: config.get('ES.DOCUMENTS.organization.type')
   },
   role: {
     index: config.get('ES.DOCUMENTS.role.index'),
+    enrichPolicy: 'role-policy',
     type: config.get('ES.DOCUMENTS.role.type')
   },
   skill: {
     index: config.get('ES.DOCUMENTS.skill.index'),
+    enrichPolicy: 'skill-policy',
     type: config.get('ES.DOCUMENTS.skill.type')
   },
   skillprovider: {

@@ -1,4 +1,5 @@
 const _ = require('lodash')
+const config = require('config')
 const models = require('../../src/models')
 const logger = require('../../src/common/logger')
 const { getESClient } = require('../../src/common/es-client')
@@ -38,10 +39,13 @@ async function insertIntoES (modelName, body) {
       body,
       refresh: 'true'
     })
+    if (topResources[esResourceName].enrichPolicy) {
+      await client.enrich.executePolicy({ name: topResources[esResourceName].enrichPolicy })
+    }
   } else if (_.includes(_.keys(userResources), esResourceName)) {
     const userResource = userResources[esResourceName]
 
-    const user = await client.getSource({
+    const { body: user } = await client.getSource({
       index: topResources.user.index,
       type: topResources.user.type,
       id: body.userId
@@ -73,18 +77,19 @@ async function insertIntoES (modelName, body) {
       logger.error(`Can't create existing ${esResourceName} with the ${userResource.relateKey}: ${relateId}, userId: ${body.userId}`)
     } else {
       user[userResource.propertyName].push(body)
-      await client.update({
+      await client.index({
         index: topResources.user.index,
         type: topResources.user.type,
         id: body.userId,
-        body: { doc: user },
+        body: user,
+        pipeline: config.get('ES.ENRICH_USER_PIPELINE_NAME'),
         refresh: 'true'
       })
     }
   } else if (_.includes(_.keys(organizationResources), esResourceName)) {
     const orgResource = organizationResources[esResourceName]
 
-    const organization = await client.getSource({
+    const { body: organization } = await client.getSource({
       index: topResources.organization.index,
       type: topResources.organization.type,
       id: body.organizationId

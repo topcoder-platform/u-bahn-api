@@ -1,6 +1,7 @@
 const config = require('config')
 const AWS = require('aws-sdk')
-const elasticsearch = require('elasticsearch')
+const elasticsearch = require('@elastic/elasticsearch')
+const createAwsElasticsearchConnector = require('aws-elasticsearch-connector')
 
 AWS.config.region = config.AWS_REGION
 
@@ -16,20 +17,16 @@ function getESClient () {
     return esClient
   }
   const host = config.ES.HOST
-  const apiVersion = config.ES.API_VERSION
-
   if (!esClient) {
     // AWS ES configuration is different from other providers
     if (/.*amazonaws.*/.test(host)) {
       esClient = new elasticsearch.Client({
-        apiVersion,
-        host,
-        connectionClass: require('http-aws-es') // eslint-disable-line global-require
+        ...createAwsElasticsearchConnector(AWS.config),
+        node: host
       })
     } else {
       esClient = new elasticsearch.Client({
-        apiVersion,
-        host
+        node: host
       })
     }
   }
