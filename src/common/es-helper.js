@@ -215,13 +215,11 @@ const FILTER_CHAIN = {
   skill: {
     filterNext: 'userskill',
     queryField: 'skillId',
-    enrichNext: 'skillprovider',
     idField: 'skillProviderId'
   },
   attribute: {
     filterNext: 'userattribute',
     queryField: 'attributeId',
-    enrichNext: 'attributegroup',
     idField: 'attributeGroupId'
   },
   attributegroup: {
@@ -247,29 +245,23 @@ const FILTER_CHAIN = {
   // sub resource
   userskill: {
     queryField: 'skillId',
-    enrichNext: 'skill',
     idField: 'skillId'
   },
   userrole: {
     queryField: 'roleId',
-    enrichNext: 'role',
     idField: 'roleId'
   },
   externalprofile: {
-    enrichNext: 'organization',
     idField: 'organizationId'
   },
   achievement: {
-    enrichNext: 'achievementprovider',
     idField: 'achievementsProviderId'
   },
   userattribute: {
-    enrichNext: 'attribute',
     idField: 'attributeId'
   },
   organizationskillprovider: {
     queryField: 'skillProviderId',
-    enrichNext: 'skillprovider',
     idField: 'skillProviderId'
   }
 }
