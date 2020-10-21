@@ -15,7 +15,7 @@ const topResources = {
       enrichFields: ['id', 'name', 'created', 'updated', 'createdBy', 'updatedBy']
     },
     pipeline: {
-      id: 'skillprovider-pipeline',
+      id: config.get('ES.DOCUMENTS.skillprovider.pipelineId'),
       field: 'skillProviderId',
       targetField: 'skillprovider',
       maxMatches: '1'
@@ -51,7 +51,7 @@ const topResources = {
       enrichFields: ['id', 'name', 'organizationId', 'created', 'updated', 'createdBy', 'updatedBy']
     },
     pipeline: {
-      id: 'attributegroup-pipeline',
+      id: config.get('ES.DOCUMENTS.attributegroup.pipelineId'),
       field: 'attributeGroupId',
       targetField: 'attributegroup',
       maxMatches: '1'
@@ -68,7 +68,7 @@ const topResources = {
     },
     ingest: {
       pipeline: {
-        id: 'skillprovider-pipeline'
+        id: config.get('ES.DOCUMENTS.skillprovider.pipelineId')
       }
     }
   },
@@ -83,21 +83,21 @@ const topResources = {
     },
     ingest: {
       pipeline: {
-        id: 'attributegroup-pipeline'
+        id: config.get('ES.DOCUMENTS.attributegroup.pipelineId')
       }
     }
   },
 
   organization: {
     index: config.get('ES.DOCUMENTS.organization.index'),
-    type: config.get('ES.DOCUMENTS.organization.type'),
+    type: config.get('ES.DOCUMENTS.organization.type')
   },
 
   user: {
     index: config.get('ES.DOCUMENTS.user.index'),
     type: config.get('ES.DOCUMENTS.user.type'),
     pipeline: {
-      id: 'user-pipeline',
+      id: config.get('ES.DOCUMENTS.user.pipelineId'),
       processors: [
         {
           referenceField: config.get('ES.DOCUMENTS.achievement.userField'),

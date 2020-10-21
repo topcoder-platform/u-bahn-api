@@ -51,7 +51,6 @@ module.exports = {
   // ElasticSearch
   ES: {
     HOST: process.env.ES_HOST || 'http://localhost:9200',
-    ENRICH_USER_PIPELINE_NAME: process.env.ENRICH_USER_PIPELINE_NAME || 'enrich_user',
     // es mapping: _index, _type, _id
     DOCUMENTS: {
       achievementprovider: {
@@ -64,7 +63,8 @@ module.exports = {
       },
       attributegroup: {
         index: process.env.ATTRIBUTE_GROUP_INDEX || 'attribute_group',
-        type: '_doc'
+        type: '_doc',
+        pipelineId: process.env.ATTRIBUTE_GROUP_PIPELINE_ID || 'attributegroup-pipeline'
       },
       organization: {
         index: process.env.ORGANIZATION_INDEX || 'organization',
@@ -80,11 +80,13 @@ module.exports = {
       },
       skillprovider: {
         index: process.env.SKILL_PROVIDER_INDEX || 'skill_provider',
-        type: '_doc'
+        type: '_doc',
+        pipelineId: process.env.SKILL_PROVIDER_PIPELINE_ID || 'skillprovider-pipeline'
       },
       user: {
         index: process.env.USER_INDEX || 'user',
-        type: '_doc'
+        type: '_doc',
+        pipelineId: process.env.USER_PIPELINE_ID || 'user-pipeline'
       },
       // sub resources under user
       achievement: {

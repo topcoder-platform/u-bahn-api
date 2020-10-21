@@ -37,6 +37,9 @@ Configuration for the application is at config/default.js and config/production.
 - UBAHN_AGGREGATE_TOPIC: Kafka topic that is used to combine all create, update and delete message(s)
 - ES.HOST: Elasticsearch host
 - ES.DOCUMENTS: Elasticsearch index, type and id mapping for resources.
+- ATTRIBUTE_GROUP_PIPELINE_ID: The pipeline id for enrichment with attribute group. Default is `attributegroup-pipeline`
+- SKILL_PROVIDER_PIPELINE_ID: The pipeline id for enrichment with skill provider. Default is `skillprovider-pipeline`
+- USER_PIPELINE_ID: The pipeline id for enrichment of user details. Default is `user-pipeline`
 
 For `ES.DOCUMENTS` configuration, you will find multiple other configurations below it. Each has default values that you can override using the environment variables
 

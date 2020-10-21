@@ -259,10 +259,6 @@ function getServiceMethods (Model, createSchema, patchSchema, searchSchema, buil
     try {
       return await esHelper.searchElasticSearch(resource, query, auth)
     } catch (err) {
-      // return error if enrich fails
-      if (resource === 'user' && query.enrich) {
-        throw errors.elasticSearchEnrichError(err.message)
-      }
       logger.logFullError(err)
     }
 

@@ -1,5 +1,4 @@
 const _ = require('lodash')
-const config = require('config')
 const models = require('../../src/models')
 const logger = require('../../src/common/logger')
 const { getESClient } = require('../../src/common/es-client')
