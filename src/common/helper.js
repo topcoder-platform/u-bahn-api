@@ -109,6 +109,9 @@ function readerToJson (reader) {
           toRealValue(r, setValue(name, []))
           r.stepOut()
           break
+        case IonTypes.BOOL:
+          setValue(name, r.booleanValue())
+          break
       }
       nextT = reader.next()
     }
