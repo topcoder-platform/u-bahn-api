@@ -19,7 +19,6 @@
     "@hapi/joi": "^16.1.8",
     "@hapi/joi-date": "^2.0.1",
     "amazon-qldb-driver-nodejs": "^0.1.1-preview.2",
-    "aws-elasticsearch-connector": "^9.0.0",
     "aws-sdk": "^2.627.0",
     "axios": "^0.19.2",
     "body-parser": "^1.19.0",

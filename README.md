@@ -35,7 +35,7 @@ Configuration for the application is at config/default.js and config/production.
 - UBAHN_UPDATE_TOPIC: Kafka topic for update message
 - UBAHN_DELETE_TOPIC: Kafka topic for delete message
 - UBAHN_AGGREGATE_TOPIC: Kafka topic that is used to combine all create, update and delete message(s)
-- ES.HOST: Elasticsearch host
+- ES_HOST: Elasticsearch host
 - ES.DOCUMENTS: Elasticsearch index, type and id mapping for resources.
 - ATTRIBUTE_GROUP_PIPELINE_ID: The pipeline id for enrichment with attribute group. Default is `attributegroup-pipeline`
 - SKILL_PROVIDER_PIPELINE_ID: The pipeline id for enrichment with skill provider. Default is `skillprovider-pipeline`
@@ -46,6 +46,9 @@ Configuration for the application is at config/default.js and config/production.
 - ACHIEVEMENT_PROVIDER_ENRICH_POLICYNAME: The enrich policy for achievement provider. Default is `achievementprovider-policy`
 - SKILL_ENRICH_POLICYNAME: The enrich policy for skill. Default is `skill-policy`
 - ATTRIBUTE_ENRICH_POLICYNAME: The enrich policy for skill. Default is `attribute-policy`
+- ELASTICCLOUD_ID: The elastic cloud id, if your elasticsearch instance is hosted on elastic cloud. DO NOT provide a value for ES_HOST if you are using this
+- ELASTICCLOUD_USERNAME: The elastic cloud username for basic authentication. Provide this only if your elasticsearch instance is hosted on elastic cloud
+- ELASTICCLOUD_PASSWORD: The elastic cloud password for basic authentication. Provide this only if your elasticsearch instance is hosted on elastic cloud
 
 For `ES.DOCUMENTS` configuration, you will find multiple other configurations below it. Each has default values that you can override using the environment variables
 

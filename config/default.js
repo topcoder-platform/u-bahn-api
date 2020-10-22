@@ -51,6 +51,13 @@ module.exports = {
   // ElasticSearch
   ES: {
     HOST: process.env.ES_HOST || 'http://localhost:9200',
+
+    ELASTICCLOUD: {
+      id: process.env.ELASTICCLOUD_ID,
+      username: process.env.ELASTICCLOUD_USERNAME,
+      password: process.env.ELASTICCLOUD_PASSWORD
+    },
+
     // es mapping: _index, _type, _id
     DOCUMENTS: {
       achievementprovider: {
