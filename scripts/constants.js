@@ -10,7 +10,7 @@ const topResources = {
     index: config.get('ES.DOCUMENTS.skillprovider.index'),
     type: config.get('ES.DOCUMENTS.skillprovider.type'),
     enrich: {
-      policyName: 'skillprovider-policy',
+      policyName: config.get('ES.DOCUMENTS.skillprovider.enrichPolicyName'),
       matchField: 'id',
       enrichFields: ['id', 'name', 'created', 'updated', 'createdBy', 'updatedBy']
     },
@@ -26,7 +26,7 @@ const topResources = {
     index: config.get('ES.DOCUMENTS.role.index'),
     type: config.get('ES.DOCUMENTS.role.type'),
     enrich: {
-      policyName: 'role-policy',
+      policyName: config.get('ES.DOCUMENTS.role.enrichPolicyName'),
       matchField: 'id',
       enrichFields: ['id', 'name', 'created', 'updated', 'createdBy', 'updatedBy']
     }
@@ -36,7 +36,7 @@ const topResources = {
     index: config.get('ES.DOCUMENTS.achievementprovider.index'),
     type: config.get('ES.DOCUMENTS.achievementprovider.type'),
     enrich: {
-      policyName: 'achievementprovider-policy',
+      policyName: config.get('ES.DOCUMENTS.achievementprovider.enrichPolicyName'),
       matchField: 'id',
       enrichFields: ['id', 'name', 'created', 'updated', 'createdBy', 'updatedBy']
     }
@@ -46,7 +46,7 @@ const topResources = {
     index: config.get('ES.DOCUMENTS.attributegroup.index'),
     type: config.get('ES.DOCUMENTS.attributegroup.type'),
     enrich: {
-      policyName: 'attributegroup-policy',
+      policyName: config.get('ES.DOCUMENTS.attributegroup.enrichPolicyName'),
       matchField: 'id',
       enrichFields: ['id', 'name', 'organizationId', 'created', 'updated', 'createdBy', 'updatedBy']
     },
@@ -62,7 +62,7 @@ const topResources = {
     index: config.get('ES.DOCUMENTS.skill.index'),
     type: config.get('ES.DOCUMENTS.skill.type'),
     enrich: {
-      policyName: 'skill-policy',
+      policyName: config.get('ES.DOCUMENTS.skill.enrichPolicyName'),
       matchField: 'id',
       enrichFields: ['id', 'skillProviderId', 'name', 'externalId', 'uri', 'created', 'updated', 'createdBy', 'updatedBy', 'skillprovider']
     },
@@ -77,7 +77,7 @@ const topResources = {
     index: config.get('ES.DOCUMENTS.attribute.index'),
     type: config.get('ES.DOCUMENTS.attribute.type'),
     enrich: {
-      policyName: 'attribute-policy',
+      policyName: config.get('ES.DOCUMENTS.attribute.enrichPolicyName'),
       matchField: 'id',
       enrichFields: ['id', 'name', 'attributeGroupId', 'created', 'updated', 'createdBy', 'updatedBy', 'attributegroup']
     },
@@ -168,7 +168,7 @@ const organizationResources = {
     propertyName: config.get('ES.DOCUMENTS.organizationskillprovider.orgField'),
     relateKey: 'skillProviderId',
     enrich: {
-      policyName: 'organization-policy',
+      policyName: config.get('ES.DOCUMENTS.organization.enrichPolicyName'),
       matchField: 'id',
       enrichFields: ['id', 'name', 'created', 'updated', 'createdBy', 'updatedBy', 'skillProviders']
     }

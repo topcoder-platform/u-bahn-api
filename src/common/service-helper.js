@@ -190,7 +190,7 @@ function getServiceMethods (Model, createSchema, patchSchema, searchSchema, buil
   async function patch (id, entity, auth, params) {
     await makeSureRefExist(entity)
 
-    const dbEntity = await get(id, auth, params)
+    const dbEntity = await get(id, auth, params, {}, true)
     const newEntity = new Model()
     _.extend(newEntity, dbEntity, entity)
     newEntity.updated = new Date()
@@ -218,23 +218,26 @@ function getServiceMethods (Model, createSchema, patchSchema, searchSchema, buil
    * @param auth the auth obj
    * @param params the path parameters
    * @param query the query parameters
+   * @param fromDb Should we bypass Elasticsearch for the record and fetch from db instead?
    * @return {Promise} the db device
    */
-  async function get (id, auth, params, query = {}) {
+  async function get (id, auth, params, query = {}, fromDb = false) {
     let recordObj
     // Merge path and query params
     const trueParams = _.assign(params, query)
-    try {
-      const result = await esHelper.getFromElasticSearch(resource, id, auth, trueParams)
-      // check permission
-      permissionCheck(auth, result)
-      return result
-    } catch (err) {
-      // return error if enrich fails or permission fails
-      if ((resource === 'user' && trueParams.enrich) || (err.status && err.status === 403)) {
-        throw errors.elasticSearchEnrichError(err.message)
+    if (!fromDb) {
+      try {
+        const result = await esHelper.getFromElasticSearch(resource, id, auth, trueParams)
+        // check permission
+        permissionCheck(auth, result)
+        return result
+      } catch (err) {
+        // return error if enrich fails or permission fails
+        if ((resource === 'user' && trueParams.enrich) || (err.status && err.status === 403)) {
+          throw errors.elasticSearchEnrichError(err.message)
+        }
+        logger.logFullError(err)
       }
-      logger.logFullError(err)
     }
     if (_.isNil(trueParams) || _.isEmpty(trueParams)) {
       recordObj = await models.DBHelper.get(Model, id)
@@ -302,7 +305,7 @@ function getServiceMethods (Model, createSchema, patchSchema, searchSchema, buil
    */
   async function remove (id, auth, params) {
     let payload
-    await get(id, auth, params) // check exist
+    await get(id, auth, params, {}, true) // check exist
     await models.DBHelper.delete(Model, id, buildQueryByParams(params))
     if (SUB_USER_DOCUMENTS[resource] || SUB_ORG_DOCUMENTS[resource]) {
       payload = _.assign({}, params)

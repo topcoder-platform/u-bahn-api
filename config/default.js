@@ -55,33 +55,40 @@ module.exports = {
     DOCUMENTS: {
       achievementprovider: {
         index: process.env.ACHIEVEMENT_PROVIDER_INDEX || 'achievement_provider',
-        type: '_doc'
+        type: '_doc',
+        enrichPolicyName: process.env.ACHIEVEMENT_PROVIDER_ENRICH_POLICYNAME || 'achievementprovider-policy'
       },
       attribute: {
         index: process.env.ATTRIBUTE_INDEX || 'attribute',
-        type: '_doc'
+        type: '_doc',
+        enrichPolicyName: process.env.ATTRIBUTE_ENRICH_POLICYNAME || 'attribute-policy'
       },
       attributegroup: {
         index: process.env.ATTRIBUTE_GROUP_INDEX || 'attribute_group',
         type: '_doc',
-        pipelineId: process.env.ATTRIBUTE_GROUP_PIPELINE_ID || 'attributegroup-pipeline'
+        pipelineId: process.env.ATTRIBUTE_GROUP_PIPELINE_ID || 'attributegroup-pipeline',
+        enrichPolicyName: process.env.ATTRIBUTE_GROUP_ENRICH_POLICYNAME || 'attributegroup-policy'
       },
       organization: {
         index: process.env.ORGANIZATION_INDEX || 'organization',
-        type: '_doc'
+        type: '_doc',
+        enrichPolicyName: process.env.ORGANIZATION_ENRICH_POLICYNAME || 'organization-policy'
       },
       role: {
         index: process.env.ROLE_INDEX || 'role',
-        type: '_doc'
+        type: '_doc',
+        enrichPolicyName: process.env.ROLE_ENRICH_POLICYNAME || 'role-policy'
       },
       skill: {
         index: process.env.SKILL_INDEX || 'skill',
-        type: '_doc'
+        type: '_doc',
+        enrichPolicyName: process.env.SKILL_ENRICH_POLICYNAME || 'skill-policy'
       },
       skillprovider: {
         index: process.env.SKILL_PROVIDER_INDEX || 'skill_provider',
         type: '_doc',
-        pipelineId: process.env.SKILL_PROVIDER_PIPELINE_ID || 'skillprovider-pipeline'
+        pipelineId: process.env.SKILL_PROVIDER_PIPELINE_ID || 'skillprovider-pipeline',
+        enrichPolicyName: process.env.SKILL_PROVIDER_ENRICH_POLICYNAME || 'skillprovider-policy'
       },
       user: {
         index: process.env.USER_INDEX || 'user',

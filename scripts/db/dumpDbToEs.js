@@ -29,40 +29,88 @@ const RESOURCES_IN_ORDER = [
 
 const client = getESClient()
 
+const RESOURCE_NOT_FOUND = 'resource_not_found_exception'
+const INDEX_NOT_FOUND = 'index_not_found_exception'
+
 /**
  * Cleans up the data in elasticsearch
  * @param {Array} keys Array of models
  */
 async function cleanupES (keys) {
   const client = getESClient()
-  await client.ingest.deletePipeline({
-    id: topResources.user.pipeline.id
-  })
-  await client.ingest.deletePipeline({
-    id: topResources.skillprovider.pipeline.id
-  })
-  await client.ingest.deletePipeline({
-    id: topResources.attributegroup.pipeline.id
-  })
-  for (let i = 0; i < keys.length; i++) {
-    const key = keys[i]
-    if (models[key].tableName) {
-      const esResourceName = modelToESIndexMapping[key]
-      if (_.includes(_.keys(topResources), esResourceName)) {
-        if (topResources[esResourceName].enrich) {
-          await client.enrich.deletePolicy({
-            name: topResources[esResourceName].enrich.policyName
-          })
+  try {
+    await client.ingest.deletePipeline({
+      id: topResources.user.pipeline.id
+    })
+  } catch (e) {
+    if (e.meta && e.meta.body.error.type !== RESOURCE_NOT_FOUND) {
+      throw e
+    }
+  }
+
+  try {
+    await client.ingest.deletePipeline({
+      id: topResources.skillprovider.pipeline.id
+    })
+  } catch (e) {
+    if (e.meta && e.meta.body.error.type !== RESOURCE_NOT_FOUND) {
+      throw e
+    }
+  }
+
+  try {
+    await client.ingest.deletePipeline({
+      id: topResources.attributegroup.pipeline.id
+    })
+  } catch (e) {
+    if (e.meta && e.meta.body.error.type !== RESOURCE_NOT_FOUND) {
+      throw e
+    }
+  }
+
+  try {
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i]
+      if (models[key].tableName) {
+        const esResourceName = modelToESIndexMapping[key]
+        if (_.includes(_.keys(topResources), esResourceName)) {
+          if (topResources[esResourceName].enrich) {
+            try {
+              await client.enrich.deletePolicy({
+                name: topResources[esResourceName].enrich.policyName
+              })
+            } catch (e) {
+              if (e.meta && e.meta.body.error.type !== RESOURCE_NOT_FOUND) {
+                throw e
+              }
+            }
+          }
+
+          try {
+            await client.indices.delete({
+              index: topResources[esResourceName].index
+            })
+          } catch (e) {
+            if (e.meta && e.meta.body.error.type !== INDEX_NOT_FOUND) {
+              throw e
+            }
+          }
+        } else if (_.includes(_.keys(organizationResources), esResourceName)) {
+          try {
+            await client.enrich.deletePolicy({
+              name: organizationResources[esResourceName].enrich.policyName
+            })
+          } catch (e) {
+            if (e.meta && e.meta.body.error.type !== RESOURCE_NOT_FOUND) {
+              throw e
+            }
+          }
         }
-        await client.indices.delete({
-          index: topResources[esResourceName].index
-        })
-      } else if (_.includes(_.keys(organizationResources), esResourceName)) {
-        await client.enrich.deletePolicy({
-          name: organizationResources[esResourceName].enrich.policyName
-        })
       }
     }
+  } catch (e) {
+    console.log(JSON.stringify(e))
+    throw e
   }
   console.log('Existing data in elasticsearch has been deleted!')
 }

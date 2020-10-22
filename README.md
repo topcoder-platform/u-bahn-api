@@ -40,6 +40,12 @@ Configuration for the application is at config/default.js and config/production.
 - ATTRIBUTE_GROUP_PIPELINE_ID: The pipeline id for enrichment with attribute group. Default is `attributegroup-pipeline`
 - SKILL_PROVIDER_PIPELINE_ID: The pipeline id for enrichment with skill provider. Default is `skillprovider-pipeline`
 - USER_PIPELINE_ID: The pipeline id for enrichment of user details. Default is `user-pipeline`
+- ATTRIBUTE_GROUP_ENRICH_POLICYNAME: The enrich policy for attribute group. Default is `attributegroup-policy`
+- SKILL_PROVIDER_ENRICH_POLICYNAME: The enrich policy for skill provider. Default is `skillprovider-policy`
+- ROLE_ENRICH_POLICYNAME: The enrich policy for role. Default is `role-policy`
+- ACHIEVEMENT_PROVIDER_ENRICH_POLICYNAME: The enrich policy for achievement provider. Default is `achievementprovider-policy`
+- SKILL_ENRICH_POLICYNAME: The enrich policy for skill. Default is `skill-policy`
+- ATTRIBUTE_ENRICH_POLICYNAME: The enrich policy for skill. Default is `attribute-policy`
 
 For `ES.DOCUMENTS` configuration, you will find multiple other configurations below it. Each has default values that you can override using the environment variables
 
