@@ -319,13 +319,18 @@ async function main () {
 
   for (let i = 0; i < keys.length; i++) {
     const key = keys[i]
-    let temp
     try {
       const data = await models.DBHelper.find(models[key], [])
 
       for (let i = 0; i < data.length; i++) {
-        logger.info(JSON.stringify(data[i]))
         logger.info(`Inserting data ${i + 1} of ${data.length}`)
+        logger.info(JSON.stringify(data[i]))
+        if (!_.isString(data[i].created)) {
+          data[i].created = new Date()
+        }
+        if (!_.isString(data[i].createdBy)) {
+          data[i].created = 'TonyJ'
+        }
         await insertIntoES(key, data[i])
       }
       logger.info('import data for ' + key + ' done')
