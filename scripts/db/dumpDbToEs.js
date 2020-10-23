@@ -319,15 +319,18 @@ async function main () {
 
   for (let i = 0; i < keys.length; i++) {
     const key = keys[i]
+    let temp
     try {
       const data = await models.DBHelper.find(models[key], [])
 
       for (let i = 0; i < data.length; i++) {
+        temp = data[i]
         logger.info(`Inserting data ${i + 1} of ${data.length}`)
         await insertIntoES(key, data[i])
       }
       logger.info('import data for ' + key + ' done')
     } catch (e) {
+      logger.error(JSON.stringify(temp))
       logger.error(e)
       logger.warn('import data for ' + key + ' failed')
       continue
