@@ -6,3 +6,4 @@ scripts/generate
 .nyc_output
 .env
 coverage
+.vscode
