@@ -329,7 +329,7 @@ async function main () {
           data[i].created = new Date()
         }
         if (!_.isString(data[i].createdBy)) {
-          data[i].created = 'TonyJ'
+          data[i].createdBy = 'TonyJ'
         }
         await insertIntoES(key, data[i])
       }
