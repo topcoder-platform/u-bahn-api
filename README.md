@@ -52,6 +52,7 @@ Configuration for the application is at config/default.js and config/production.
 
 For `ES.DOCUMENTS` configuration, you will find multiple other configurations below it. Each has default values that you can override using the environment variables
 
+
 ## Local deployment
 
 Setup your Elasticsearch instance and ensure that it is up and running.
