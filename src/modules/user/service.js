@@ -17,7 +17,13 @@ const methods = helper.getServiceMethods(
     firstName: joi.string(),
     lastName: joi.string()
   },
-  { handle: joi.string(), roleId: joi.string() },
+  {
+    handle: joi.string(),
+    roleId: joi.string(),
+    enrich: joi.boolean(),
+    'externalProfile.externalId': joi.string(),
+    'externalProfile.organizationId': joi.string()
+  },
   async query => {
     let prefix = 'select * from DUser'
     const dbQueries = []

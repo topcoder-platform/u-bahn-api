@@ -215,13 +215,11 @@ const FILTER_CHAIN = {
   skill: {
     filterNext: 'userskill',
     queryField: 'skillId',
-    enrichNext: 'skillprovider',
     idField: 'skillProviderId'
   },
   attribute: {
     filterNext: 'userattribute',
     queryField: 'attributeId',
-    enrichNext: 'attributegroup',
     idField: 'attributeGroupId'
   },
   attributegroup: {
@@ -247,29 +245,23 @@ const FILTER_CHAIN = {
   // sub resource
   userskill: {
     queryField: 'skillId',
-    enrichNext: 'skill',
     idField: 'skillId'
   },
   userrole: {
     queryField: 'roleId',
-    enrichNext: 'role',
     idField: 'roleId'
   },
   externalprofile: {
-    enrichNext: 'organization',
     idField: 'organizationId'
   },
   achievement: {
-    enrichNext: 'achievementprovider',
     idField: 'achievementsProviderId'
   },
   userattribute: {
-    enrichNext: 'attribute',
     idField: 'attributeId'
   },
   organizationskillprovider: {
     queryField: 'skillProviderId',
-    enrichNext: 'skillprovider',
     idField: 'skillProviderId'
   }
 }
@@ -377,68 +369,6 @@ function parseEnrichFilter (params) {
 }
 
 /**
- * Enrich a resource recursively by following enrich path.
- * @param resource the resource to enrich
- * @param enrichIdProp the id property of child resource in parent object
- * @param item the parent object
- * @returns {Promise<void>} the promise of enriched parent object
- */
-async function enrichResource (resource, enrichIdProp, item) {
-  const subDoc = DOCUMENTS[resource]
-  const filterChain = FILTER_CHAIN[resource]
-  const subResult = await esClient.getSource({
-    index: subDoc.index,
-    type: subDoc.type,
-    id: item[enrichIdProp]
-  })
-
-  if (filterChain.enrichNext) {
-    const enrichIdProp = filterChain.idField
-    // return error if any id is missing in enrich path
-    if (!subResult[enrichIdProp]) {
-      throw new Error(`The parent ${resource} is missing id value of child resource ${filterChain.enrichNext}`)
-    }
-    // enrich next child resource recursively
-    await enrichResource(filterChain.enrichNext, enrichIdProp, subResult)
-  }
-  item[resource] = subResult
-}
-
-/**
- * Enrich a user.
- * @param user the user object to enrich
- * @returns {Promise<*>} the promise of enriched user
- */
-async function enrichUser (user) {
-  for (const subProp of Object.keys(SUB_USER_DOCUMENTS)) {
-    const subDoc = SUB_USER_DOCUMENTS[subProp]
-    const subData = user[subDoc.userField]
-    const filterChain = FILTER_CHAIN[subProp]
-    if (subData && subData.length > 0) {
-      // enrich next level sub resources
-      for (const subItem of subData) {
-        await enrichResource(filterChain.enrichNext, filterChain.idField, subItem)
-      }
-    }
-  }
-  return user
-}
-
-/**
- * Enrich users.
- * @param users list of users from ES search
- * @returns {Promise<*>} the enriched users
- */
-async function enrichUsers (users) {
-  const enrichedUsers = []
-  for (const user of users) {
-    const enriched = await enrichUser(user)
-    enrichedUsers.push(enriched)
-  }
-  return enrichedUsers
-}
-
-/**
  * Get a resource by Id from ES.
  * @param resource the resource to get
  * @param args the request path and query parameters
@@ -494,12 +424,9 @@ async function getFromElasticSearch (resource, ...args) {
   logger.debug(`ES query for get ${resource}: ${JSON.stringify(esQuery, null, 2)}`)
 
   // query ES
-  const result = await esClient.getSource(esQuery)
+  const { body: result } = await esClient.getSource(esQuery)
 
-  if (params.enrich && resource === 'user') {
-    const user = await enrichUser(result)
-    return user
-  } else if (subUserDoc) {
+  if (subUserDoc) {
     // find top sub doc by sub.id
     const found = result[subUserDoc.userField].find(sub => sub[filterChain.idField] === params[filterChain.idField])
     if (found) {
@@ -713,7 +640,7 @@ async function searchSkills (keyword, skillProviderIds) {
   }
 
   logger.debug(`ES query for searching skills: ${JSON.stringify(esQuery, null, 2)}`)
-  const results = await esClient.search(esQuery)
+  const { body: results } = await esClient.search(esQuery)
 
   return results.hits.hits.map(hit => hit._source)
 }
@@ -1059,7 +986,7 @@ async function resolveResFilter (filter, initialRes) {
 
   // query ES with filter
   const esQuery = buildEsQueryFromFilter(filter)
-  const result = await esClient.search(esQuery)
+  const { body: result } = await esClient.search(esQuery)
 
   const numHits = getTotalCount(result.hits.total)
 
@@ -1288,7 +1215,7 @@ async function searchElasticSearch (resource, ...args) {
   }
 
   logger.debug(`ES query for search ${resource}: ${JSON.stringify(esQuery, null, 2)}`)
-  const docs = await esClient.search(esQuery)
+  const { body: docs } = await esClient.search(esQuery)
   if (docs.hits && getTotalCount(docs.hits.total) === 0) {
     return {
       total: docs.hits.total,
@@ -1299,10 +1226,7 @@ async function searchElasticSearch (resource, ...args) {
   }
 
   let result = []
-  if (resource === 'user' && params.enrich) {
-    const users = docs.hits.hits.map(hit => hit._source)
-    result = await enrichUsers(users)
-  } else if (topUserSubDoc) {
+  if (topUserSubDoc) {
     result = docs.hits.hits[0]._source[topUserSubDoc.userField]
     // for sub-resource query, it returns all sub-resource items in one user,
     // so needs filtering and also page size
@@ -1420,14 +1344,9 @@ async function searchUsers (authUser, filter, params) {
 
   logger.debug(`ES query for searching users: ${JSON.stringify(esQuery, null, 2)}`)
   console.time('mainesquery')
-  const docs = await esClient.search(esQuery)
+  const { body: docs } = await esClient.search(esQuery)
   console.timeEnd('mainesquery')
-  const users = docs.hits.hits.map(hit => hit._source)
-
-  logger.debug('Enrich users')
-  console.time('enrichUsers')
-  const result = await enrichUsers(users)
-  console.timeEnd('enrichUsers')
+  const result = docs.hits.hits.map(hit => hit._source)
 
   return {
     total: getTotalCount(docs.hits.total),
@@ -1448,7 +1367,7 @@ async function searchSkillsInOrganization ({ organizationId, keyword }) {
   const esQueryToGetSkillProviders = buildEsQueryToGetSkillProviderIds(organizationId)
   logger.debug(`ES query to get skill provider ids: ${JSON.stringify(esQueryToGetSkillProviders, null, 2)}`)
 
-  const esResultOfQueryToGetSkillProviders = await esClient.search(esQueryToGetSkillProviders)
+  const { body: esResultOfQueryToGetSkillProviders } = await esClient.search(esQueryToGetSkillProviders)
   logger.debug(`ES result: ${JSON.stringify(esResultOfQueryToGetSkillProviders, null, 2)}`)
 
   const skillProviderIds = _.flatten(esResultOfQueryToGetSkillProviders.hits.hits.map(hit => hit._source.skillProviders == null ? [] : hit._source.skillProviders.map(sp => sp.skillProviderId)))
@@ -1474,7 +1393,7 @@ async function searchAttributeValues ({ attributeId, attributeValue }) {
   const esQuery = buildEsQueryToGetAttributeValues(attributeId, querystring.unescape(attributeValue), 5)
   logger.debug(`ES query for searching attribute values: ${JSON.stringify(esQuery, null, 2)}`)
 
-  const esResult = await esClient.search(esQuery)
+  const { body: esResult } = await esClient.search(esQuery)
   logger.debug(`ES Result: ${JSON.stringify(esResult, null, 2)}`)
   const result = []
   const attributes = esResult.aggregations.attributes.ids.buckets
@@ -1502,7 +1421,7 @@ async function searchAchievementValues ({ organizationId, keyword }) {
   const esQuery = buildEsQueryToGetAchievements(organizationId, querystring.unescape(keyword), 5)
   logger.debug(`ES query for searching achievement values; ${JSON.stringify(esQuery, null, 2)}`)
 
-  const esResult = await esClient.search(esQuery)
+  const { body: esResult } = await esClient.search(esQuery)
   logger.debug(`ES response ${JSON.stringify(esResult, null, 2)}`)
   const result = esResult.aggregations.achievements.buckets.map(a => {
     const achievementName = a.key
