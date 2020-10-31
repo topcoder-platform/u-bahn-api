@@ -43,7 +43,9 @@ async function cleanupES (keys) {
       id: topResources.user.pipeline.id
     })
   } catch (e) {
-    if (e.meta && e.meta.body.error.type !== RESOURCE_NOT_FOUND) {
+    if (e.meta && e.meta.body.error.type === RESOURCE_NOT_FOUND) {
+      // Ignore
+    } else {
       throw e
     }
   }
@@ -53,7 +55,9 @@ async function cleanupES (keys) {
       id: topResources.skillprovider.pipeline.id
     })
   } catch (e) {
-    if (e.meta && e.meta.body.error.type !== RESOURCE_NOT_FOUND) {
+    if (e.meta && e.meta.body.error.type === RESOURCE_NOT_FOUND) {
+      // Ignore
+    } else {
       throw e
     }
   }
@@ -63,7 +67,9 @@ async function cleanupES (keys) {
       id: topResources.attributegroup.pipeline.id
     })
   } catch (e) {
-    if (e.meta && e.meta.body.error.type !== RESOURCE_NOT_FOUND) {
+    if (e.meta && e.meta.body.error.type === RESOURCE_NOT_FOUND) {
+      // Ignore
+    } else {
       throw e
     }
   }
@@ -80,7 +86,9 @@ async function cleanupES (keys) {
                 name: topResources[esResourceName].enrich.policyName
               })
             } catch (e) {
-              if (e.meta && e.meta.body.error.type !== RESOURCE_NOT_FOUND) {
+              if (e.meta && e.meta.body.error.type === RESOURCE_NOT_FOUND) {
+                // Ignore
+              } else {
                 throw e
               }
             }
@@ -91,7 +99,9 @@ async function cleanupES (keys) {
               index: topResources[esResourceName].index
             })
           } catch (e) {
-            if (e.meta && e.meta.body.error.type !== INDEX_NOT_FOUND) {
+            if (e.meta && e.meta.body.error.type === INDEX_NOT_FOUND) {
+              // Ignore
+            } else {
               throw e
             }
           }
@@ -101,7 +111,9 @@ async function cleanupES (keys) {
               name: organizationResources[esResourceName].enrich.policyName
             })
           } catch (e) {
-            if (e.meta && e.meta.body.error.type !== RESOURCE_NOT_FOUND) {
+            if (e.meta && e.meta.body.error.type === RESOURCE_NOT_FOUND) {
+              // Ignore
+            } else {
               throw e
             }
           }
@@ -136,11 +148,27 @@ async function insertIntoES (modelName, body) {
   } else if (_.includes(_.keys(userResources), esResourceName)) {
     const userResource = userResources[esResourceName]
 
-    const { body: user } = await client.getSource({
-      index: topResources.user.index,
-      type: topResources.user.type,
-      id: body.userId
-    })
+    let user
+
+    try {
+      const res = await client.getSource({
+        index: topResources.user.index,
+        type: topResources.user.type,
+        id: body.userId
+      })
+
+      user = res.body
+    } catch (e) {
+      if (e.meta && e.meta.body.error.type === RESOURCE_NOT_FOUND) {
+        logger.info(`The ${modelName} references user with id ${body.userId}, which does not exist. Deleting the reference...`)
+        // The user does not exist. Delete the referece records
+        await models.DBHelper.delete(models[modelName], body.id)
+        logger.info('Reference deleted')
+        return
+      } else {
+        throw e
+      }
+    }
 
     if (userResource.nested === true && userResource.mappingCreated !== true) {
       await client.indices.putMapping({
@@ -180,11 +208,27 @@ async function insertIntoES (modelName, body) {
   } else if (_.includes(_.keys(organizationResources), esResourceName)) {
     const orgResource = organizationResources[esResourceName]
 
-    const { body: organization } = await client.getSource({
-      index: topResources.organization.index,
-      type: topResources.organization.type,
-      id: body.organizationId
-    })
+    let organization
+
+    try {
+      const res = await client.getSource({
+        index: topResources.organization.index,
+        type: topResources.organization.type,
+        id: body.organizationId
+      })
+
+      organization = res.body
+    } catch (e) {
+      if (e.meta && e.meta.body.error.type === RESOURCE_NOT_FOUND) {
+        logger.info(`The ${modelName} references org with id ${body.organizationId}, which does not exist. Deleting the reference...`)
+        // The user does not exist. Delete the referece records
+        await models.DBHelper.delete(models[modelName], body.id)
+        logger.info('Reference deleted')
+        return
+      } else {
+        throw e
+      }
+    }
 
     const relateId = body[orgResource.relateKey]
 
