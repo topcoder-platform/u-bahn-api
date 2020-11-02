@@ -373,7 +373,10 @@ async function main () {
           data[i].created = new Date()
         }
         if (!_.isString(data[i].createdBy)) {
-          data[i].createdBy = 'TonyJ'
+          data[i].createdBy = 'tcAdmin'
+        }
+        if (!_.isString(data[i].updatedBy)) {
+          data[i].updatedBy = 'tcAdmin'
         }
         await insertIntoES(key, data[i])
       }
