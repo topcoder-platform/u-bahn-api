@@ -367,27 +367,19 @@ async function main () {
       const data = await models.DBHelper.find(models[key], [])
 
       for (let i = 0; i < data.length; i++) {
-        let untouchedData = true
         logger.info(`Inserting data ${i + 1} of ${data.length}`)
         logger.info(JSON.stringify(data[i]))
         if (!_.isString(data[i].created)) {
           data[i].created = new Date()
-          untouchedData = false
         }
         if (!_.isString(data[i].updated)) {
           data[i].updated = new Date()
-          untouchedData = false
         }
         if (!_.isString(data[i].createdBy)) {
           data[i].createdBy = 'tcAdmin'
-          untouchedData = false
         }
         if (!_.isString(data[i].updatedBy)) {
           data[i].updatedBy = 'tcAdmin'
-          untouchedData = false
-        }
-        if (!untouchedData) {
-          await models.DBHelper.save(models[key], data[i], false)
         }
         await insertIntoES(key, data[i])
       }
