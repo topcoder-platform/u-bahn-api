@@ -129,30 +129,30 @@ async function createAndExecuteEnrichPolicy (modelName) {
   const esResourceName = modelToESIndexMapping[modelName]
 
   if (_.includes(_.keys(topResources), esResourceName) && topResources[esResourceName].enrich) {
-    // await client.enrich.putPolicy({
-    //   name: topResources[esResourceName].enrich.policyName,
-    //   body: {
-    //     match: {
-    //       indices: topResources[esResourceName].index,
-    //       match_field: topResources[esResourceName].enrich.matchField,
-    //       enrich_fields: topResources[esResourceName].enrich.enrichFields
-    //     }
-    //   }
-    // })
+    await client.enrich.putPolicy({
+      name: topResources[esResourceName].enrich.policyName,
+      body: {
+        match: {
+          indices: topResources[esResourceName].index,
+          match_field: topResources[esResourceName].enrich.matchField,
+          enrich_fields: topResources[esResourceName].enrich.enrichFields
+        }
+      }
+    })
     await client.enrich.executePolicy({ name: topResources[esResourceName].enrich.policyName })
   } else if (_.includes(_.keys(organizationResources), esResourceName)) {
     // For organization, execute enrich policy AFTER the sub documents on the org (namely orgskillprovider) is in
     // This is because external profile on user is enriched with org, and it needs to have the orgskillprovider details in it
-    // await client.enrich.putPolicy({
-    //   name: organizationResources[esResourceName].enrich.policyName,
-    //   body: {
-    //     match: {
-    //       indices: topResources.organization.index,
-    //       match_field: organizationResources[esResourceName].enrich.matchField,
-    //       enrich_fields: organizationResources[esResourceName].enrich.enrichFields
-    //     }
-    //   }
-    // })
+    await client.enrich.putPolicy({
+      name: organizationResources[esResourceName].enrich.policyName,
+      body: {
+        match: {
+          indices: topResources.organization.index,
+          match_field: organizationResources[esResourceName].enrich.matchField,
+          enrich_fields: organizationResources[esResourceName].enrich.enrichFields
+        }
+      }
+    })
     await client.enrich.executePolicy({ name: organizationResources[esResourceName].enrich.policyName })
   }
 }
@@ -231,13 +231,11 @@ async function main () {
   })
   keys = _.compact(temp)
 
-  keys = keys.filter(k => !['Role', 'Skill', 'UsersRole', 'SkillsProvider'].includes(k))
-
   for (let i = 0; i < keys.length; i++) {
     const key = keys[i]
     try {
-      const data = require(`./data2/${key}.json`)
-      // await models.DBHelper.clear(models[key])
+      const data = require(`./data/${key}.json`)
+      await models.DBHelper.clear(models[key])
       for (let i = 0; i < data.length; i++) {
         logger.info(`Inserting data ${i + 1} of ${data.length}`)
         await models.DBHelper.save(models[key], new models[key]().from(data[i]), true)
@@ -258,13 +256,13 @@ async function main () {
       logger.warn('create and execute enrich policy for ' + key + ' failed')
     }
 
-    // try {
-    //   await createEnrichProcessor(key)
-    //   logger.info('create enrich processor (pipeline) for ' + key + ' done')
-    // } catch (e) {
-    //   logger.error(e)
-    //   logger.warn('create enrich processor (pipeline) for ' + key + ' failed')
-    // }
+    try {
+      await createEnrichProcessor(key)
+      logger.info('create enrich processor (pipeline) for ' + key + ' done')
+    } catch (e) {
+      logger.error(e)
+      logger.warn('create enrich processor (pipeline) for ' + key + ' failed')
+    }
   }
   logger.info('all done')
   process.exit(0)
