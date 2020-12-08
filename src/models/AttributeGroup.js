@@ -4,7 +4,7 @@
 const { DataTypes } = require('sequelize')
 
 module.exports = (sequelize) => {
-  return sequelize.define('AttributeGroup', {
+  const AttributeGroup = sequelize.define('AttributeGroup', {
     id: {
       primaryKey: true,
       type: DataTypes.UUID,
@@ -25,4 +25,9 @@ module.exports = (sequelize) => {
     updatedAt: 'updated',
     createdAt: 'created'
   })
+  AttributeGroup.associate = (models) => {
+    AttributeGroup.belongsTo(models.Organization, { foreignKey: 'organizationId', type: DataTypes.UUID })
+    AttributeGroup.hasMany(models.Attribute, { foreignKey: 'attributeGroupId', type: DataTypes.UUID })
+  }
+  return AttributeGroup
 }

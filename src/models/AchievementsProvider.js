@@ -4,7 +4,7 @@
 const { DataTypes } = require('sequelize')
 
 module.exports = (sequelize) => {
-  return sequelize.define('AchievementsProvider', {
+  const AchievementsProvider = sequelize.define('AchievementsProvider', {
     id: {
       primaryKey: true,
       type: DataTypes.UUID,
@@ -25,4 +25,8 @@ module.exports = (sequelize) => {
     updatedAt: 'updated',
     createdAt: 'created'
   })
+  AchievementsProvider.associate = (models) => {
+    AchievementsProvider.hasMany(models.Achievement, { foreignKey: 'achievementsProviderId', type: DataTypes.UUID })
+  }
+  return AchievementsProvider
 }

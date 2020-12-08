@@ -8,7 +8,8 @@
     "lint": "standard \"**/*.js\"",
     "insert-data": "node scripts/db/genData.js",
     "delete-data": "node scripts/db/dropAll.js",
-    "migrate-db-to-es": "node scripts/db/dumpDbToEs.js"
+    "migrate-db-to-es": "node scripts/db/dumpDbToEs.js",
+    "migrations": "node scripts/db/migrations.js"
   },
   "repository": {
     "type": "git",
@@ -36,6 +37,7 @@
     "swagger-ui-express": "^4.1.4",
     "tc-bus-api-wrapper": "github:topcoder-platform/tc-bus-api-wrapper",
     "tc-core-library-js": "github:appirio-tech/tc-core-library-js#v2.6.4",
+    "umzug": "^2.3.0",
     "uuid": "^7.0.1",
     "winston": "^3.2.1"
   },

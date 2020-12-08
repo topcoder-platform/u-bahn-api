@@ -5,7 +5,6 @@ const pgtools = require('pgtools')
 const config = require('config')
 const errors = require('../common/errors')
 const logger = require('../common/logger')
-const { DataTypes } = require('sequelize')
 const appConst = require('../consts')
 const helper = require('../common/helper')
 
@@ -32,63 +31,6 @@ async function createDb () {
       logger.info(`Created db ${config.DB_NAME} successfully`)
     }
   })
-}
-
-/**
- * Generate relationship options object
- * @param foreignKeyName the foriegn key name
- * @returns {Object}
- */
-function generateRelationshipOptions (foreignKeyName) {
-  return {
-    foreignKey: {
-      name: foreignKeyName,
-      type: DataTypes.UUID
-    }
-  }
-}
-
-/**
- * add db relationships
- * @param sequelize the sequelize instance
- */
-function addRelationships (sequelize) {
-  const {
-    Skill, SkillsProvider, UsersSkill, User, Achievement,
-    AchievementsProvider, AttributeGroup, Attribute, UsersAttribute,
-    Organization, OrganizationSkillsProvider, ExternalProfile, UsersRole, Role
-  } = sequelize.models
-
-  SkillsProvider.hasMany(Skill, generateRelationshipOptions('skillProviderId'))
-  Skill.belongsTo(SkillsProvider, generateRelationshipOptions('skillProviderId'))
-  SkillsProvider.hasMany(OrganizationSkillsProvider, generateRelationshipOptions('skillProviderId'))
-  OrganizationSkillsProvider.belongsTo(SkillsProvider, generateRelationshipOptions('skillProviderId'))
-  User.hasMany(UsersSkill, generateRelationshipOptions('userId'))
-  UsersSkill.belongsTo(User, generateRelationshipOptions('userId'))
-  User.hasMany(Achievement, generateRelationshipOptions('userId'))
-  Achievement.belongsTo(User, generateRelationshipOptions('userId'))
-  User.hasMany(UsersAttribute, generateRelationshipOptions('userId'))
-  UsersAttribute.belongsTo(User, generateRelationshipOptions('userId'))
-  User.hasMany(ExternalProfile, generateRelationshipOptions('userId'))
-  ExternalProfile.belongsTo(User, generateRelationshipOptions('userId'))
-  User.hasMany(UsersRole, generateRelationshipOptions('userId'))
-  UsersRole.belongsTo(User, generateRelationshipOptions('userId'))
-  Organization.hasMany(ExternalProfile, generateRelationshipOptions('organizationId'))
-  ExternalProfile.belongsTo(Organization, generateRelationshipOptions('organizationId'))
-  Organization.hasMany(AttributeGroup, generateRelationshipOptions('organizationId'))
-  AttributeGroup.belongsTo(Organization, generateRelationshipOptions('organizationId'))
-  OrganizationSkillsProvider.belongsTo(Organization, generateRelationshipOptions('organizationId'))
-  Organization.hasMany(OrganizationSkillsProvider, generateRelationshipOptions('organizationId'))
-  Skill.hasMany(UsersSkill, generateRelationshipOptions('skillId'))
-  UsersSkill.belongsTo(Skill, generateRelationshipOptions('skillId'))
-  Role.hasMany(UsersRole, generateRelationshipOptions('roleId'))
-  UsersRole.belongsTo(Role, generateRelationshipOptions('roleId'))
-  AchievementsProvider.hasMany(Achievement, generateRelationshipOptions('achievementsProviderId'))
-  Achievement.belongsTo(AchievementsProvider, generateRelationshipOptions('achievementsProviderId'))
-  Attribute.hasMany(UsersAttribute, generateRelationshipOptions('attributeId'))
-  UsersAttribute.belongsTo(Attribute, generateRelationshipOptions('attributeId'))
-  AttributeGroup.hasMany(Attribute, generateRelationshipOptions('attributeGroupId'))
-  Attribute.belongsTo(AttributeGroup, generateRelationshipOptions('attributeGroupId'))
 }
 
 /**
@@ -238,7 +180,6 @@ async function makeSureUnique (model, entity, uniqueFields, pathParams = {}) {
 
 module.exports = {
   createDb,
-  addRelationships,
   find,
   create,
   update,

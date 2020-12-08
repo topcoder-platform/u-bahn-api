@@ -2,12 +2,10 @@
 
 const _ = require('lodash')
 const sequelize = require('../../src/models/index')
-const dbHelper = require('../../src/common/db-helper')
 const logger = require('../../src/common/logger')
 const { getESClient } = require('../../src/common/es-client')
 const {
   topResources,
-  userResources,
   organizationResources,
   modelToESIndexMapping
 } = require('../constants')
@@ -31,98 +29,6 @@ const RESOURCES_IN_ORDER = [
 ]
 
 const client = getESClient()
-
-async function insertIntoES (modelName, body) {
-  const esResourceName = modelToESIndexMapping[modelName]
-
-  if (!esResourceName) {
-    logger.error(`Cannot insert data into model ${modelName}. No equivalent elasticsearch index found`)
-
-    return
-  }
-
-  if (_.includes(_.keys(topResources), esResourceName)) {
-    await client.index({
-      index: topResources[esResourceName].index,
-      type: topResources[esResourceName].type,
-      id: body.id,
-      body,
-      pipeline: topResources[esResourceName].ingest ? topResources[esResourceName].ingest.pipeline.id : undefined,
-      refresh: 'wait_for'
-    })
-  } else if (_.includes(_.keys(userResources), esResourceName)) {
-    const userResource = userResources[esResourceName]
-
-    const { body: user } = await client.getSource({
-      index: topResources.user.index,
-      type: topResources.user.type,
-      id: body.userId
-    })
-
-    if (userResource.nested === true && userResource.mappingCreated !== true) {
-      await client.indices.putMapping({
-        index: topResources.user.index,
-        type: topResources.user.type,
-        include_type_name: true,
-        body: {
-          properties: {
-            [userResource.propertyName]: {
-              type: 'nested'
-            }
-          }
-        }
-      })
-      userResource.mappingCreated = true
-    }
-
-    const relateId = body[userResource.relateKey]
-
-    if (!user[userResource.propertyName]) {
-      user[userResource.propertyName] = []
-    }
-
-    if (_.some(user[userResource.propertyName], [userResource.relateKey, relateId])) {
-      logger.error(`Can't create existing ${esResourceName} with the ${userResource.relateKey}: ${relateId}, userId: ${body.userId}`)
-    } else {
-      user[userResource.propertyName].push(body)
-      await client.index({
-        index: topResources.user.index,
-        type: topResources.user.type,
-        id: body.userId,
-        body: user,
-        pipeline: topResources.user.pipeline.id,
-        refresh: 'wait_for'
-      })
-    }
-  } else if (_.includes(_.keys(organizationResources), esResourceName)) {
-    const orgResource = organizationResources[esResourceName]
-
-    const { body: organization } = await client.getSource({
-      index: topResources.organization.index,
-      type: topResources.organization.type,
-      id: body.organizationId
-    })
-
-    const relateId = body[orgResource.relateKey]
-
-    if (!organization[orgResource.propertyName]) {
-      organization[orgResource.propertyName] = []
-    }
-
-    if (_.some(organization[orgResource.propertyName], [orgResource.relateKey, relateId])) {
-      logger.error(`Can't create existing ${esResourceName} with the ${orgResource.relateKey}: ${relateId}, organizationId: ${body.organizationId}`)
-    } else {
-      organization[orgResource.propertyName].push(body)
-      await client.index({
-        index: topResources.organization.index,
-        type: topResources.organization.type,
-        id: body.organizationId,
-        body: organization,
-        refresh: 'wait_for'
-      })
-    }
-  }
-}
 
 /**
  * Creates and executes the enrich policy for the provided model
@@ -219,10 +125,6 @@ async function createEnrichProcessor (modelName) {
  * @return {Promise<void>}
  */
 async function main () {
-  await dbHelper.createDb()
-  await sequelize.sync()
-  dbHelper.addRelationships(sequelize)
-
   let keys = Object.keys(sequelize.models)
 
   // Sort the models in the order of insertion (for correct enrichment)
@@ -238,20 +140,6 @@ async function main () {
 
   for (let i = 0; i < keys.length; i++) {
     const key = keys[i]
-    try {
-      const data = require(`./data/${key}.json`)
-      for (let i = 0; i < data.length; i++) {
-        logger.info(`Inserting data ${i + 1} of ${data.length}`)
-        await dbHelper.create(sequelize.models[key], data[i], null)
-        // await insertIntoES(key, data[i])
-      }
-      logger.info('import data for ' + key + ' done')
-    } catch (e) {
-      logger.error(e)
-      logger.warn('import data for ' + key + ' failed')
-      continue
-    }
-
     try {
       await createAndExecuteEnrichPolicy(key)
       logger.info('create and execute enrich policy for ' + key + ' done')

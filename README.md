@@ -67,7 +67,7 @@ Setup your Elasticsearch instance and ensure that it is up and running.
 
 ## Working with mock data
 
-You can use the scripts `npm run insert-data` (and `npm run delete-data`) to insert mock data (and delete mock data respectively). The data is inserted into Postgres and Elasticsearch. You need to setup the configurations beforehand and also start the elasticsearch instance before you run these scripts. You can run the script `npm run migrate-db-to-es` to dump data in db into es.
+You can use the scripts `npm run migrations up` (and `npm run migrations down`) to insert mock data (and delete mock data respectively). The data is inserted into Postgres and Elasticsearch. You need to setup the configurations beforehand and also start the elasticsearch instance before you run these scripts. You can run the script `npm run migrate-db-to-es` to dump data in db into es.
 
 ## Local Deployment with Docker
 

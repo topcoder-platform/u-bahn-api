@@ -4,7 +4,7 @@
 const { DataTypes } = require('sequelize')
 
 module.exports = (sequelize) => {
-  return sequelize.define('ExternalProfile', {
+  const ExternalProfile = sequelize.define('ExternalProfile', {
     id: {
       primaryKey: true,
       type: DataTypes.UUID,
@@ -31,4 +31,9 @@ module.exports = (sequelize) => {
     updatedAt: 'updated',
     createdAt: 'created'
   })
+  ExternalProfile.associate = (models) => {
+    ExternalProfile.belongsTo(models.User, { foreignKey: 'userId', type: DataTypes.UUID })
+    ExternalProfile.belongsTo(models.Organization, { foreignKey: 'organizationId', type: DataTypes.UUID })
+  }
+  return ExternalProfile
 }

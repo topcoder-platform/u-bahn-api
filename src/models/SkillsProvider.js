@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize')
 
 module.exports = (sequelize) => {
-  return sequelize.define('SkillsProvider', {
+  const SkillsProvider = sequelize.define('SkillsProvider', {
     id: {
       primaryKey: true,
       type: DataTypes.UUID,
@@ -22,4 +22,9 @@ module.exports = (sequelize) => {
     updatedAt: 'updated',
     createdAt: 'created'
   })
+  SkillsProvider.associate = (models) => {
+    SkillsProvider.hasMany(models.Skill, { foreignKey: 'skillProviderId', type: DataTypes.UUID })
+    SkillsProvider.hasMany(models.OrganizationSkillsProvider, { foreignKey: 'skillProviderId', type: DataTypes.UUID })
+  }
+  return SkillsProvider
 }

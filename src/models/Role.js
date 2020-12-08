@@ -4,7 +4,7 @@
 const { DataTypes } = require('sequelize')
 
 module.exports = (sequelize) => {
-  return sequelize.define('Role', {
+  const Role = sequelize.define('Role', {
     id: {
       primaryKey: true,
       type: DataTypes.UUID,
@@ -25,4 +25,8 @@ module.exports = (sequelize) => {
     updatedAt: 'updated',
     createdAt: 'created'
   })
+  Role.associate = (models) => {
+    Role.hasMany(models.UsersRole, { foreignKey: 'roleId', type: DataTypes.UUID })
+  }
+  return Role
 }

@@ -4,7 +4,7 @@
 const { DataTypes } = require('sequelize')
 
 module.exports = (sequelize) => {
-  return sequelize.define('OrganizationSkillsProvider', {
+  const OrganizationSkillsProvider = sequelize.define('OrganizationSkillsProvider', {
     id: {
       primaryKey: true,
       type: DataTypes.UUID,
@@ -22,4 +22,9 @@ module.exports = (sequelize) => {
     updatedAt: 'updated',
     createdAt: 'created'
   })
+  OrganizationSkillsProvider.associate = (models) => {
+    OrganizationSkillsProvider.belongsTo(models.SkillsProvider, { foreignKey: 'skillProviderId', type: DataTypes.UUID })
+    OrganizationSkillsProvider.belongsTo(models.Organization, { foreignKey: 'organizationId', type: DataTypes.UUID })
+  }
+  return OrganizationSkillsProvider
 }
