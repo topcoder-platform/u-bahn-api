@@ -9,7 +9,6 @@ const querystring = require('querystring')
 const errors = require('./errors')
 const appConst = require('../consts')
 const _ = require('lodash')
-const { getServiceMethods } = require('./service-helper')
 const { getControllerMethods, getSubControllerMethods } = require('./controller-helper')
 const logger = require('./logger')
 const busApi = require('tc-bus-api-wrapper')
@@ -266,6 +265,5 @@ module.exports = {
   injectSearchMeta,
   getControllerMethods,
   getSubControllerMethods,
-  getServiceMethods,
   postEvent
 }

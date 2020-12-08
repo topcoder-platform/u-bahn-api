@@ -1,5 +1,8 @@
+// TODO - Update BEFORE merge
+
 const _ = require('lodash')
-const models = require('../../src/models')
+const sequelize = require('../../src/models/index')
+const dbHelper = require('../../src/common/db-helper')
 const logger = require('../../src/common/logger')
 const { getESClient } = require('../../src/common/es-client')
 const {
@@ -216,14 +219,16 @@ async function createEnrichProcessor (modelName) {
  * @return {Promise<void>}
  */
 async function main () {
-  await models.init()
+  await dbHelper.createDb()
+  await sequelize.sync()
+  dbHelper.addRelationships(sequelize)
 
-  let keys = Object.keys(models)
+  let keys = Object.keys(sequelize.models)
 
   // Sort the models in the order of insertion (for correct enrichment)
   const temp = Array(keys.length).fill(null)
   keys.forEach(k => {
-    if (models[k].tableName) {
+    if (sequelize.models[k].name) {
       const esResourceName = modelToESIndexMapping[k]
       const index = RESOURCES_IN_ORDER.indexOf(esResourceName)
       temp[index] = k
@@ -235,11 +240,10 @@ async function main () {
     const key = keys[i]
     try {
       const data = require(`./data/${key}.json`)
-      await models.DBHelper.clear(models[key])
       for (let i = 0; i < data.length; i++) {
         logger.info(`Inserting data ${i + 1} of ${data.length}`)
-        await models.DBHelper.save(models[key], new models[key]().from(data[i]), true)
-        await insertIntoES(key, data[i])
+        await dbHelper.create(sequelize.models[key], data[i], null)
+        // await insertIntoES(key, data[i])
       }
       logger.info('import data for ' + key + ' done')
     } catch (e) {

@@ -1,16 +1,28 @@
-const { RecordObject } = require('./BaseObject')
-
 /**
  * UsersAttribute skill model
  */
-class UsersAttribute extends RecordObject {
-  constructor () {
-    super()
-    this.attributeId = null
-    this.value = null
-    this.userId = null
-  }
-}
+const { DataTypes } = require('sequelize')
 
-UsersAttribute.tableName = 'UsersAttribute'
-module.exports = UsersAttribute
+module.exports = (sequelize) => {
+  return sequelize.define('UsersAttribute', {
+    id: {
+      primaryKey: true,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4
+    },
+    createdBy: {
+      type: DataTypes.STRING
+    },
+    updatedBy: {
+      type: DataTypes.STRING
+    },
+    value: {
+      type: DataTypes.STRING
+    }
+  },
+  {
+    timestamps: true,
+    updatedAt: 'updated',
+    createdAt: 'created'
+  })
+}

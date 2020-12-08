@@ -283,14 +283,20 @@ function escapeRegex (str) {
 }
 
 async function getOrganizationId (handle) {
-  const DBHelper = require('../models/index').DBHelper
+  const dBHelper = require('../common/db-helper')
+  const sequelize = require('../models/index')
 
-  // TODO Use the service method instead of raw query
-  const orgIdLookupResults = await DBHelper.find(require('../models/ExternalProfile'), [
-    'select * from DUser, ExternalProfile',
-    `DUser.handle='${handle}'`,
-    'DUser.id = ExternalProfile.userId'
-  ])
+  const orgIdLookupResults = await dBHelper.find(
+    sequelize.models.ExternalProfile,
+    {
+      '$User.handle$': handle
+    },
+    [{
+      model: sequelize.models.User,
+      as: 'User',
+      attributes: []
+    }]
+  )
 
   if (orgIdLookupResults.length > 0) {
     throw new Error(`Handle ${handle} is associated with multiple organizations. Cannot select one.`)
@@ -302,15 +308,21 @@ async function getOrganizationId (handle) {
 }
 
 async function getAttributeId (organizationId, attributeName) {
-  const DBHelper = require('../models/index').DBHelper
+  const dBHelper = require('../common/db-helper')
+  const sequelize = require('../models/index')
 
-  // TODO Use the service method instead of raw query
-  const attributeIdLookupResults = await DBHelper.find(require('../models/Attribute'), [
-    'select Attribute.id from AttributeGroup, Attribute',
-    `AttributeGroup.organizationId = '${organizationId}'`,
-    'Attribute.attributeGroupId = AttributeGroup.id',
-    `Attribute.name = '${attributeName}'`
-  ])
+  const attributeIdLookupResults = await dBHelper.find(
+    sequelize.models.Attribute,
+    {
+      '$AttributeGroup.organizationId$': organizationId,
+      name: attributeName
+    },
+    [{
+      model: sequelize.models.AttributeGroup,
+      as: 'AttributeGroup',
+      attributes: []
+    }]
+  )
 
   if (attributeIdLookupResults.length > 0) {
     return attributeIdLookupResults[0].id

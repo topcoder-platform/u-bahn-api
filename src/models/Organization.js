@@ -1,17 +1,28 @@
-const { RecordObject } = require('./BaseObject')
-
 /**
  * Organization model
  */
-class Organization extends RecordObject {
-  constructor () {
-    super()
-    this.name = null
-  }
-}
+const { DataTypes } = require('sequelize')
 
-Organization.tableName = 'Organization'
-Organization.additionalSql = [
-  'CREATE INDEX ON Organization (name)'
-]
-module.exports = Organization
+module.exports = (sequelize) => {
+  return sequelize.define('Organization', {
+    id: {
+      primaryKey: true,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4
+    },
+    createdBy: {
+      type: DataTypes.STRING
+    },
+    updatedBy: {
+      type: DataTypes.STRING
+    },
+    name: {
+      type: DataTypes.STRING
+    }
+  },
+  {
+    timestamps: true,
+    updatedAt: 'updated',
+    createdAt: 'created'
+  })
+}

@@ -1,61 +1,59 @@
 /**
  * the model index
  */
-
-const User = require('./User')
-const Role = require('./Role')
-const SkillsProvider = require('./SkillsProvider')
-const Skill = require('./Skill')
-const Organization = require('./Organization')
-const UsersRole = require('./UsersRole')
-const UsersSkill = require('./UsersSkill')
-const ExternalProfile = require('./ExternalProfile')
-const AchievementsProvider = require('./AchievementsProvider')
-const Achievement = require('./Achievement')
-const AttributeGroup = require('./AttributeGroup')
-const Attribute = require('./Attribute')
-const UserAttribute = require('./UserAttribute')
-const OrganizationSkillsProvider = require('./OrganizationSkillsProvider')
+const { Sequelize } = require('sequelize')
+const config = require('config')
 const logger = require('../common/logger')
-const consts = require('../consts')
+const dBHelper = require('../common/db-helper')
 
-const DBHelper = require('./DBHelper')
+/**
+ * the database instance
+ */
+const sequelize = new Sequelize(
+  `postgresql://${config.DB_USERNAME}:${config.DB_PASSWORD}@${config.DB_HOST}:${config.DB_PORT}/${config.DB_NAME}`
+)
 
-module.exports = {
-  User,
-  Role,
-  SkillsProvider,
-  Organization,
-  Skill,
-  UsersRole,
-  UsersSkill,
-  Achievement,
-  ExternalProfile,
-  AchievementsProvider,
-  AttributeGroup,
-  Attribute,
-  UserAttribute,
-  OrganizationSkillsProvider,
-  consts,
-  DBHelper
+const modelDefiners = [
+  require('./Skill'),
+  require('./SkillsProvider'),
+  require('./UsersSkill'),
+  require('./User'),
+  require('./Organization'),
+  require('./Achievement'),
+  require('./AchievementsProvider'),
+  require('./AttributeGroup'),
+  require('./Attribute'),
+  require('./UserAttribute'),
+  require('./OrganizationSkillsProvider'),
+  require('./ExternalProfile'),
+  require('./Role'),
+  require('./UsersRole')
+]
+
+// We define all models according to their files.
+for (const modelDefiner of modelDefiners) {
+  modelDefiner(sequelize)
 }
+
+// Add relationships
+dBHelper.addRelationships(sequelize)
+
+module.exports = sequelize
+
 /**
  * create table
  */
 module.exports.init = async () => {
   logger.info('connect to database, check/create tables ...')
-  await DBHelper.createTable(User)
-  await DBHelper.createTable(Role)
-  await DBHelper.createTable(SkillsProvider)
-  await DBHelper.createTable(Skill)
-  await DBHelper.createTable(Organization)
-  await DBHelper.createTable(UsersRole)
-  await DBHelper.createTable(UsersSkill)
-  await DBHelper.createTable(ExternalProfile)
-  await DBHelper.createTable(AchievementsProvider)
-  await DBHelper.createTable(Achievement)
-  await DBHelper.createTable(AttributeGroup)
-  await DBHelper.createTable(Attribute)
-  await DBHelper.createTable(UserAttribute)
-  await DBHelper.createTable(OrganizationSkillsProvider)
+
+  // create db
+  await dBHelper.createDb()
+
+  // authenticate db
+  await sequelize.authenticate()
+  logger.info(`Connected to db ${config.DB_NAME} successfully`)
+
+  // sync db (create tables)
+  await sequelize.sync()
+  logger.info(`db ${config.DB_NAME} synced successfully`)
 }

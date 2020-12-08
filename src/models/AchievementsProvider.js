@@ -1,17 +1,28 @@
-const { RecordObject } = require('./BaseObject')
-
 /**
  * AchievementsProvider model
  */
-class AchievementsProvider extends RecordObject {
-  constructor () {
-    super()
-    this.name = null
-  }
-}
+const { DataTypes } = require('sequelize')
 
-AchievementsProvider.tableName = 'AchievementsProvider'
-AchievementsProvider.additionalSql = [
-  'CREATE INDEX ON AchievementsProvider (name)'
-]
-module.exports = AchievementsProvider
+module.exports = (sequelize) => {
+  return sequelize.define('AchievementsProvider', {
+    id: {
+      primaryKey: true,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4
+    },
+    createdBy: {
+      type: DataTypes.STRING
+    },
+    updatedBy: {
+      type: DataTypes.STRING
+    },
+    name: {
+      type: DataTypes.STRING
+    }
+  },
+  {
+    timestamps: true,
+    updatedAt: 'updated',
+    createdAt: 'created'
+  })
+}

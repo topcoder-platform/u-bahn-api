@@ -1,14 +1,25 @@
-const { RecordObject } = require('./BaseObject')
+const { DataTypes } = require('sequelize')
 
-/**
- * SkillsProvider model
- */
-class SkillsProvider extends RecordObject {
-  constructor () {
-    super()
-    this.name = null
-  }
+module.exports = (sequelize) => {
+  return sequelize.define('SkillsProvider', {
+    id: {
+      primaryKey: true,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4
+    },
+    createdBy: {
+      type: DataTypes.STRING
+    },
+    updatedBy: {
+      type: DataTypes.STRING
+    },
+    name: {
+      type: DataTypes.STRING
+    }
+  },
+  {
+    timestamps: true,
+    updatedAt: 'updated',
+    createdAt: 'created'
+  })
 }
-
-SkillsProvider.tableName = 'SkillsProvider'
-module.exports = SkillsProvider

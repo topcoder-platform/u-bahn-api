@@ -1,16 +1,25 @@
-const { RecordObject } = require('./BaseObject')
-
 /**
- * UserRole model
+ * UsersRole model
  */
-class UsersRole extends RecordObject {
-  constructor () {
-    super()
-    this.userId = null
-    this.roleId = null
-  }
+const { DataTypes } = require('sequelize')
+
+module.exports = (sequelize) => {
+  return sequelize.define('UsersRole', {
+    id: {
+      primaryKey: true,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4
+    },
+    createdBy: {
+      type: DataTypes.STRING
+    },
+    updatedBy: {
+      type: DataTypes.STRING
+    }
+  },
+  {
+    timestamps: true,
+    updatedAt: 'updated',
+    createdAt: 'created'
+  })
 }
-
-UsersRole.tableName = 'UserRole'
-
-module.exports = UsersRole

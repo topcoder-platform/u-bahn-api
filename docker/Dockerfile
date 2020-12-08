@@ -9,4 +9,9 @@ WORKDIR /ubahn_api
 
 # Install the dependencies from package.json
 RUN npm install
+
+# Expose port
+EXPOSE 3002
+
+# start api
 CMD npm start
