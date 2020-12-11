@@ -8,8 +8,7 @@ module.exports = {
         model: 'SkillsProviders',
         key: 'id'
       },
-      onUpdate: 'CASCADE',
-      onDelete: 'SET NULL'
+      onUpdate: 'CASCADE'
     })
     await query.addColumn('OrganizationSkillsProviders', 'skillProviderId', {
       type: DataTypes.UUID,
@@ -17,8 +16,7 @@ module.exports = {
         model: 'SkillsProviders',
         key: 'id'
       },
-      onUpdate: 'CASCADE',
-      onDelete: 'SET NULL'
+      onUpdate: 'CASCADE'
     })
     await query.addColumn('UsersSkills', 'userId', {
       type: DataTypes.UUID,
@@ -27,7 +25,7 @@ module.exports = {
         key: 'id'
       },
       onUpdate: 'CASCADE',
-      onDelete: 'SET NULL'
+      onDelete: 'CASCADE'
     })
     await query.addColumn('Achievements', 'userId', {
       type: DataTypes.UUID,
@@ -36,7 +34,7 @@ module.exports = {
         key: 'id'
       },
       onUpdate: 'CASCADE',
-      onDelete: 'SET NULL'
+      onDelete: 'CASCADE'
     })
     await query.addColumn('UserAttributes', 'userId', {
       type: DataTypes.UUID,
@@ -45,7 +43,7 @@ module.exports = {
         key: 'id'
       },
       onUpdate: 'CASCADE',
-      onDelete: 'SET NULL'
+      onDelete: 'CASCADE'
     })
     await query.addColumn('ExternalProfiles', 'userId', {
       type: DataTypes.UUID,
@@ -54,7 +52,7 @@ module.exports = {
         key: 'id'
       },
       onUpdate: 'CASCADE',
-      onDelete: 'SET NULL'
+      onDelete: 'CASCADE'
     })
     await query.addColumn('UsersRoles', 'userId', {
       type: DataTypes.UUID,
@@ -63,7 +61,7 @@ module.exports = {
         key: 'id'
       },
       onUpdate: 'CASCADE',
-      onDelete: 'SET NULL'
+      onDelete: 'CASCADE'
     })
     await query.addColumn('ExternalProfiles', 'organizationId', {
       type: DataTypes.UUID,
@@ -71,8 +69,7 @@ module.exports = {
         model: 'Organizations',
         key: 'id'
       },
-      onUpdate: 'CASCADE',
-      onDelete: 'SET NULL'
+      onUpdate: 'CASCADE'
     })
     await query.addColumn('AttributeGroups', 'organizationId', {
       type: DataTypes.UUID,
@@ -80,8 +77,7 @@ module.exports = {
         model: 'Organizations',
         key: 'id'
       },
-      onUpdate: 'CASCADE',
-      onDelete: 'SET NULL'
+      onUpdate: 'CASCADE'
     })
     await query.addColumn('OrganizationSkillsProviders', 'organizationId', {
       type: DataTypes.UUID,
@@ -90,7 +86,7 @@ module.exports = {
         key: 'id'
       },
       onUpdate: 'CASCADE',
-      onDelete: 'SET NULL'
+      onDelete: 'CASCADE'
     })
     await query.addColumn('UsersSkills', 'skillId', {
       type: DataTypes.UUID,
@@ -98,8 +94,7 @@ module.exports = {
         model: 'Skills',
         key: 'id'
       },
-      onUpdate: 'CASCADE',
-      onDelete: 'SET NULL'
+      onUpdate: 'CASCADE'
     })
     await query.addColumn('UsersRoles', 'roleId', {
       type: DataTypes.UUID,
@@ -107,8 +102,7 @@ module.exports = {
         model: 'Roles',
         key: 'id'
       },
-      onUpdate: 'CASCADE',
-      onDelete: 'SET NULL'
+      onUpdate: 'CASCADE'
     })
     await query.addColumn('Achievements', 'achievementsProviderId', {
       type: DataTypes.UUID,
@@ -116,8 +110,7 @@ module.exports = {
         model: 'AchievementsProviders',
         key: 'id'
       },
-      onUpdate: 'CASCADE',
-      onDelete: 'SET NULL'
+      onUpdate: 'CASCADE'
     })
     await query.addColumn('UserAttributes', 'attributeId', {
       type: DataTypes.UUID,
@@ -125,8 +118,7 @@ module.exports = {
         model: 'Attributes',
         key: 'id'
       },
-      onUpdate: 'CASCADE',
-      onDelete: 'SET NULL'
+      onUpdate: 'CASCADE'
     })
     await query.addColumn('Attributes', 'attributeGroupId', {
       type: DataTypes.UUID,
@@ -134,8 +126,7 @@ module.exports = {
         model: 'AttributeGroups',
         key: 'id'
       },
-      onUpdate: 'CASCADE',
-      onDelete: 'SET NULL'
+      onUpdate: 'CASCADE'
     })
   },
   down: async (query) => {
