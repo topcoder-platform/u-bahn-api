@@ -975,6 +975,10 @@ paths:
         in: "query"
         description: "The name of the skill"
         type: "string"
+      - name: "orderBy"
+        in: "query"
+        type: "string"
+        description: "Specify by which field to sort by. Sorts in ascending order only"
       responses:
         "200":
           description: "OK - the request was successful"
