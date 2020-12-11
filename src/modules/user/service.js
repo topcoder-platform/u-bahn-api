@@ -14,7 +14,7 @@ const sequelize = require('../../models/index')
 const User = sequelize.models.User
 const Achievement = sequelize.models.Achievement
 const ExternalProfile = sequelize.models.ExternalProfile
-const UsersAttribute = sequelize.models.UsersAttribute
+const UserAttribute = sequelize.models.UserAttribute
 const UsersRole = sequelize.models.UsersRole
 const UsersSkill = sequelize.models.UsersSkill
 
@@ -162,7 +162,7 @@ async function remove (id, auth, params) {
 async function beginCascadeDelete (id, params) {
   await serviceHelper.deleteChild(Achievement, id, ['userId', 'achievementsProviderId'], 'Achievement')
   await serviceHelper.deleteChild(ExternalProfile, id, ['userId', 'organizationId'], 'ExternalProfile')
-  await serviceHelper.deleteChild(UsersAttribute, id, ['userId', 'attributeId'], 'UsersAttribute')
+  await serviceHelper.deleteChild(UserAttribute, id, ['userId', 'attributeId'], 'UserAttribute')
   await serviceHelper.deleteChild(UsersRole, id, ['userId', 'roleId'], 'UsersRole')
   await serviceHelper.deleteChild(UsersSkill, id, ['userId', 'skillId'], 'UsersSkill')
   await dbHelper.remove(User, id)

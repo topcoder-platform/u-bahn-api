@@ -1,5 +1,3 @@
-// TODO - Update BEFORE merge
-
 const _ = require('lodash')
 const sequelize = require('../../src/models/index')
 const dbHelper = require('../../src/common/db-helper')

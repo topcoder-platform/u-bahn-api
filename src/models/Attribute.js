@@ -26,7 +26,7 @@ module.exports = (sequelize) => {
     createdAt: 'created'
   })
   Attribute.associate = (models) => {
-    Attribute.hasMany(models.UsersAttribute, { foreignKey: 'attributeId', type: DataTypes.UUID })
+    Attribute.hasMany(models.UserAttribute, { foreignKey: 'attributeId', type: DataTypes.UUID })
     Attribute.belongsTo(models.AttributeGroup, { foreignKey: 'attributeGroupId', type: DataTypes.UUID })
   }
   return Attribute

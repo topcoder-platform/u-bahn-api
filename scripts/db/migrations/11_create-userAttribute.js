@@ -1,5 +1,5 @@
 /**
- * UsersAttribute model
+ * UserAttribute model
  */
 const { DataTypes } = require('sequelize')
 

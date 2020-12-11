@@ -13,7 +13,7 @@ const sequelize = require('../../models/index')
 
 const Attribute = sequelize.models.Attribute
 const AttributeGroup = sequelize.models.AttributeGroup
-const UsersAttribute = sequelize.models.UsersAttribute
+const UserAttribute = sequelize.models.UserAttribute
 const resource = serviceHelper.getResource('Attribute')
 const uniqueFields = [['name', 'attributeGroupId']]
 
@@ -132,9 +132,9 @@ search.schema = {
  * @return {Promise<void>} no data returned
  */
 async function remove (id, auth, params) {
-  const existing = await dbHelper.find(UsersAttribute, { attributeId: id })
+  const existing = await dbHelper.find(UserAttribute, { attributeId: id })
   if (existing.length > 0) {
-    throw errors.deleteConflictError(`Please delete ${UsersAttribute.name} with ids ${existing.map(o => o.id)}`)
+    throw errors.deleteConflictError(`Please delete ${UserAttribute.name} with ids ${existing.map(o => o.id)}`)
   }
   await dbHelper.remove(Attribute, id)
   await serviceHelper.deleteRecordFromEs(id, params, resource)

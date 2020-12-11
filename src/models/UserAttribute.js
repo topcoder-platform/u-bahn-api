@@ -1,10 +1,10 @@
 /**
- * UsersAttribute skill model
+ * UserAttribute skill model
  */
 const { DataTypes } = require('sequelize')
 
 module.exports = (sequelize) => {
-  const UsersAttribute = sequelize.define('UsersAttribute', {
+  const UserAttribute = sequelize.define('UserAttribute', {
     id: {
       primaryKey: true,
       type: DataTypes.UUID,
@@ -25,9 +25,9 @@ module.exports = (sequelize) => {
     updatedAt: 'updated',
     createdAt: 'created'
   })
-  UsersAttribute.associate = (models) => {
-    UsersAttribute.belongsTo(models.User, { foreignKey: 'userId', type: DataTypes.UUID })
-    UsersAttribute.belongsTo(models.Attribute, { foreignKey: 'attributeId', type: DataTypes.UUID })
+  UserAttribute.associate = (models) => {
+    UserAttribute.belongsTo(models.User, { foreignKey: 'userId', type: DataTypes.UUID })
+    UserAttribute.belongsTo(models.Attribute, { foreignKey: 'attributeId', type: DataTypes.UUID })
   }
-  return UsersAttribute
+  return UserAttribute
 }

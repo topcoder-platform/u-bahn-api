@@ -62,12 +62,12 @@ Setup your Elasticsearch instance and ensure that it is up and running.
 
 1. Follow *Configuration* section to update config values, like database, etc ..
 2. Goto *UBahn-api*, run `npm i` and `npm run lint`
-3. Import mock data, `node scripts/db/genData.js`, this will gen some data for test (if you need this)
+3. Run the migrations - `npm run migrations up`. This will create the database, the tables and insert mock data into the database. You will then run `npm run migrate-db-to-es` to migrate the data to elasticsearch from the database
 4. Startup server `node app.js` or `npm run start`
 
-## Working with mock data
+## Migrations
 
-You can use the scripts `npm run migrations up` (and `npm run migrations down`) to insert mock data (and delete mock data respectively). The data is inserted into Postgres and Elasticsearch. You need to setup the configurations beforehand and also start the elasticsearch instance before you run these scripts. You can run the script `npm run migrate-db-to-es` to dump data in db into es.
+Migrations are located under the `./scripts/db/` folder. Run `npm run migrations up` and `npm run migrations down` to execute the migrations or remove the earlier ones
 
 ## Local Deployment with Docker
 
@@ -87,6 +87,4 @@ Make sure all config values are right, and you can run on local successfully, th
 
 5. When you are running the application for the first time, It will take some time initially to download the image and install the dependencies
 
-## Verification
-
-See `Verification.md`
+You can also head into `docker-pgsql-es` folder and run `docker-compose up -d` to have docker instances of pgsql and elasticsearch to use with the api

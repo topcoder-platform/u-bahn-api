@@ -13,8 +13,8 @@ const sequelize = require('../../models/index')
 const AttributeGroup = sequelize.models.AttributeGroup
 const Attribute = sequelize.models.Attribute
 const User = sequelize.models.User
-const UsersAttribute = sequelize.models.UsersAttribute
-const resource = serviceHelper.getResource('UsersAttribute')
+const UserAttribute = sequelize.models.UserAttribute
+const resource = serviceHelper.getResource('UserAttribute')
 const uniqueFields = [['userId', 'attributeId']]
 
 /**
@@ -26,9 +26,9 @@ const uniqueFields = [['userId', 'attributeId']]
 async function create (entity, auth) {
   await dbHelper.get(Attribute, entity.attributeId)
   await dbHelper.get(User, entity.userId)
-  await dbHelper.makeSureUnique(UsersAttribute, entity, uniqueFields)
+  await dbHelper.makeSureUnique(UserAttribute, entity, uniqueFields)
 
-  const result = await dbHelper.create(UsersAttribute, entity, auth)
+  const result = await dbHelper.create(UserAttribute, entity, auth)
   await serviceHelper.createRecordInEs(resource, result)
 
   return result
@@ -59,9 +59,9 @@ async function patch (id, entity, auth, params) {
     await dbHelper.get(User, entity.userId)
   }
 
-  await dbHelper.makeSureUnique(UsersAttribute, entity, uniqueFields, params)
+  await dbHelper.makeSureUnique(UserAttribute, entity, uniqueFields, params)
 
-  const newEntity = await dbHelper.update(UsersAttribute, id, entity, auth, params)
+  const newEntity = await dbHelper.update(UserAttribute, id, entity, auth, params)
   await serviceHelper.patchRecordInEs(resource, newEntity)
 
   return newEntity
@@ -96,9 +96,9 @@ async function get (id, auth, params, query = {}, fromDb = false) {
     }
   }
 
-  const recordObj = await dbHelper.get(UsersAttribute, id, params)
+  const recordObj = await dbHelper.get(UserAttribute, id, params)
   if (!recordObj) {
-    throw errors.newEntityNotFoundError(`cannot find ${UsersAttribute.name} where ${_.map(trueParams, (v, k) => `${k}:${v}`).join(', ')}`)
+    throw errors.newEntityNotFoundError(`cannot find ${UserAttribute.name} where ${_.map(trueParams, (v, k) => `${k}:${v}`).join(', ')}`)
   }
 
   helper.permissionCheck(auth, recordObj)
@@ -135,7 +135,7 @@ async function search (query, auth) {
     query['$Attribute.AttributeGroup.id$'] = query.attributeGroupId
     delete query.attributeGroupId
   }
-  const items = await dbHelper.find(UsersAttribute, query, auth, [{
+  const items = await dbHelper.find(UserAttribute, query, auth, [{
     model: Attribute,
     as: 'Attribute',
     attributes: [],
@@ -169,7 +169,7 @@ search.schema = {
  * @return {Promise<void>} no data returned
  */
 async function remove (id, auth, params) {
-  await dbHelper.remove(UsersAttribute, id, params)
+  await dbHelper.remove(UserAttribute, id, params)
   await serviceHelper.deleteRecordFromEs(id, params, resource)
 }
 

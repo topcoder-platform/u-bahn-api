@@ -1,23 +1,11 @@
-# TODO - Update BEFORE merge
-
 version: '3'
 services:
-  postgres:
-    image: "postgres:13.1"
-    volumes:
-      - database-data:/var/lib/postgresql/data/
-    ports: 
-      - "5432:5432"
-    environment:
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_USER: ${DB_USERNAME}
-      POSTGRES_DB: ${DB_NAME}
-  esearch:
-    image: elasticsearch:7.7.1
-    container_name: ubahn-data-processor-es_es
+  ubahn_api:
+    image: ubahn_api:latest
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+    env_file:
+      - api.env
     ports:
-      - "9200:9200"
-    environment:
-      - discovery.type=single-node
-volumes:
-  database-data:
+      - "3001:3001"

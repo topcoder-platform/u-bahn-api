@@ -1,5 +1,3 @@
-// TODO - Update BEFORE merge
-
 const config = require('config')
 const _ = require('lodash')
 const errors = require('./errors')
@@ -31,7 +29,7 @@ const MODEL_TO_RESOURCE = {
   UsersSkill: 'userskill',
   SkillsProvider: 'skillprovider',
   AchievementsProvider: 'achievementprovider',
-  UsersAttribute: 'userattribute',
+  UserAttribute: 'userattribute',
   UsersRole: 'userrole',
   OrganizationSkillsProvider: 'organizationskillprovider'
 }

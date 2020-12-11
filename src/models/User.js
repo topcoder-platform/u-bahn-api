@@ -34,7 +34,7 @@ module.exports = (sequelize) => {
   User.associate = (models) => {
     User.hasMany(models.UsersSkill, { foreignKey: 'userId', type: DataTypes.UUID })
     User.hasMany(models.Achievement, { foreignKey: 'userId', type: DataTypes.UUID })
-    User.hasMany(models.UsersAttribute, { foreignKey: 'userId', type: DataTypes.UUID })
+    User.hasMany(models.UserAttribute, { foreignKey: 'userId', type: DataTypes.UUID })
     User.hasMany(models.ExternalProfile, { foreignKey: 'userId', type: DataTypes.UUID })
     User.hasMany(models.UsersRole, { foreignKey: 'userId', type: DataTypes.UUID })
   }

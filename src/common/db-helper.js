@@ -1,5 +1,3 @@
-// TODO - Update BEFORE merge
-
 const _ = require('lodash')
 const pgtools = require('pgtools')
 const config = require('config')
