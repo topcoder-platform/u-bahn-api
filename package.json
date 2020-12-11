@@ -9,7 +9,8 @@
     "insert-data": "node scripts/db/genData.js",
     "delete-data": "node scripts/db/dropAll.js",
     "migrate-db-to-es": "node scripts/db/dumpDbToEs.js",
-    "migrations": "node scripts/db/migrations.js"
+    "migrations": "node scripts/db/migrations.js",
+    "migrate-qldb-to-pg": "node scripts/db/migrateQldbToPg.js"
   },
   "repository": {
     "type": "git",
@@ -25,7 +26,6 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "get-parameter-names": "^0.3.0",
-    "ion-js": "^3.1.2",
     "js-yaml": "^3.13.1",
     "lodash": "^4.17.19",
     "node-cache": "^5.1.2",
@@ -42,6 +42,9 @@
     "winston": "^3.2.1"
   },
   "devDependencies": {
+    "aws-sdk": "^2.627.0",
+    "ion-js": "^3.1.2",
+    "amazon-qldb-driver-nodejs": "^0.1.1-preview.2",
     "standard": "^14.3.0"
   },
   "engines": {

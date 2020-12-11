@@ -69,6 +69,12 @@ Setup your Elasticsearch instance and ensure that it is up and running.
 
 Migrations are located under the `./scripts/db/` folder. Run `npm run migrations up` and `npm run migrations down` to execute the migrations or remove the earlier ones
 
+## Import data from QLDB
+ 
+Make sure `QLDB_NAME`, `AWS_REGION`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` are set in your environment
+
+Run `npm run migrate-qldb-to-pg` to import data from qldb. 
+
 ## Local Deployment with Docker
 
 Make sure all config values are right, and you can run on local successfully, then run below commands
