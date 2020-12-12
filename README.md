@@ -62,16 +62,14 @@ Setup your Elasticsearch instance and ensure that it is up and running.
 
 1. Follow *Configuration* section to update config values, like database, etc ..
 2. Goto *UBahn-api*, run `npm i` and `npm run lint`
-3. Run the migrations - `npm run migrations up`. This will create the database, the tables and insert mock data into the database. You will then run `npm run migrate-db-to-es` to migrate the data to elasticsearch from the database
-4. Startup server `node app.js` or `npm run start`
+3. Run the migrations - `npm run migrations up`. This will create the database, the tables.
+4. Then run `npm run insert-data` and insert mock data into the database.
+5. You will then run `npm run migrate-db-to-es` to migrate the data to elasticsearch from the database
+6. Startup server `node app.js` or `npm run start`
 
 ## Migrations
 
 Migrations are located under the `./scripts/db/` folder. Run `npm run migrations up` and `npm run migrations down` to execute the migrations or remove the earlier ones
-
-## Import seed data
-
-Run `npm run seeds-up` to import data from `./scripts/db/data`. 
 
 ## Import data from QLDB
  

@@ -6,11 +6,10 @@
   "scripts": {
     "start": "node app.js",
     "lint": "standard \"**/*.js\"",
-    "insert-data": "node scripts/db/genData.js",
     "delete-data": "node scripts/db/dropAll.js",
     "migrate-db-to-es": "node scripts/db/dumpDbToEs.js",
     "migrations": "node scripts/db/migrations.js",
-    "seeds-up": "node scripts/db/seedUp.js",
+    "insert-data": "node scripts/db/insert-data.js",
     "migrate-qldb-to-pg": "node scripts/db/migrateQldbToPg.js"
   },
   "repository": {
