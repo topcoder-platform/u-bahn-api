@@ -1108,6 +1108,8 @@ async function searchElasticSearch (resource, ...args) {
     if (params.orderBy) {
       sortClause = sortClause.concat(await resolveSortClauseFromDb(params.orderBy, authUser, authUserOrganizationId))
     }
+  } else if (params.orderBy) {
+    sortClause = [{ [`${params.orderBy}.keyword`]: 'asc' }]
   }
 
   // construct ES query
@@ -1279,18 +1281,14 @@ async function searchUsers (authUser, filter, params) {
   const authUserOrganizationId = filter.organizationId
   const filterKey = Object.keys(userFilters)
 
-  console.time('resolveUserFilterFromDb')
   for (const key of filterKey) {
     const resolved = await resolveUserFilterFromDb(userFilters[key], authUser, authUserOrganizationId)
     resolvedUserFilters.push(resolved)
   }
-  console.timeEnd('resolveUserFilterFromDb')
 
-  console.time('resolveSortClauseFromDb')
   if (params.orderBy) {
     sortClause = sortClause.concat(await resolveSortClauseFromDb(params.orderBy, authUser, authUserOrganizationId))
   }
-  console.timeEnd('resolveSortClauseFromDb')
 
   const esQuery = {
     index: queryDoc.index,
@@ -1343,9 +1341,7 @@ async function searchUsers (authUser, filter, params) {
   })
 
   logger.debug(`ES query for searching users: ${JSON.stringify(esQuery, null, 2)}`)
-  console.time('mainesquery')
   const { body: docs } = await esClient.search(esQuery)
-  console.timeEnd('mainesquery')
   const result = docs.hits.hits.map(hit => hit._source)
 
   return {

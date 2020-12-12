@@ -22,7 +22,8 @@ const methods = helper.getServiceMethods(
   {
     skillProviderId: joi.string(),
     name: joi.string(),
-    externalId: joi.string()
+    externalId: joi.string(),
+    orderBy: joi.string()
   },
   async query => {
     const dbQueries = []
