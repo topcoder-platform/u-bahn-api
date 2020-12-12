@@ -1,6 +1,7 @@
 const {
   IonTypes
 } = require('ion-js')
+const _ = require('lodash')
 const QLDB = require('amazon-qldb-driver-nodejs')
 const sequelize = require('../../src/models/index')
 const logger = require('../../src/common/logger')
@@ -96,6 +97,21 @@ async function main () {
   for (const key of dataKeys) {
     try {
       const records = await queryAllRecord(key, session)
+      if (key === 'AttributeGroup') {
+        _.forEach(records, r => {
+          if (r.organizationId === '854f1bf3-6f51-424b-866f-e5f5a5803904') {
+            r.organizationId = '36ed815b-3da1-49f1-a043-aaed0a4e81ad'
+          }
+        })
+      }
+      if (key === 'ExternalProfile') {
+        const replaceChar = ['a', 'b', 'c']
+        _.forEach(records, r => {
+          if (r.id === 'f2d1b567-8ea3-4eec-93b0-32378a19edb7') {
+            r.id = `f2d1b567-8ea3-4ee${_.pullAt(replaceChar, 0)[0]}-93b0-32378a19edb7`
+          }
+        })
+      }
       await models[key].bulkCreate(records)
       logger.info(`import data for ${key} done, record count: ${records.length}`)
     } catch (e) {

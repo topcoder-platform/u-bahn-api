@@ -69,6 +69,10 @@ Setup your Elasticsearch instance and ensure that it is up and running.
 
 Migrations are located under the `./scripts/db/` folder. Run `npm run migrations up` and `npm run migrations down` to execute the migrations or remove the earlier ones
 
+## Import seed data
+
+Run `npm run seeds-up` to import data from `./scripts/db/data`. 
+
 ## Import data from QLDB
  
 Make sure `QLDB_NAME`, `AWS_REGION`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` are set in your environment
