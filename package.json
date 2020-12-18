@@ -10,7 +10,8 @@
     "migrate-db-to-es": "node scripts/db/dumpDbToEs.js",
     "migrations": "node scripts/db/migrations.js",
     "insert-data": "node scripts/db/insert-data.js",
-    "migrate-qldb-to-pg": "node scripts/db/migrateQldbToPg.js"
+    "migrate-qldb-to-pg": "node scripts/db/migrateQldbToPg.js",
+    "import-s3-data": "node scripts/db/importS3ToQldb.js"
   },
   "repository": {
     "type": "git",

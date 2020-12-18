@@ -77,6 +77,12 @@ Make sure `QLDB_NAME`, `AWS_REGION`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY
 
 Run `npm run migrate-qldb-to-pg` to import data from qldb. 
 
+## Import data from S3 to QLDB
+
+Make sure `BUCKET_NAME`, `QLDB_NAME`, `AWS_REGION`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` are set in your environment
+
+Run `npm run import-s3-data` to import data from s3 to qldb. 
+
 ## Local Deployment with Docker
 
 Make sure all config values are right, and you can run on local successfully, then run below commands
