@@ -47,6 +47,9 @@ async function main () {
       const data = await s3.getObject({ Bucket: bucket, Key: key }).promise()
       const contents = ion.loadAll(data.Body)
       for (const content of contents) {
+        if (!content.transactionInfo) {
+          continue
+        }
         // get content of each transaction
         const statement = content.transactionInfo.statements.get(0).statement.stringValue()
         // process create statement
