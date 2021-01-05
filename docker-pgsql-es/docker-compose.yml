@@ -1,0 +1,21 @@
+version: '3'
+services:
+  postgres:
+    image: "postgres:12.4"
+    volumes:
+      - database-data:/var/lib/postgresql/data/
+    ports: 
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_DB: ${DB_NAME}
+  esearch:
+    image: elasticsearch:7.7.1
+    container_name: ubahn-data-processor-es_es
+    ports:
+      - "9200:9200"
+    environment:
+      - discovery.type=single-node
+volumes:
+  database-data:

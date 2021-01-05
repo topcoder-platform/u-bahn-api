@@ -1,17 +1,32 @@
-const { RecordObject } = require('./BaseObject')
-
 /**
  * Role model
  */
-class Role extends RecordObject {
-  constructor () {
-    super()
-    this.name = null
-  }
-}
+const { DataTypes } = require('sequelize')
 
-Role.tableName = 'Role'
-Role.additionalSql = [
-  'CREATE INDEX ON Role (name)'
-]
-module.exports = Role
+module.exports = (sequelize) => {
+  const Role = sequelize.define('Role', {
+    id: {
+      primaryKey: true,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4
+    },
+    createdBy: {
+      type: DataTypes.STRING
+    },
+    updatedBy: {
+      type: DataTypes.STRING
+    },
+    name: {
+      type: DataTypes.STRING
+    }
+  },
+  {
+    timestamps: true,
+    updatedAt: 'updated',
+    createdAt: 'created'
+  })
+  Role.associate = (models) => {
+    Role.hasMany(models.UsersRole, { foreignKey: 'roleId', type: DataTypes.UUID })
+  }
+  return Role
+}

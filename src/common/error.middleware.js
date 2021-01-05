@@ -3,6 +3,7 @@
 /**
  * Common error handling middleware
  */
+const { UniqueConstraintError } = require('sequelize')
 const logger = require('./logger')
 
 const DEFAULT_MESSAGE = 'Something is broken at API server-side.'
@@ -18,7 +19,9 @@ const DEFAULT_MESSAGE = 'Something is broken at API server-side.'
 function middleware (err, req, res, next) {
   logger.logFullError(err)
 
-  if (err.isJoi) {
+  if (err instanceof UniqueConstraintError) {
+    res.status(409).json({ message: err.message })
+  } else if (err.isJoi) {
     res.status(400).json({ message: err.details[0].message })
   } else {
     const status = err.status || 500

@@ -1,5 +1,6 @@
 const _ = require('lodash')
-const models = require('../../src/models')
+const sequelize = require('../../src/models/index')
+const dbHelper = require('../../src/common/db-helper')
 const logger = require('../../src/common/logger')
 const { getESClient } = require('../../src/common/es-client')
 const {
@@ -8,6 +9,8 @@ const {
   organizationResources,
   modelToESIndexMapping
 } = require('../constants')
+
+const models = sequelize.models
 
 // Declares the ordering of the resource data insertion, to ensure that enrichment happens correctly
 const RESOURCES_IN_ORDER = [
@@ -162,7 +165,7 @@ async function insertIntoES (modelName, body) {
       if (e.meta && e.meta.body.error.type === RESOURCE_NOT_FOUND) {
         logger.info(`The ${modelName} references user with id ${body.userId}, which does not exist. Deleting the reference...`)
         // The user does not exist. Delete the referece records
-        await models.DBHelper.delete(models[modelName], body.id)
+        await dbHelper.remove(models[modelName], body.id)
         logger.info('Reference deleted')
         return
       } else {
@@ -222,7 +225,7 @@ async function insertIntoES (modelName, body) {
       if (e.meta && e.meta.body.error.type === RESOURCE_NOT_FOUND) {
         logger.info(`The ${modelName} references org with id ${body.organizationId}, which does not exist. Deleting the reference...`)
         // The user does not exist. Delete the referece records
-        await models.DBHelper.delete(models[modelName], body.id)
+        await dbHelper.remove(models[modelName], body.id)
         logger.info('Reference deleted')
         return
       } else {
@@ -351,7 +354,7 @@ async function main () {
   // Sort the models in the order of insertion (for correct enrichment)
   const temp = Array(keys.length).fill(null)
   keys.forEach(k => {
-    if (models[k].tableName) {
+    if (sequelize.models[k].name) {
       const esResourceName = modelToESIndexMapping[k]
       const index = RESOURCES_IN_ORDER.indexOf(esResourceName)
       temp[index] = k
@@ -364,7 +367,7 @@ async function main () {
   for (let i = 0; i < keys.length; i++) {
     const key = keys[i]
     try {
-      const data = await models.DBHelper.find(models[key], [])
+      const data = await dbHelper.find(models[key], {})
 
       for (let i = 0; i < data.length; i++) {
         logger.info(`Inserting data ${i + 1} of ${data.length}`)

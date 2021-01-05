@@ -1,14 +1,12 @@
 const errors = require('../../common/errors')
-const models = require('../../models')
+const sequelize = require('../../models/index')
 
 async function get () {
-  // Check QLDB Connection by retrieving a session
+  // Check DB Connection by authenticating
   try {
-    const session = await models.DBHelper.getSession()
-
-    session.close()
+    await sequelize.authenticate()
   } catch (e) {
-    throw errors.serviceUnavailableError(`QLDB is unavailable, ${e.message}`)
+    throw errors.serviceUnavailableError(`DB is unavailable, ${e.message}`)
   }
 
   return { checksRun: 1 }
