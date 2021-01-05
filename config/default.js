@@ -4,7 +4,7 @@
 
 module.exports = {
   LOG_LEVEL: process.env.LOG_LEVEL || 'debug',
-  PORT: process.env.PORT || 3002,
+  PORT: process.env.PORT || 3001,
 
   CASCADE_PAUSE_MS: process.env.CASCADE_PAUSE_MS || 1000,
 
