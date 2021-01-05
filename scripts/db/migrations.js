@@ -25,7 +25,7 @@ function getUmzug () {
 
 (async () => {
   if (process.argv[2] === 'up') {
-    createDb()
+    // createDb()
     await getUmzug().up()
     console.log('All migrations performed successfully')
   } else if (process.argv[2] === 'down') {
