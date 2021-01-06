@@ -138,7 +138,9 @@ search.schema = {
     perPage: joi.pageSize(),
     handle: joi.string(),
     roleId: joi.string(),
-    enrich: joi.boolean()
+    enrich: joi.boolean(),
+    'externalProfile.externalId': joi.string(),
+    'externalProfile.organizationId': joi.string()
   },
   auth: joi.object()
 }
