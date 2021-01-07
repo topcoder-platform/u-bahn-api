@@ -26,7 +26,7 @@ async function create (entity, auth) {
   await dbHelper.makeSureUnique(AchievementsProvider, entity, uniqueFields)
 
   const result = await dbHelper.create(AchievementsProvider, entity, auth)
-  await serviceHelper.createRecordInEs(resource, result)
+  await serviceHelper.createRecordInEs(resource, result.dataValues)
 
   return result
 }
@@ -50,7 +50,7 @@ async function patch (id, entity, auth, params) {
   await dbHelper.makeSureUnique(AchievementsProvider, entity, uniqueFields)
 
   const newEntity = await dbHelper.update(AchievementsProvider, id, entity, auth)
-  await serviceHelper.patchRecordInEs(resource, newEntity)
+  await serviceHelper.patchRecordInEs(resource, newEntity.dataValues)
 
   return newEntity
 }

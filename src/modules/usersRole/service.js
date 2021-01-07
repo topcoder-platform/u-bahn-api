@@ -29,7 +29,7 @@ async function create (entity, auth) {
   await dbHelper.makeSureUnique(UsersRole, entity, uniqueFields)
 
   const result = await dbHelper.create(UsersRole, entity, auth)
-  await serviceHelper.createRecordInEs(resource, result)
+  await serviceHelper.createRecordInEs(resource, result.dataValues)
 
   return result
 }

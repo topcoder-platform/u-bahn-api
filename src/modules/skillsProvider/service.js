@@ -24,7 +24,7 @@ const resource = serviceHelper.getResource('SkillsProvider')
  */
 async function create (entity, auth) {
   const result = await dbHelper.create(SkillsProvider, entity, auth)
-  await serviceHelper.createRecordInEs(resource, result)
+  await serviceHelper.createRecordInEs(resource, result.dataValues)
   return result
 }
 
@@ -45,7 +45,7 @@ create.schema = {
  */
 async function patch (id, entity, auth, params) {
   const newEntity = await dbHelper.update(SkillsProvider, id, entity, auth)
-  await serviceHelper.patchRecordInEs(resource, newEntity)
+  await serviceHelper.patchRecordInEs(resource, newEntity.dataValues)
   return newEntity
 }
 
