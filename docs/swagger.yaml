@@ -77,6 +77,18 @@ paths:
         required: false
         type: "string"
         format: "UUID"
+      - name: "externalProfile.externalId"
+        in: "query"
+        description: "Filter by the user's external profile's external id"
+        required: false
+        type: "string"
+        format: "UUID"
+      - name: "externalProfile.organizationId"
+        in: "query"
+        description: "Filter by the user's organization id"
+        required: false
+        type: "string"
+        format: "UUID"
       responses:
         "200":
           description: "OK - the request was successful"

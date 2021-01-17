@@ -43,40 +43,6 @@ create.schema = {
 }
 
 /**
- * patch device by id
- * @param id the device id
- * @param entity the request device entity
- * @param auth the auth object
- * @param params the query params
- * @return {Promise} the updated device
- */
-async function patch (id, entity, auth, params) {
-  if (entity.organizationId) {
-    await dbHelper.get(Organization, entity.organizationId)
-  }
-  if (entity.skillProviderId) {
-    await dbHelper.get(SkillsProvider, entity.skillProviderId)
-  }
-
-  await dbHelper.makeSureUnique(OrganizationSkillsProvider, entity, uniqueFields, params)
-
-  const newEntity = await dbHelper.update(OrganizationSkillsProvider, id, entity, auth, params)
-  await serviceHelper.patchRecordInEs(resource, newEntity.dataValues)
-
-  return newEntity
-}
-
-patch.schema = {
-  id: joi.string(),
-  entity: {
-    organizationId: joi.string(),
-    skillProviderId: joi.string()
-  },
-  auth: joi.object(),
-  params: joi.object()
-}
-
-/**
  * get device by id
  * @param id the device id
  * @param auth the auth obj
@@ -149,7 +115,6 @@ async function remove (id, auth, params) {
 module.exports = {
   create,
   search,
-  patch,
   get,
   remove
 }
