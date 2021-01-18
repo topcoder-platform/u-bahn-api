@@ -6,6 +6,8 @@ module.exports = {
   LOG_LEVEL: process.env.LOG_LEVEL || 'debug',
   PORT: process.env.PORT || 3001,
 
+  CASCADE_PAUSE_MS: process.env.CASCADE_PAUSE_MS || 1000,
+
   AUTH_SECRET: process.env.AUTH_SECRET || 'CLIENT_SECRET',
   VALID_ISSUERS: process.env.VALID_ISSUERS ? process.env.VALID_ISSUERS.replace(/\\"/g, '')
     : '["https://topcoder-dev.auth0.com/", "https://api.topcoder.com"]',
@@ -14,10 +16,11 @@ module.exports = {
   MAX_PAGE_SIZE: parseInt(process.env.MAX_PAGE_SIZE) || 100,
   API_VERSION: process.env.API_VERSION || 'api/1.0',
 
-  AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
-  AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
-  AWS_REGION: process.env.AWS_REGION || 'us-east-1',
-  DATABASE: process.env.DATABASE || 'ubahn-db',
+  DB_NAME: process.env.DB_NAME || 'ubahn-db',
+  DB_USERNAME: process.env.DB_USER || 'postgres',
+  DB_PASSWORD: process.env.DB_PASSWORD || 'password',
+  DB_HOST: process.env.DB_HOST || 'localhost',
+  DB_PORT: process.env.DB_PORT || 5432,
 
   AUTH0_URL: process.env.AUTH0_URL,
   AUTH0_AUDIENCE: process.env.AUTH0_AUDIENCE,

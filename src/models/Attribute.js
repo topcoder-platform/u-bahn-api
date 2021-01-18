@@ -1,18 +1,33 @@
-const { RecordObject } = require('./BaseObject')
-
 /**
  * Attribute model
  */
-class Attribute extends RecordObject {
-  constructor () {
-    super()
-    this.attributeGroupId = null
-    this.name = null
-  }
-}
+const { DataTypes } = require('sequelize')
 
-Attribute.tableName = 'Attribute'
-Attribute.additionalSql = [
-  'CREATE INDEX ON Attribute (name)'
-]
-module.exports = Attribute
+module.exports = (sequelize) => {
+  const Attribute = sequelize.define('Attribute', {
+    id: {
+      primaryKey: true,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4
+    },
+    createdBy: {
+      type: DataTypes.STRING
+    },
+    updatedBy: {
+      type: DataTypes.STRING
+    },
+    name: {
+      type: DataTypes.STRING
+    }
+  },
+  {
+    timestamps: true,
+    updatedAt: 'updated',
+    createdAt: 'created'
+  })
+  Attribute.associate = (models) => {
+    Attribute.hasMany(models.UserAttribute, { foreignKey: 'attributeId', type: DataTypes.UUID })
+    Attribute.belongsTo(models.AttributeGroup, { foreignKey: 'attributeGroupId', type: DataTypes.UUID })
+  }
+  return Attribute
+}

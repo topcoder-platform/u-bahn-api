@@ -1,61 +1,43 @@
 /**
  * the model index
  */
-
-const User = require('./User')
-const Role = require('./Role')
-const SkillsProvider = require('./SkillsProvider')
-const Skill = require('./Skill')
-const Organization = require('./Organization')
-const UsersRole = require('./UsersRole')
-const UsersSkill = require('./UsersSkill')
-const ExternalProfile = require('./ExternalProfile')
-const AchievementsProvider = require('./AchievementsProvider')
-const Achievement = require('./Achievement')
-const AttributeGroup = require('./AttributeGroup')
-const Attribute = require('./Attribute')
-const UserAttribute = require('./UserAttribute')
-const OrganizationSkillsProvider = require('./OrganizationSkillsProvider')
+const { Sequelize } = require('sequelize')
+const config = require('config')
+const fs = require('fs')
+const path = require('path')
 const logger = require('../common/logger')
-const consts = require('../consts')
 
-const DBHelper = require('./DBHelper')
+/**
+ * the database instance
+ */
+const sequelize = new Sequelize(
+  `postgresql://${config.DB_USERNAME}:${config.DB_PASSWORD}@${config.DB_HOST}:${config.DB_PORT}/${config.DB_NAME}`
+)
 
-module.exports = {
-  User,
-  Role,
-  SkillsProvider,
-  Organization,
-  Skill,
-  UsersRole,
-  UsersSkill,
-  Achievement,
-  ExternalProfile,
-  AchievementsProvider,
-  AttributeGroup,
-  Attribute,
-  UserAttribute,
-  OrganizationSkillsProvider,
-  consts,
-  DBHelper
-}
+const db = {}
+
+fs
+  .readdirSync(__dirname)
+  .filter(file => (file.indexOf('.') !== 0) && (file !== 'index.js'))
+  .forEach((file) => {
+    const model = require(path.join(__dirname, file))(sequelize)
+    db[model.name] = model
+  })
+
+Object.keys(db).forEach((modelName) => {
+  if ('associate' in db[modelName]) {
+    db[modelName].associate(db)
+  }
+})
+
+module.exports = sequelize
+
 /**
  * create table
  */
 module.exports.init = async () => {
   logger.info('connect to database, check/create tables ...')
-  await DBHelper.createTable(User)
-  await DBHelper.createTable(Role)
-  await DBHelper.createTable(SkillsProvider)
-  await DBHelper.createTable(Skill)
-  await DBHelper.createTable(Organization)
-  await DBHelper.createTable(UsersRole)
-  await DBHelper.createTable(UsersSkill)
-  await DBHelper.createTable(ExternalProfile)
-  await DBHelper.createTable(AchievementsProvider)
-  await DBHelper.createTable(Achievement)
-  await DBHelper.createTable(AttributeGroup)
-  await DBHelper.createTable(Attribute)
-  await DBHelper.createTable(UserAttribute)
-  await DBHelper.createTable(OrganizationSkillsProvider)
+  // authenticate db
+  await sequelize.authenticate()
+  logger.info(`Connected to db ${config.DB_NAME} successfully`)
 }

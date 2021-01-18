@@ -6,9 +6,12 @@
   "scripts": {
     "start": "node app.js",
     "lint": "standard \"**/*.js\"",
-    "insert-data": "node scripts/db/genData.js",
     "delete-data": "node scripts/db/dropAll.js",
-    "migrate-db-to-es": "node scripts/db/dumpDbToEs.js"
+    "migrate-db-to-es": "node scripts/db/dumpDbToEs.js",
+    "migrations": "node scripts/db/migrations.js",
+    "insert-data": "node scripts/db/insert-data.js",
+    "migrate-qldb-to-pg": "node scripts/db/migrateQldbToPg.js",
+    "import-s3-data": "node scripts/db/importS3ToQldb.js"
   },
   "repository": {
     "type": "git",
@@ -19,7 +22,7 @@
     "@hapi/joi": "^16.1.8",
     "@hapi/joi-date": "^2.0.1",
     "amazon-qldb-driver-nodejs": "^0.1.1-preview.2",
-    "aws-sdk": "^2.627.0",
+    "aws-sdk": "^2.810.0",
     "axios": "^0.19.2",
     "body-parser": "^1.19.0",
     "config": "^3.2.4",
@@ -28,12 +31,18 @@
     "get-parameter-names": "^0.3.0",
     "ion-js": "^3.1.2",
     "js-yaml": "^3.13.1",
+    "jsbi": "^3.1.4",
     "lodash": "^4.17.19",
     "node-cache": "^5.1.2",
+    "pg": "^8.5.1",
+    "pg-hstore": "^2.3.3",
+    "pgtools": "^0.3.0",
     "querystring": "^0.2.0",
+    "sequelize": "^6.3.5",
     "swagger-ui-express": "^4.1.4",
     "tc-bus-api-wrapper": "github:topcoder-platform/tc-bus-api-wrapper",
     "tc-core-library-js": "github:appirio-tech/tc-core-library-js#v2.6.4",
+    "umzug": "^2.3.0",
     "uuid": "^7.0.1",
     "winston": "^3.2.1"
   },
