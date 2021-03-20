@@ -38,7 +38,7 @@ builddeploy_steps: &builddeploy_steps
             source awsenvconf
             ./buildenv.sh -e $DEPLOY_ENV -b ${LOGICAL_ENV}-${APPNAME}-deployvar
             source buildenvvar
-            ./master_deploy.sh -d ECS -e $DEPLOY_ENV -t latest -s ${LOGICAL_ENV}-global-appvar,${LOGICAL_ENV}-${APPNAME}-appvar -i ${APPNAME}
+            ./master_deploy.sh -d ECS -e $DEPLOY_ENV -t latest -s ${PLATFORM_ENV}-global-appvar,${LOGICAL_ENV}-${APPNAME}-appvar -i ${APPNAME}
 
 
 jobs:
@@ -48,6 +48,7 @@ jobs:
     environment:
       DEPLOY_ENV: "DEV"
       LOGICAL_ENV: "dev"
+      PLATFORM_ENV: "dev"
       APPNAME: "ubahn_api"    
     steps: *builddeploy_steps
 
@@ -55,9 +56,19 @@ jobs:
     <<: *defaults
     environment:
       DEPLOY_ENV: "PROD"
-      LOGICAL_ENV: "prod"    
+      LOGICAL_ENV: "prod"  
+      PLATFORM_ENV: "prod"  
       APPNAME: "ubahn_api"  
     steps: *builddeploy_steps
+
+  "build-prod-dbupdate":
+    <<: *defaults
+    environment:
+      DEPLOY_ENV: "PROD"
+      LOGICAL_ENV: "prod-dbupdate"   
+      PLATFORM_ENV: "prod" 
+      APPNAME: "ubahn_api"  
+    steps: *builddeploy_steps    
 
 workflows:
   version: 2
@@ -78,3 +89,10 @@ workflows:
           filters:
             branches:
               only: master
+
+      - "build-prod-dbupdate":
+          context : org-global
+          filters:
+            branches:
+              only: prod-dbupdate
+              
