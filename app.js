@@ -51,7 +51,6 @@ _.each(routes, (verbs, url) => {
           return next(errors.newAuthError('Action is not allowed for invalid token'))
         }
         req.auth = req.authUser
-        req.auth.sub = req.auth.userId
         if (req.authUser.roles) {
           // all access are allowed
           if (_.isEmpty(access)) {
