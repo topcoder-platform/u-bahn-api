@@ -391,14 +391,12 @@ async function main () {
 
   for (let i = 0; i < keys.length; i++) {
     const key = keys[i]
+    const queryPage = { perPage: parseInt(config.get('ES.MAX_BATCH_SIZE'), 10), page: 1 }
     try {
-      const allData = await dbHelper.find(models[key], {})
-      let j = 0
-      const dataset = _.chunk(allData, config.get('ES.MAX_BATCH_SIZE'))
-      for (const data of dataset) {
+      while (true) {
+        const data = await dbHelper.find(models[key], { ...queryPage })
         for (let i = 0; i < data.length; i++) {
-          j++
-          logger.info(`Inserting data ${j} of ${allData.length}`)
+          logger.info(`Inserting data ${(i + 1) + (queryPage.perPage * (queryPage.page - 1))}`)
           logger.info(JSON.stringify(data[i]))
           if (!_.isString(data[i].created)) {
             data[i].created = new Date()
@@ -414,14 +412,18 @@ async function main () {
           }
         }
         await insertIntoES(key, data)
+        if (data.length < queryPage.perPage) {
+          logger.info('import data for ' + key + ' done')
+          break
+        } else {
+          queryPage.page = queryPage.page + 1
+        }
       }
-      logger.info('import data for ' + key + ' done')
     } catch (e) {
       logger.error(e)
       logger.warn('import data for ' + key + ' failed')
       continue
     }
-
     try {
       await createAndExecuteEnrichPolicy(key)
       logger.info('create and execute enrich policy for ' + key + ' done')
