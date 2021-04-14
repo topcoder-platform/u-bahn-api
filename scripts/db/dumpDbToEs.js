@@ -391,12 +391,12 @@ async function main () {
 
   for (let i = 0; i < keys.length; i++) {
     const key = keys[i]
-    const queryPage = { perPage: parseInt(config.get('ES.MAX_BATCH_SIZE')), page: 1 }
+    const queryPage = { perPage: parseInt(config.get('ES.MAX_BATCH_SIZE'), 10), page: 1 }
     try {
       while (true) {
         const data = await dbHelper.find(models[key], { ...queryPage })
         for (let i = 0; i < data.length; i++) {
-          logger.info(`Inserting data ${i + 1} of ${data.length}`)
+          logger.info(`Inserting data ${(i + 1) + (queryPage.perPage * (queryPage.page - 1))}`)
           logger.info(JSON.stringify(data[i]))
           if (!_.isString(data[i].created)) {
             data[i].created = new Date()
@@ -412,8 +412,8 @@ async function main () {
           }
         }
         await insertIntoES(key, data)
-        logger.info('import data for ' + key + ' done')
         if (data.length < queryPage.perPage) {
+          logger.info('import data for ' + key + ' done')
           break
         } else {
           queryPage.page = queryPage.page + 1
