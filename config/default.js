@@ -126,7 +126,7 @@ module.exports = {
         orgField: process.env.ORGANIZATION_SKILLPROVIDER_PROPERTY_NAME || 'skillProviders'
       }
     },
-    MAX_BATCH_SIZE: parseInt(process.env.MAX_RESULT_SIZE, 10) || 10000,
+    MAX_BATCH_SIZE: parseInt(process.env.MAX_BATCH_SIZE, 10) || 10000,
     MAX_RESULT_SIZE: parseInt(process.env.MAX_RESULT_SIZE, 10) || 1000,
     MAX_BULK_SIZE: parseInt(process.env.MAX_BULK_SIZE, 10) || 100
   }
