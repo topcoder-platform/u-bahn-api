@@ -420,7 +420,9 @@ async function main () {
         }
       }
     } catch (e) {
-      logger.error(e)
+      logger.error(JSON.stringify(_.get(e, 'meta.body', ''), null, 4))
+      logger.error(_.get(e, 'meta.meta.request.params.method', ''))
+      logger.error(_.get(e, 'meta.meta.request.params.path', ''))
       logger.warn('import data for ' + key + ' failed')
       continue
     }
@@ -428,7 +430,7 @@ async function main () {
       await createAndExecuteEnrichPolicy(key)
       logger.info('create and execute enrich policy for ' + key + ' done')
     } catch (e) {
-      logger.error(e)
+      logger.error(JSON.stringify(_.get(e, 'meta.body', ''), null, 4))
       logger.warn('create and execute enrich policy for ' + key + ' failed')
     }
 
@@ -436,7 +438,7 @@ async function main () {
       await createEnrichProcessor(key)
       logger.info('create enrich processor (pipeline) for ' + key + ' done')
     } catch (e) {
-      logger.error(e)
+      logger.error(JSON.stringify(_.get(e, 'meta.body', ''), null, 4))
       logger.warn('create enrich processor (pipeline) for ' + key + ' failed')
     }
   }
