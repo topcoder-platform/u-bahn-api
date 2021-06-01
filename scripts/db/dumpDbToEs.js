@@ -144,30 +144,40 @@ async function insertIntoES (modelName, dataset) {
     const chunked = _.chunk(dataset, config.get('ES.MAX_BULK_SIZE'))
     for (const ds of chunked) {
       const body = _.flatMap(ds, doc => [{ index: { _id: doc.id } }, doc])
-      await client.bulk({
-        index: topResources[esResourceName].index,
-        type: topResources[esResourceName].type,
-        body,
-        pipeline: topResources[esResourceName].ingest ? topResources[esResourceName].ingest.pipeline.id : undefined,
-        refresh: 'wait_for'
-      })
+      try {
+        await client.bulk({
+          index: topResources[esResourceName].index,
+          type: topResources[esResourceName].type,
+          body,
+          pipeline: topResources[esResourceName].ingest ? topResources[esResourceName].ingest.pipeline.id : undefined,
+          refresh: 'wait_for'
+        })
+      } catch (e) {
+        logger.error('ES, create mapping error.')
+        logger.error(JSON.stringify(e))
+      }
     }
   } else if (_.includes(_.keys(userResources), esResourceName)) {
     const userResource = userResources[esResourceName]
 
     if (userResource.nested === true && userResource.mappingCreated !== true) {
-      await client.indices.putMapping({
-        index: topResources.user.index,
-        type: topResources.user.type,
-        include_type_name: true,
-        body: {
-          properties: {
-            [userResource.propertyName]: {
-              type: 'nested'
+      try {
+        await client.indices.putMapping({
+          index: topResources.user.index,
+          type: topResources.user.type,
+          include_type_name: true,
+          body: {
+            properties: {
+              [userResource.propertyName]: {
+                type: 'nested'
+              }
             }
           }
-        }
-      })
+        })
+      } catch (e) {
+        logger.error('ES, nexted mapping error.')
+        logger.error(JSON.stringify(e))
+      }
       userResource.mappingCreated = true
     }
 
