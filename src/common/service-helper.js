@@ -38,8 +38,17 @@ const MODEL_TO_RESOURCE = {
  * Create record in es
  * @param resource the resource to create
  * @param result the resource fields
+ * @param toEs is to es directly
  */
-async function createRecordInEs (resource, entity) {
+async function createRecordInEs (resource, entity, toEs) {
+  try {
+    if (toEs) {
+      await esHelper.processCreate(resource, entity)
+    }
+  } catch (err) {
+    logger.logFullError(err)
+    throw err
+  }
   try {
     await publishMessage('create', resource, entity)
   } catch (err) {
@@ -51,8 +60,17 @@ async function createRecordInEs (resource, entity) {
  * Patch record in es
  * @param resource the resource to create
  * @param result the resource fields
+ * @param toEs is to es directly
  */
-async function patchRecordInEs (resource, entity) {
+async function patchRecordInEs (resource, entity, toEs) {
+  try {
+    if (toEs) {
+      await esHelper.processUpdate(resource, entity)
+    }
+  } catch (err) {
+    logger.logFullError(err)
+    throw err
+  }
   try {
     await publishMessage('patch', resource, entity)
   } catch (err) {
@@ -65,8 +83,9 @@ async function patchRecordInEs (resource, entity) {
  * @param id the id of record
  * @param params the params of record (like nested ids)
  * @param resource the resource to delete
+ * @param toEs is to es directly
  */
-async function deleteRecordFromEs (id, params, resource) {
+async function deleteRecordFromEs (id, params, resource, toEs) {
   let payload
   if (SUB_USER_DOCUMENTS[resource] || SUB_ORG_DOCUMENTS[resource]) {
     payload = _.assign({}, params)
@@ -75,6 +94,15 @@ async function deleteRecordFromEs (id, params, resource) {
       id
     }
   }
+  try {
+    if (toEs) {
+      await esHelper.processDelete(resource, payload)
+    }
+  } catch (err) {
+    logger.logFullError(err)
+    throw err
+  }
+
   try {
     await publishMessage('remove', resource, payload)
   } catch (err) {
@@ -174,13 +202,14 @@ function sleep (ms) {
 }
 
 /**
- * delete child of record with delay between each item deleted
+ * delete child of record with delay between each item deleted and with transaction
  * @param model the child model to delete
  * @param id the user id to delete
  * @param params the params for child
  * @param resourceName the es recource name
+ * @param transaction the transaction object
  */
-async function deleteChild (model, id, params, resourceName) {
+async function deleteChild (model, id, params, resourceName, transaction) {
   const query = {}
   query[params[0]] = id
   const result = await dbHelper.find(model, query)
@@ -194,8 +223,8 @@ async function deleteChild (model, id, params, resourceName) {
       params.forEach(attr => { esParams[attr] = record[attr] })
 
       // remove from db
-      dbHelper.remove(model, record.id)
-      deleteRecordFromEs(record.id, esParams, resourceName)
+      await dbHelper.remove(model, record.id, transaction)
+      await deleteRecordFromEs(record.id, esParams, resourceName, !!transaction)
 
       // sleep for configured time
       await sleep(config.CASCADE_PAUSE_MS)
