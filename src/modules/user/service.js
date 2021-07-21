@@ -159,7 +159,7 @@ search.schema = {
  * @return {Promise<void>} no data returned
  */
 async function remove (id, auth, params) {
-  beginCascadeDelete(id, params)
+  await beginCascadeDelete(id, params)
 }
 
 /**
@@ -175,7 +175,7 @@ async function beginCascadeDelete (id, params) {
     await serviceHelper.deleteChild(UsersRole, id, ['userId', 'roleId'], 'UsersRole', t)
     await serviceHelper.deleteChild(UsersSkill, id, ['userId', 'skillId'], 'UsersSkill', t)
     await dbHelper.remove(User, id, null, t)
-    await serviceHelper.deleteRecordFromEs(id, params, resource)
+    await serviceHelper.deleteRecordFromEs(id, params, resource, true)
   })
 }
 
