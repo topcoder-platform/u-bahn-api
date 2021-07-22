@@ -30,8 +30,11 @@ const uniqueFields = [['handle']]
 async function create (entity, auth) {
   await dbHelper.makeSureUnique(User, entity, uniqueFields)
 
-  const result = await dbHelper.create(User, entity, auth)
-  await serviceHelper.createRecordInEs(resource, result.dataValues)
+  const result = await sequelize.transaction(async (t) => {
+    const userEntity = await dbHelper.create(User, entity, auth, t)
+    await serviceHelper.createRecordInEs(resource, userEntity.dataValues, true)
+    return userEntity
+  })
 
   return result
 }
@@ -56,10 +59,13 @@ create.schema = {
 async function patch (id, entity, auth, params) {
   await dbHelper.makeSureUnique(User, entity, uniqueFields)
 
-  const newEntity = await dbHelper.update(User, id, entity, auth)
-  await serviceHelper.patchRecordInEs(resource, newEntity.dataValues)
+  const result = await sequelize.transaction(async (t) => {
+    const newEntity = await dbHelper.update(User, id, entity, auth, null, t)
+    await serviceHelper.patchRecordInEs(resource, newEntity.dataValues, true)
+    return newEntity
+  })
 
-  return newEntity
+  return result
 }
 
 patch.schema = {
@@ -153,7 +159,7 @@ search.schema = {
  * @return {Promise<void>} no data returned
  */
 async function remove (id, auth, params) {
-  beginCascadeDelete(id, params)
+  await beginCascadeDelete(id, params)
 }
 
 /**
@@ -162,13 +168,15 @@ async function remove (id, auth, params) {
  * @param params the path params
  */
 async function beginCascadeDelete (id, params) {
-  await serviceHelper.deleteChild(Achievement, id, ['userId', 'achievementsProviderId'], 'Achievement')
-  await serviceHelper.deleteChild(ExternalProfile, id, ['userId', 'organizationId'], 'ExternalProfile')
-  await serviceHelper.deleteChild(UserAttribute, id, ['userId', 'attributeId'], 'UserAttribute')
-  await serviceHelper.deleteChild(UsersRole, id, ['userId', 'roleId'], 'UsersRole')
-  await serviceHelper.deleteChild(UsersSkill, id, ['userId', 'skillId'], 'UsersSkill')
-  await dbHelper.remove(User, id)
-  await serviceHelper.deleteRecordFromEs(id, params, resource)
+  await sequelize.transaction(async (t) => {
+    await serviceHelper.deleteChild(Achievement, id, ['userId', 'achievementsProviderId'], 'Achievement', t)
+    await serviceHelper.deleteChild(ExternalProfile, id, ['userId', 'organizationId'], 'ExternalProfile', t)
+    await serviceHelper.deleteChild(UserAttribute, id, ['userId', 'attributeId'], 'UserAttribute', t)
+    await serviceHelper.deleteChild(UsersRole, id, ['userId', 'roleId'], 'UsersRole', t)
+    await serviceHelper.deleteChild(UsersSkill, id, ['userId', 'skillId'], 'UsersSkill', t)
+    await dbHelper.remove(User, id, null, t)
+    await serviceHelper.deleteRecordFromEs(id, params, resource, true)
+  })
 }
 
 module.exports = {
