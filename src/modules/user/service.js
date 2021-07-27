@@ -4,8 +4,10 @@
 
 const joi = require('@hapi/joi')
 const _ = require('lodash')
+const config = require('config')
 
 const errors = require('../../common/errors')
+const logger = require('../../common/logger')
 const helper = require('../../common/helper')
 const dbHelper = require('../../common/db-helper')
 const serviceHelper = require('../../common/service-helper')
@@ -33,7 +35,11 @@ async function create (entity, auth) {
   const result = await sequelize.transaction(async (t) => {
     const userEntity = await dbHelper.create(User, entity, auth, t)
     await serviceHelper.createRecordInEs(resource, userEntity.dataValues, true)
-    return userEntity
+    try {
+      await helper.postEvent(config.UBAHN_CREATE_USER_TOPIC, userEntity.dataValues)
+    } catch (err) {
+      logger.logFullError(err)
+    }
   })
 
   return result
@@ -62,6 +68,12 @@ async function patch (id, entity, auth, params) {
   const result = await sequelize.transaction(async (t) => {
     const newEntity = await dbHelper.update(User, id, entity, auth, null, t)
     await serviceHelper.patchRecordInEs(resource, newEntity.dataValues, true)
+
+    try {
+      await helper.postEvent(config.UBAHN_UPDATE_USER_TOPIC, newEntity.dataValues)
+    } catch (err) {
+      logger.logFullError(err)
+    }
     return newEntity
   })
 
@@ -176,6 +188,11 @@ async function beginCascadeDelete (id, params) {
     await serviceHelper.deleteChild(UsersSkill, id, ['userId', 'skillId'], 'UsersSkill', t)
     await dbHelper.remove(User, id, null, t)
     await serviceHelper.deleteRecordFromEs(id, params, resource, true)
+    try {
+      await helper.postEvent(config.UBAHN_DELETE_USER_TOPIC, {id})
+    } catch (err) {
+      logger.logFullError(err)
+    }
   })
 }
 
