@@ -32,12 +32,13 @@ const uniqueFields = [['handle']]
 async function create (entity, auth) {
   await dbHelper.makeSureUnique(User, entity, uniqueFields)
 
-  let payload 
+  let payload
   try {
     const result = await sequelize.transaction(async (t) => {
       const userEntity = await dbHelper.create(User, entity, auth, t)
       payload = userEntity.dataValues
       await serviceHelper.createRecordInEs(resource, userEntity.dataValues, true)
+      return userEntity
     })
     return result
   } catch (e) {
@@ -200,7 +201,7 @@ async function beginCascadeDelete (id, params) {
       await dbHelper.remove(User, id, null, t)
       await serviceHelper.deleteRecordFromEs(id, params, resource, true)
     })
-    
+
   } catch (e) {
     helper.postEvent(config.UBAHN_DELETE_USER_TOPIC, payload)
     throw e
