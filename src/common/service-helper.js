@@ -65,8 +65,7 @@ async function createRecordInEs (resource, entity, toEs) {
 async function patchRecordInEs (resource, entity, toEs) {
   try {
     if (toEs) {
-      //await esHelper.processUpdate(resource, entity)
-      throw "throwing error"
+      await esHelper.processUpdate(resource, entity)
     }
   } catch (err) {
     logger.logFullError(err)

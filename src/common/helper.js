@@ -167,7 +167,6 @@ async function postEvent (topic, payload) {
  * @params {String} action for which operation error occurred
  */
  async function publishError (topic, payload, action) {
-  logger.debug(`Publish error to Kafka topic ${topic}, ${JSON.stringify(payload, null, 2)}`)
   _.set(payload, 'apiAction', action)
   const message = {
     topic,
@@ -176,7 +175,7 @@ async function postEvent (topic, payload) {
     'mime-type': 'application/json',
     payload
   }
-  logger.debug(`Final message, ${JSON.stringify(message, null, 2)}`)
+  logger.debug(`Publish error to Kafka topic ${topic}, ${JSON.stringify(message, null, 2)}`)
   await busApiClient.postEvent(message)
 }
 
