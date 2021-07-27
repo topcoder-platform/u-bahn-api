@@ -32,17 +32,21 @@ const uniqueFields = [['handle']]
 async function create (entity, auth) {
   await dbHelper.makeSureUnique(User, entity, uniqueFields)
 
-  const result = await sequelize.transaction(async (t) => {
-    const userEntity = await dbHelper.create(User, entity, auth, t)
-    await serviceHelper.createRecordInEs(resource, userEntity.dataValues, true)
-    try {
-      await helper.postEvent(config.UBAHN_CREATE_USER_TOPIC, userEntity.dataValues)
-    } catch (err) {
-      logger.logFullError(err)
+  let payload
+  try {
+    const result = await sequelize.transaction(async (t) => {
+      const userEntity = await dbHelper.create(User, entity, auth, t)
+      payload = userEntity.dataValues
+      await serviceHelper.createRecordInEs(resource, userEntity.dataValues, true)
+      return userEntity
+    })
+    return result
+  } catch (e) {
+    if (payload) {
+      helper.postEvent(config.UBAHN_CREATE_USER_TOPIC, payload)
     }
-  })
-
-  return result
+    throw e
+  }
 }
 
 create.schema = {
@@ -65,19 +69,24 @@ create.schema = {
 async function patch (id, entity, auth, params) {
   await dbHelper.makeSureUnique(User, entity, uniqueFields)
 
-  const result = await sequelize.transaction(async (t) => {
-    const newEntity = await dbHelper.update(User, id, entity, auth, null, t)
-    await serviceHelper.patchRecordInEs(resource, newEntity.dataValues, true)
+  let payload
+  try {
+    const result = await sequelize.transaction(async (t) => {
+      const newEntity = await dbHelper.update(User, id, entity, auth, null, t)
+      payload = newEntity.dataValues
 
-    try {
-      await helper.postEvent(config.UBAHN_UPDATE_USER_TOPIC, newEntity.dataValues)
-    } catch (err) {
-      logger.logFullError(err)
+      await serviceHelper.patchRecordInEs(resource, newEntity.dataValues, true)
+
+      return newEntity
+    })
+
+    return result
+  } catch (e) {
+    if (payload) {
+        helper.postEvent(config.UBAHN_UPDATE_USER_TOPIC, payload)
     }
-    return newEntity
-  })
-
-  return result
+    throw e
+  }
 }
 
 patch.schema = {
@@ -180,20 +189,23 @@ async function remove (id, auth, params) {
  * @param params the path params
  */
 async function beginCascadeDelete (id, params) {
-  await sequelize.transaction(async (t) => {
-    await serviceHelper.deleteChild(Achievement, id, ['userId', 'achievementsProviderId'], 'Achievement', t)
-    await serviceHelper.deleteChild(ExternalProfile, id, ['userId', 'organizationId'], 'ExternalProfile', t)
-    await serviceHelper.deleteChild(UserAttribute, id, ['userId', 'attributeId'], 'UserAttribute', t)
-    await serviceHelper.deleteChild(UsersRole, id, ['userId', 'roleId'], 'UsersRole', t)
-    await serviceHelper.deleteChild(UsersSkill, id, ['userId', 'skillId'], 'UsersSkill', t)
-    await dbHelper.remove(User, id, null, t)
-    await serviceHelper.deleteRecordFromEs(id, params, resource, true)
-    try {
-      await helper.postEvent(config.UBAHN_DELETE_USER_TOPIC, {id})
-    } catch (err) {
-      logger.logFullError(err)
-    }
-  })
+  let payload = {id}
+  try {
+    await sequelize.transaction(async (t) => {
+      await serviceHelper.deleteChild(Achievement, id, ['userId', 'achievementsProviderId'], 'Achievement', t)
+      aa.bb
+      await serviceHelper.deleteChild(ExternalProfile, id, ['userId', 'organizationId'], 'ExternalProfile', t)
+      await serviceHelper.deleteChild(UserAttribute, id, ['userId', 'attributeId'], 'UserAttribute', t)
+      await serviceHelper.deleteChild(UsersRole, id, ['userId', 'roleId'], 'UsersRole', t)
+      await serviceHelper.deleteChild(UsersSkill, id, ['userId', 'skillId'], 'UsersSkill', t)
+      await dbHelper.remove(User, id, null, t)
+      await serviceHelper.deleteRecordFromEs(id, params, resource, true)
+    })
+
+  } catch (e) {
+    helper.postEvent(config.UBAHN_DELETE_USER_TOPIC, payload)
+    throw e
+  }
 }
 
 module.exports = {
