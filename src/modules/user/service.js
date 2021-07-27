@@ -68,6 +68,12 @@ async function patch (id, entity, auth, params) {
   const result = await sequelize.transaction(async (t) => {
     const newEntity = await dbHelper.update(User, id, entity, auth, null, t)
     await serviceHelper.patchRecordInEs(resource, newEntity.dataValues, true)
+
+    try {
+      await helper.postEvent(config.UBAHN_UPDATE_USER_TOPIC, newEntity.dataValues)
+    } catch (err) {
+      logger.logFullError(err)
+    }
     return newEntity
   })
 
@@ -182,6 +188,11 @@ async function beginCascadeDelete (id, params) {
     await serviceHelper.deleteChild(UsersSkill, id, ['userId', 'skillId'], 'UsersSkill', t)
     await dbHelper.remove(User, id, null, t)
     await serviceHelper.deleteRecordFromEs(id, params, resource, true)
+    try {
+      await helper.postEvent(config.UBAHN_DELETE_USER_TOPIC, {id})
+    } catch (err) {
+      logger.logFullError(err)
+    }
   })
 }
 
