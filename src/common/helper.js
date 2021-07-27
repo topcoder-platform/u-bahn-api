@@ -176,6 +176,7 @@ async function postEvent (topic, payload) {
     'mime-type': 'application/json',
     payload
   }
+  logger.debug(`Final message, ${JSON.stringify(message, null, 2)}`)
   await busApiClient.postEvent(message)
 }
 
