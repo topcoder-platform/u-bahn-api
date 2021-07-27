@@ -43,7 +43,7 @@ async function create (entity, auth) {
     return result
   } catch (e) {
     if (payload) {
-      helper.postEvent(config.UBAHN_CREATE_USER_TOPIC, payload)
+      helper.publishError(config.UBAHN_ERROR_TOPIC, payload, 'user.create')
     }
     throw e
   }
@@ -74,16 +74,14 @@ async function patch (id, entity, auth, params) {
     const result = await sequelize.transaction(async (t) => {
       const newEntity = await dbHelper.update(User, id, entity, auth, null, t)
       payload = newEntity.dataValues
-
       await serviceHelper.patchRecordInEs(resource, newEntity.dataValues, true)
-
       return newEntity
     })
 
     return result
   } catch (e) {
     if (payload) {
-        helper.postEvent(config.UBAHN_UPDATE_USER_TOPIC, payload)
+      helper.publishError(config.UBAHN_ERROR_TOPIC, payload, 'user.update')
     }
     throw e
   }
@@ -203,7 +201,7 @@ async function beginCascadeDelete (id, params) {
     })
 
   } catch (e) {
-    helper.postEvent(config.UBAHN_DELETE_USER_TOPIC, payload)
+    helper.publishError(config.UBAHN_ERROR_TOPIC, payload, 'user.delete')
     throw e
   }
 }

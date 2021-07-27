@@ -160,6 +160,25 @@ async function postEvent (topic, payload) {
   await busApiClient.postEvent(message)
 }
 
+/**
+ * Send error event to Kafka
+ * @params {String} topic the topic name
+ * @params {Object} payload the payload
+ * @params {String} action for which operation error occurred
+ */
+ async function publishError (topic, payload, action) {
+  logger.debug(`Publish error to Kafka topic ${topic}, ${JSON.stringify(payload, null, 2)}`)
+  _.set(payload, 'apiAction', action)
+  const message = {
+    topic,
+    originator: config.KAFKA_MESSAGE_ORIGINATOR,
+    timestamp: new Date().toISOString(),
+    'mime-type': 'application/json',
+    payload
+  }
+  await busApiClient.postEvent(message)
+}
+
 module.exports = {
   validProperties,
   getAuthUser,
@@ -168,5 +187,6 @@ module.exports = {
   injectSearchMeta,
   getControllerMethods,
   getSubControllerMethods,
-  postEvent
+  postEvent,
+  publishError
 }
