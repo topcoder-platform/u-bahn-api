@@ -231,7 +231,7 @@ async function deleteChild (model, id, params, resourceName, transaction) {
 
       // remove from db
       await dbHelper.remove(model, record.id, transaction)
-      await deleteRecordFromEs(record.id, esParams, resourceName, !!transaction)
+      await deleteRecordFromEs(record.id, esParams, resourceName)
 
       // sleep for configured time
       await sleep(config.CASCADE_PAUSE_MS)
