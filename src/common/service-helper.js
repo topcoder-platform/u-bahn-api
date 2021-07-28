@@ -49,11 +49,15 @@ async function createRecordInEs (resource, entity, toEs) {
     logger.logFullError(err)
     throw err
   }
-  try {
-    await publishMessage('create', resource, entity)
-  } catch (err) {
-    logger.logFullError(err)
+
+  if (!toEs) {
+    try {
+      await publishMessage("create", resource, entity);
+    } catch (err) {
+      logger.logFullError(err);
+    }
   }
+
 }
 
 /**
@@ -71,10 +75,12 @@ async function patchRecordInEs (resource, entity, toEs) {
     logger.logFullError(err)
     throw err
   }
-  try {
-    await publishMessage('patch', resource, entity)
-  } catch (err) {
-    logger.logFullError(err)
+  if (!toEs) {
+    try {
+      await publishMessage("patch", resource, entity);
+    } catch (err) {
+      logger.logFullError(err);
+    }
   }
 }
 
@@ -102,11 +108,12 @@ async function deleteRecordFromEs (id, params, resource, toEs) {
     logger.logFullError(err)
     throw err
   }
-
-  try {
-    await publishMessage('remove', resource, payload)
-  } catch (err) {
-    logger.logFullError(err)
+  if (!toEs) {
+    try {
+      await publishMessage("remove", resource, payload);
+    } catch (err) {
+      logger.logFullError(err);
+    }
   }
 }
 
