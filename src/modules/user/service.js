@@ -178,7 +178,7 @@ search.schema = {
  * @return {Promise<void>} no data returned
  */
 async function remove (id, auth, params) {
-  await beginCascadeDelete(id, params)
+  beginCascadeDelete(id, params)
 }
 
 /**
