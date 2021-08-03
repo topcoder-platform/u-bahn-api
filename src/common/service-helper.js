@@ -50,12 +50,11 @@ async function createRecordInEs (resource, entity, toEs) {
     throw err
   }
 
-  if (!toEs) {
-    try {
-      await publishMessage("create", resource, entity);
-    } catch (err) {
-      logger.logFullError(err);
-    }
+  // publish create event.
+  try {
+    await publishMessage("create", resource, entity);
+  } catch (err) {
+    logger.logFullError(err);
   }
 
 }
@@ -75,12 +74,12 @@ async function patchRecordInEs (resource, entity, toEs) {
     logger.logFullError(err)
     throw err
   }
-  if (!toEs) {
-    try {
-      await publishMessage("patch", resource, entity);
-    } catch (err) {
-      logger.logFullError(err);
-    }
+
+  // publish patch event.
+  try {
+    await publishMessage("patch", resource, entity);
+  } catch (err) {
+    logger.logFullError(err);
   }
 }
 
