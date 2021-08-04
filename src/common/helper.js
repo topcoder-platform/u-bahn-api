@@ -1,4 +1,5 @@
 const config = require('config')
+const Joi = require('@hapi/joi')
 const querystring = require('querystring')
 const errors = require('./errors')
 const appConst = require('../consts')
@@ -8,6 +9,20 @@ const logger = require('./logger')
 const busApi = require('tc-bus-api-wrapper')
 const busApiClient = busApi(_.pick(config, ['AUTH0_URL', 'AUTH0_AUDIENCE', 'TOKEN_CACHE_TIME', 'AUTH0_CLIENT_ID',
   'AUTH0_CLIENT_SECRET', 'BUSAPI_URL', 'KAFKA_ERROR_TOPIC', 'AUTH0_PROXY_SERVER_URL']))
+
+/**
+ * Function to valid require keys
+ * @param {Object} payload validated object
+ * @param {Array} keys required keys
+ * @throws {Error} if required key absent
+ */
+function validProperties (payload, keys) {
+  const schema = Joi.object(_.fromPairs(_.map(keys, key => [key, Joi.string().uuid().required()]))).unknown(true)
+  const error = schema.validate(payload).error
+  if (error) {
+    throw error
+  }
+}
 
 /**
  * get auth user handle or id
@@ -145,12 +160,33 @@ async function postEvent (topic, payload) {
   await busApiClient.postEvent(message)
 }
 
+/**
+ * Send error event to Kafka
+ * @params {String} topic the topic name
+ * @params {Object} payload the payload
+ * @params {String} action for which operation error occurred
+ */
+ async function publishError (topic, payload, action) {
+  _.set(payload, 'apiAction', action)
+  const message = {
+    topic,
+    originator: config.KAFKA_MESSAGE_ORIGINATOR,
+    timestamp: new Date().toISOString(),
+    'mime-type': 'application/json',
+    payload
+  }
+  logger.debug(`Publish error to Kafka topic ${topic}, ${JSON.stringify(message, null, 2)}`)
+  await busApiClient.postEvent(message)
+}
+
 module.exports = {
+  validProperties,
   getAuthUser,
   permissionCheck,
   checkIfExists,
   injectSearchMeta,
   getControllerMethods,
   getSubControllerMethods,
-  postEvent
+  postEvent,
+  publishError
 }

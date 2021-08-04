@@ -2,6 +2,7 @@ const config = require('config')
 const _ = require('lodash')
 const querystring = require('querystring')
 const logger = require('../common/logger')
+const helper = require('../common/helper')
 const appConst = require('../consts')
 const esClient = require('./es-client').getESClient()
 
@@ -280,6 +281,38 @@ function escapeRegex (str) {
     .replace(/OR/g, '\\O\\R') // replace OR
     .replace(/NOT/g, '\\N\\O\\T') // replace NOT
   /* eslint-enable no-useless-escape */
+}
+
+/**
+ * Process create entity
+ * @param {String} resource resource name
+ * @param {Object} entity entity object
+ */
+async function processCreate (resource, entity) {
+  helper.validProperties(entity, ['id'])
+  await esClient.index({
+    index: DOCUMENTS[resource].index,
+    type: DOCUMENTS[resource].type,
+    id: entity.id,
+    body: entity,
+    refresh: 'wait_for'
+  })
+  logger.info(`Insert in Elasticsearch resource ${resource} entity, , ${JSON.stringify(entity, null, 2)}`)
+}
+
+/**
+ * Process delete entity
+ * @param {String} resource resource name
+ * @param {Object} entity entity object
+ */
+async function processDelete (resource, entity) {
+  helper.validProperties(entity, ['id'])
+  await esClient.delete({
+    index: DOCUMENTS[resource].index,
+    type: DOCUMENTS[resource].type,
+    id: entity.id,
+    refresh: 'wait_for'
+  })
 }
 
 async function getOrganizationId (handle) {
@@ -1453,6 +1486,9 @@ async function searchAchievementValues ({ organizationId, keyword }) {
 }
 
 module.exports = {
+  processCreate,
+  processUpdate: processCreate,
+  processDelete,
   searchElasticSearch,
   getFromElasticSearch,
   searchUsers,

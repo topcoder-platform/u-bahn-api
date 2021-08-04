@@ -105,24 +105,27 @@ async function get (model, pk, params) {
  * @param model the sequelize model object
  * @param entity entity to create
  * @param auth the user auth object
+ * @param transaction the transaction object
  * @returns {Promise<void>}
  */
-async function create (model, entity, auth) {
+async function create (model, entity, auth, transaction) {
   if (auth) {
     entity.createdBy = helper.getAuthUser(auth)
   }
-  return model.create(entity)
+  return model.create(entity, { transaction })
 }
 
 /**
  * delete object by pk
  * @param model the sequelize model object
  * @param pk the primary key
+ * @param transaction the transaction object
  * @returns {Promise<void>}
  */
-async function remove (model, pk, params) {
+async function remove (model, pk, params, transaction) {
   const instance = await get(model, pk, params)
-  return instance.destroy()
+  const result = await instance.destroy({ transaction })
+  return result
 }
 
 /**
@@ -132,13 +135,14 @@ async function remove (model, pk, params) {
  * @param entity entity to create
  * @param auth the auth object
  * @param auth the path params
+ * @param transaction the transaction object
  * @returns {Promise<void>}
  */
-async function update (model, pk, entity, auth, params) {
+async function update (model, pk, entity, auth, params, transaction) {
   // insure that object exists
   const instance = await get(model, pk, params)
   entity.updatedBy = helper.getAuthUser(auth)
-  return instance.update(entity)
+  return instance.update(entity, { transaction })
 }
 
 /**

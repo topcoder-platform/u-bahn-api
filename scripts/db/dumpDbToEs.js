@@ -144,30 +144,40 @@ async function insertIntoES (modelName, dataset) {
     const chunked = _.chunk(dataset, config.get('ES.MAX_BULK_SIZE'))
     for (const ds of chunked) {
       const body = _.flatMap(ds, doc => [{ index: { _id: doc.id } }, doc])
-      await client.bulk({
-        index: topResources[esResourceName].index,
-        type: topResources[esResourceName].type,
-        body,
-        pipeline: topResources[esResourceName].ingest ? topResources[esResourceName].ingest.pipeline.id : undefined,
-        refresh: 'wait_for'
-      })
+      try {
+        await client.bulk({
+          index: topResources[esResourceName].index,
+          type: topResources[esResourceName].type,
+          body,
+          pipeline: topResources[esResourceName].ingest ? topResources[esResourceName].ingest.pipeline.id : undefined,
+          refresh: 'wait_for'
+        })
+      } catch (e) {
+        logger.error('ES, create mapping error.')
+        logger.error(JSON.stringify(e))
+      }
     }
   } else if (_.includes(_.keys(userResources), esResourceName)) {
     const userResource = userResources[esResourceName]
 
     if (userResource.nested === true && userResource.mappingCreated !== true) {
-      await client.indices.putMapping({
-        index: topResources.user.index,
-        type: topResources.user.type,
-        include_type_name: true,
-        body: {
-          properties: {
-            [userResource.propertyName]: {
-              type: 'nested'
+      try {
+        await client.indices.putMapping({
+          index: topResources.user.index,
+          type: topResources.user.type,
+          include_type_name: true,
+          body: {
+            properties: {
+              [userResource.propertyName]: {
+                type: 'nested'
+              }
             }
           }
-        }
-      })
+        })
+      } catch (e) {
+        logger.error('ES, nexted mapping error.')
+        logger.error(JSON.stringify(e))
+      }
       userResource.mappingCreated = true
     }
 
@@ -391,14 +401,12 @@ async function main () {
 
   for (let i = 0; i < keys.length; i++) {
     const key = keys[i]
+    const queryPage = { perPage: parseInt(config.get('ES.MAX_BATCH_SIZE'), 10), page: 1 }
     try {
-      const allData = await dbHelper.find(models[key], {})
-      let j = 0
-      const dataset = _.chunk(allData, config.get('ES.MAX_BATCH_SIZE'))
-      for (const data of dataset) {
+      while (true) {
+        const data = await dbHelper.find(models[key], { ...queryPage })
         for (let i = 0; i < data.length; i++) {
-          j++
-          logger.info(`Inserting data ${j} of ${allData.length}`)
+          logger.info(`Inserting data ${(i + 1) + (queryPage.perPage * (queryPage.page - 1))}`)
           logger.info(JSON.stringify(data[i]))
           if (!_.isString(data[i].created)) {
             data[i].created = new Date()
@@ -414,19 +422,25 @@ async function main () {
           }
         }
         await insertIntoES(key, data)
+        if (data.length < queryPage.perPage) {
+          logger.info('import data for ' + key + ' done')
+          break
+        } else {
+          queryPage.page = queryPage.page + 1
+        }
       }
-      logger.info('import data for ' + key + ' done')
     } catch (e) {
-      logger.error(e)
+      logger.error(JSON.stringify(_.get(e, 'meta.body', ''), null, 4))
+      logger.error(_.get(e, 'meta.meta.request.params.method', ''))
+      logger.error(_.get(e, 'meta.meta.request.params.path', ''))
       logger.warn('import data for ' + key + ' failed')
       continue
     }
-
     try {
       await createAndExecuteEnrichPolicy(key)
       logger.info('create and execute enrich policy for ' + key + ' done')
     } catch (e) {
-      logger.error(e)
+      logger.error(JSON.stringify(_.get(e, 'meta.body', ''), null, 4))
       logger.warn('create and execute enrich policy for ' + key + ' failed')
     }
 
@@ -434,7 +448,7 @@ async function main () {
       await createEnrichProcessor(key)
       logger.info('create enrich processor (pipeline) for ' + key + ' done')
     } catch (e) {
-      logger.error(e)
+      logger.error(JSON.stringify(_.get(e, 'meta.body', ''), null, 4))
       logger.warn('create enrich processor (pipeline) for ' + key + ' failed')
     }
   }
