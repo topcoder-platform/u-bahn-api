@@ -290,7 +290,8 @@ function escapeRegex (str) {
  */
 async function processCreate (resource, entity) {
   helper.validProperties(entity, ['id'])
-  esClient.index({
+  logger.info(`going to call ES index api.`)
+  await esClient.index({
     index: DOCUMENTS[resource].index,
     type: DOCUMENTS[resource].type,
     id: entity.id,
