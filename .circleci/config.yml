@@ -51,6 +51,14 @@ jobs:
       APPNAME: "ubahn_api"    
     steps: *builddeploy_steps
 
+  "build-dev-test":
+    <<: *defaults
+    environment:
+      DEPLOY_ENV: "DEV"
+      LOGICAL_ENV: "shapeup"
+      APPNAME: "ubahn_api"    
+    steps: *builddeploy_steps
+
   "build-prod":
     <<: *defaults
     environment:
@@ -70,6 +78,13 @@ workflows:
             branches:
               only:
                 - develop
+
+      # Development-Test builds are executed on "custom" branch only. 
+      - "build-dev-test":
+          context : org-global
+          filters:
+            branches:
+              only:
                 - feature/shapeup4-cqrs-update
 
       # Production builds are exectuted only on tagged commits to the
