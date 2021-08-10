@@ -295,8 +295,7 @@ async function processCreate (resource, entity) {
     index: DOCUMENTS[resource].index,
     type: DOCUMENTS[resource].type,
     id: entity.id,
-    body: entity,
-    refresh: 'wait_for'
+    body: entity
   })
   logger.info(`Insert in Elasticsearch resource ${resource} entity, , ${JSON.stringify(entity, null, 2)}`)
 }
