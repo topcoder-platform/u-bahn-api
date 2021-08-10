@@ -37,7 +37,7 @@ async function create (entity, auth) {
     const result = await sequelize.transaction(async (t) => {
       const userEntity = await dbHelper.create(User, entity, auth, t)
       payload = userEntity.dataValues
-      await serviceHelper.createRecordInEs(resource, userEntity.dataValues, true)
+      serviceHelper.createRecordInEs(resource, userEntity.dataValues, true)
       return userEntity
     })
     return result
