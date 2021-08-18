@@ -3,6 +3,7 @@
  */
 
 const joi = require('@hapi/joi')
+const config = require('config')
 const _ = require('lodash')
 
 const errors = require('../../common/errors')
@@ -27,9 +28,20 @@ async function create (entity, auth) {
   await dbHelper.get(Organization, entity.organizationId)
   await dbHelper.makeSureUnique(AttributeGroup, entity, uniqueFields)
 
-  const result = await dbHelper.create(AttributeGroup, entity, auth)
-  await serviceHelper.createRecordInEs(resource, result.dataValues)
-  return result
+  let newEntity
+  try {
+    await sequelize.transaction(async (t) => {
+      const result = await dbHelper.create(AttributeGroup, entity, auth, t)
+      newEntity = result.toJSON()
+      await serviceHelper.createRecordInEs(resource, newEntity)
+    })
+    return newEntity
+  } catch (e) {
+    if (newEntity) {
+      helper.publishError(config.UBAHN_ERROR_TOPIC, newEntity, 'attributegroup.create')
+    }
+    throw e
+  }
 }
 
 create.schema = {
@@ -54,9 +66,20 @@ async function patch (id, entity, auth, params) {
   }
   await dbHelper.makeSureUnique(AttributeGroup, entity, uniqueFields)
 
-  const newEntity = await dbHelper.update(AttributeGroup, id, entity, auth)
-  await serviceHelper.patchRecordInEs(resource, newEntity.dataValues)
-  return newEntity
+  let newEntity
+  try {
+    await sequelize.transaction(async (t) => {
+      const result = await dbHelper.update(AttributeGroup, id, entity, auth, params, t)
+      newEntity = result.toJSON()
+      await serviceHelper.patchRecordInEs(resource, newEntity)
+    })
+    return newEntity
+  } catch (e) {
+    if (newEntity) {
+      helper.publishError(config.UBAHN_ERROR_TOPIC, newEntity, 'attributegroup.update')
+    }
+    throw e
+  }
 }
 
 patch.schema = {
@@ -136,8 +159,16 @@ async function remove (id, auth, params) {
   if (existing.length > 0) {
     throw errors.deleteConflictError(`Please delete ${Attribute.name} with ids ${existing.map(o => o.id)}`)
   }
-  await dbHelper.remove(AttributeGroup, id)
-  await serviceHelper.deleteRecordFromEs(id, params, resource)
+  const entity = { id }
+  try {
+    await sequelize.transaction(async (t) => {
+      await dbHelper.remove(AttributeGroup, id, params, t)
+      await serviceHelper.deleteRecordFromEs(id, params, resource)
+    })
+  } catch (e) {
+    helper.publishError(config.UBAHN_ERROR_TOPIC, entity, 'attributegroup.delete')
+    throw e
+  }
 }
 
 module.exports = {

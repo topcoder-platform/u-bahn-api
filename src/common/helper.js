@@ -3,12 +3,15 @@ const Joi = require('@hapi/joi')
 const querystring = require('querystring')
 const errors = require('./errors')
 const appConst = require('../consts')
+const axios = require('axios')
+const m2mAuth = require('tc-core-library-js').auth.m2m
 const _ = require('lodash')
 const { getControllerMethods, getSubControllerMethods } = require('./controller-helper')
 const logger = require('./logger')
 const busApi = require('tc-bus-api-wrapper')
 const busApiClient = busApi(_.pick(config, ['AUTH0_URL', 'AUTH0_AUDIENCE', 'TOKEN_CACHE_TIME', 'AUTH0_CLIENT_ID',
   'AUTH0_CLIENT_SECRET', 'BUSAPI_URL', 'KAFKA_ERROR_TOPIC', 'AUTH0_PROXY_SERVER_URL']))
+const topcoderM2M = m2mAuth(_.pick(config, ['AUTH0_URL', 'AUTH0_AUDIENCE', 'TOKEN_CACHE_TIME', 'AUTH0_PROXY_SERVER_URL']))
 
 /**
  * Function to valid require keys
@@ -30,6 +33,34 @@ function validProperties (payload, keys) {
  */
 function getAuthUser (authUser) {
   return authUser.handle || authUser.sub
+}
+
+/* Function to get M2M token
+ * (Topcoder APIs only)
+ * @returns {Promise}
+ */
+async function getTopcoderM2Mtoken () {
+  return topcoderM2M.getMachineToken(config.AUTH0_CLIENT_ID, config.AUTH0_CLIENT_SECRET)
+}
+
+/**
+ * Returns the user in Topcoder identified by the email
+ * @param {String} email The user email
+ */
+async function getUserGroup (memberId) {
+  const url = config.TOPCODER_GROUP_API
+  const token = await getTopcoderM2Mtoken()
+  const params = { memberId, membershipType: 'user', page: 1 }
+
+  logger.debug(`request GET ${url} with params: ${JSON.stringify(params)}`)
+  let groups = []
+  let groupRes = await axios.get(url, { headers: { Authorization: `Bearer ${token}` }, params })
+  while (groupRes.data.length > 0) {
+    groups = _.concat(groups, _.map(groupRes.data, g => _.pick(g, 'id', 'name')))
+    params.page = params.page + 1
+    groupRes = await axios.get(url, { headers: { Authorization: `Bearer ${token}` }, params })
+  }
+  return groups
 }
 
 /**
@@ -166,7 +197,7 @@ async function postEvent (topic, payload) {
  * @params {Object} payload the payload
  * @params {String} action for which operation error occurred
  */
- async function publishError (topic, payload, action) {
+async function publishError (topic, payload, action) {
   _.set(payload, 'apiAction', action)
   const message = {
     topic,
@@ -179,14 +210,28 @@ async function postEvent (topic, payload) {
   await busApiClient.postEvent(message)
 }
 
+/**
+ * Fuction to get an Error with statusCode property
+ * @param {String} message error message
+ * @param {Number} statusCode
+ * @returns {Error} an Error with statusCode property
+ */
+function getErrorWithStatus (message, statusCode) {
+  const error = Error(message)
+  error.statusCode = statusCode
+  return error
+}
+
 module.exports = {
   validProperties,
   getAuthUser,
+  getUserGroup,
   permissionCheck,
   checkIfExists,
   injectSearchMeta,
   getControllerMethods,
   getSubControllerMethods,
   postEvent,
-  publishError
+  publishError,
+  getErrorWithStatus
 }
