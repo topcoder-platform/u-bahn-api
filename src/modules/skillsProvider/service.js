@@ -3,6 +3,7 @@
  */
 
 const joi = require('@hapi/joi')
+const config = require('config')
 const _ = require('lodash')
 
 const errors = require('../../common/errors')
@@ -23,9 +24,20 @@ const resource = serviceHelper.getResource('SkillsProvider')
  * @return {Promise} the created device
  */
 async function create (entity, auth) {
-  const result = await dbHelper.create(SkillsProvider, entity, auth)
-  await serviceHelper.createRecordInEs(resource, result.dataValues)
-  return result
+  let newEntity
+  try {
+    await sequelize.transaction(async (t) => {
+      const result = await dbHelper.create(SkillsProvider, entity, auth, t)
+      newEntity = result.toJSON()
+      await serviceHelper.createRecordInEs(resource, newEntity)
+    })
+    return newEntity
+  } catch (e) {
+    if (newEntity) {
+      helper.publishError(config.UBAHN_ERROR_TOPIC, newEntity, 'skillprovider.create')
+    }
+    throw e
+  }
 }
 
 create.schema = {
@@ -44,9 +56,20 @@ create.schema = {
  * @return {Promise} the updated device
  */
 async function patch (id, entity, auth, params) {
-  const newEntity = await dbHelper.update(SkillsProvider, id, entity, auth)
-  await serviceHelper.patchRecordInEs(resource, newEntity.dataValues)
-  return newEntity
+  let newEntity
+  try {
+    await sequelize.transaction(async (t) => {
+      const result = await dbHelper.update(SkillsProvider, id, entity, auth, params, t)
+      newEntity = result.toJSON()
+      await serviceHelper.patchRecordInEs(resource, newEntity)
+    })
+    return newEntity
+  } catch (e) {
+    if (newEntity) {
+      helper.publishError(config.UBAHN_ERROR_TOPIC, newEntity, 'skillprovider.update')
+    }
+    throw e
+  }
 }
 
 patch.schema = {
@@ -129,8 +152,16 @@ async function remove (id, auth, params) {
     throw errors.deleteConflictError(`Please delete ${OrganizationSkillsProvider.name} with ids ${existing.map(o => o.id)}`)
   }
 
-  await dbHelper.remove(SkillsProvider, id)
-  await serviceHelper.deleteRecordFromEs(id, params, resource)
+  const entity = { id }
+  try {
+    await sequelize.transaction(async (t) => {
+      await dbHelper.remove(SkillsProvider, id, params, t)
+      await serviceHelper.deleteRecordFromEs(id, params, resource)
+    })
+  } catch (e) {
+    helper.publishError(config.UBAHN_ERROR_TOPIC, entity, 'skillprovider.delete')
+    throw e
+  }
 }
 
 module.exports = {
