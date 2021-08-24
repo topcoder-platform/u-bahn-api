@@ -70,7 +70,7 @@ workflows:
             branches:
               only:
                 - develop
-                - feature/shapeup4-cqrs-update
+                - feature/shapeup4-cqrs-update2
 
       # Production builds are exectuted only on tagged commits to the
       # master branch.
