@@ -218,7 +218,7 @@ async function deleteChild (model, id, params, resourceName, transaction) {
       params.forEach(attr => { esParams[attr] = record[attr] })
 
       // remove from db
-      await dbHelper.remove(model, record.id, transaction)
+      await dbHelper.remove(model, record.id, null, transaction)
       await deleteRecordFromEs(record.id, esParams, resourceName)
 
       // sleep for configured time
