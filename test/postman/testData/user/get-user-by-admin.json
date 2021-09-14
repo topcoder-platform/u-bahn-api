@@ -1,0 +1,17 @@
+[
+  {
+    "user_id": "{{USER_ID_1}}",
+    "params": "enrich=true",
+    "httpCode": 200
+  },
+  {
+    "user_id": "{{USER_ID_2}}",
+    "params": "enrich=true",
+    "httpCode": 200
+  },
+  {
+    "user_id": "{{USER_ID_1}}",
+    "params": "",
+    "httpCode": 200
+  }
+]

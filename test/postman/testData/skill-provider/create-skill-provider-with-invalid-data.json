@@ -1,0 +1,23 @@
+[
+  {
+    "input": {
+    },
+    "httpCode": 400,
+    "message": "\"entity.name\" is required"
+  },
+  {
+    "input": {
+      "name": ""
+    },
+    "httpCode": 400,
+    "message": "\"entity.name\" is not allowed to be empty"
+  },
+  {
+    "input": {
+      "name": "POSTMANE2E-skill-validname",
+      "aaa":"ccc"
+    },
+    "httpCode": 400,
+    "message": "\"entity.aaa\" is not allowed"
+  }
+]

@@ -1,0 +1,12 @@
+[
+  {
+    "id": "{{ACHIEVEMENTS_PROVIDER_ID_1}}",
+    "input": {
+      "name": "POSTMANE2E-provider02-by-admin-updated"
+    },
+    "expected": {
+      "name": "POSTMANE2E-provider02-by-admin-updated"
+    },
+    "httpCode": 200
+  }
+]

@@ -1,0 +1,10 @@
+[
+  {
+    "id": "{{ATTRIBUTE_ID_1}}",
+    "httpCode": 200
+  },
+  {
+    "id": "{{ATTRIBUTE_ID_2}}",
+    "httpCode": 200
+  }
+]

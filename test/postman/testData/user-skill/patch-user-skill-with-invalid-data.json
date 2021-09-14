@@ -1,0 +1,54 @@
+[
+  {
+    "user_id": "{{USER_ID_BY_TESTER}}",
+    "skill_id": "{{SKILL_ID_2}}",
+    "input": {
+      "metricValue": ""
+    },
+    "httpCode": 400,
+    "message": "\"entity.metricValue\" is not allowed to be empty"
+  },
+  {
+    "user_id": "{{USER_ID_BY_TESTER}}",
+    "skill_id": "{{SKILL_ID_2}}",
+    "input": {
+      "certifierId": ""
+    },
+    "httpCode": 400,
+    "message": "\"entity.certifierId\" is not allowed to be empty"
+  },
+  {
+    "user_id": "{{USER_ID_BY_TESTER}}",
+    "skill_id": "{{SKILL_ID_2}}",
+    "input": {
+      "certifiedDate": ""
+    },
+    "httpCode": 400,
+    "message": "\"entity.certifiedDate\" must be a valid date"
+  },
+  {
+    "user_id": "{{USER_ID_BY_TESTER}}",
+    "skill_id": "{{SKILL_ID_2}}",
+    "input": {
+      "ccc": "abc"
+    },
+    "httpCode": 400,
+    "message": "\"entity.ccc\" is not allowed"
+  },
+  {
+    "user_id": "3cd81b8c-d45e-414e-be66-afb31aa0240c",
+    "skill_id": "{{SKILL_ID_2}}",
+    "input": {
+    },
+    "httpCode": 404,
+    "message": "cannot find User where id = 3cd81b8c-d45e-414e-be66-afb31aa0240c"
+  },
+  {
+    "user_id": "{{USER_ID_BY_TESTER}}",
+    "skill_id": "3cd81b8c-d45e-414e-be66-afb31aa0240c",
+    "input": {
+    },
+    "httpCode": 404,
+    "message": "cannot find Skill where id = 3cd81b8c-d45e-414e-be66-afb31aa0240c"
+  }
+]

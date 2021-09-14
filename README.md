@@ -14,6 +14,8 @@ Configuration for the application is at config/default.js and config/production.
 
 - LOG_LEVEL: the log level
 - PORT: the server port
+- API_BASE_URL: the api base url, default to 'http://127.0.0.1:3001/api/1.0'
+- AUTOMATED_TESTING_NAME_PREFIX: the prefix for the records from db, default to 'POSTMANE2E-',
 - CASCADE_PAUSE_MS: how many milliseconds to pause between deleting records during cascade delete (default to 1000)
 - AUTH_SECRET: TC Authentication secret
 - VALID_ISSUERS: valid issuers for TC authentication
@@ -58,7 +60,38 @@ Configuration for the application is at config/default.js and config/production.
 
 For `ES.DOCUMENTS` configuration, you will find multiple other configurations below it. Each has default values that you can override using the environment variables
 
-
+Configuration for testing is at `config/test.js`, only add such new configurations different from `config/default.js`
+- WAIT_TIME: wait time used in test, default is 0 or 0 second (5000 stands for 5 seconds)
+- AUTH_V2_URL: The auth v2 url
+- AUTH_V2_CLIENT_ID: The auth v2 client id
+- AUTH_V3_URL: The auth v3 url
+- ADMIN_CREDENTIALS_USERNAME: The user's username with admin role
+- ADMIN_CREDENTIALS_PASSWORD: The user's password with admin role
+- USER_CREDENTIALS_USERNAME: The user's username with user role
+- USER_CREDENTIALS_PASSWORD: The user's password with user role
+- MANAGER_CREDENTIALS_USERNAME: The user's username with manager role
+- MANAGER_CREDENTIALS_PASSWORD: The user's password with manager role
+- COPILOT_CREDENTIALS_USERNAME: The user's username with copilot role
+- COPILOT_CREDENTIALS_PASSWORD: The user's password with copilot role
+- USER_ID_BY_ADMIN: the user id which is created by admin
+- USER_ID_BY_TESTER: the user id which is created by a normal user
+- PROVIDER_ID_BY_ADMIN: the service provider id which is created by admin
+- PROVIDER_ID_BY_TESTER: the service provider id which is created by a normal user
+- SKILL_ID_BY_ADMIN: the skill id which is created by admin
+- SKILL_ID_BY_TESTER: the skill id which is created by a normal user
+- ROLE_ID_BY_ADMIN: the role id which is created by organization
+- ROLE_ID_BY_TESTER: the role id which is created by a normal user
+- ORGANIZATION_ID_BY_ADMIN: the organization id which is created by admin
+- ORGANIZATION_ID_BY_TESTER: the organization id which is created by a normal user
+- ACHIEVEMENTS_PROVIDER_ID_BY_ADMIN: the achievement provider id which is created by admin
+- ACHIEVEMENTS_PROVIDER_ID_BY_TESTER: the achievement provider id which is created by a normal user
+- ATTRIBUTE_GROUP_ID_BY_ADMIN: the attribute group id which is created by admin
+- ATTRIBUTE_GROUP_ID_BY_TESTER: the attribute group id which is created by a normal user
+- ATTRIBUTE_ID_BY_ADMIN: the attribute id which is created by admin
+- ATTRIBUTE_ID_BY_TESTER: the attribute id which is created by a normal user
+- ACHIEVEMENT_ID_BY_ADMIN: the achievement id which is created by admin
+- ACHIEVEMENT_ID_BY_TESTER: the achievement id which is created by a normal user
+- AUTOMATED_TESTING_REPORTERS_FORMAT: The format of output for Newman Automation Testing Report.
 ## Local deployment
 
 Setup your Elasticsearch instance and ensure that it is up and running.
@@ -105,3 +138,72 @@ Make sure all config values are right, and you can run on local successfully, th
 5. When you are running the application for the first time, It will take some time initially to download the image and install the dependencies
 
 You can also head into `docker-pgsql-es` folder and run `docker-compose up -d` to have docker instances of pgsql and elasticsearch to use with the api
+
+## Running tests
+
+### Configuration
+Test configuration is at `config/test.js`. You don't need to change them.
+
+The following test parameters can be set in config file or in env variables:
+
+- WAIT_TIME: wait time
+- AUTH_V2_URL: The auth v2 url
+- AUTH_V2_CLIENT_ID: The auth v2 client id
+- AUTH_V3_URL: The auth v3 url
+- ADMIN_CREDENTIALS_USERNAME: The user's username with admin role
+- ADMIN_CREDENTIALS_PASSWORD: The user's password with admin role
+- USER_CREDENTIALS_USERNAME: The user's username with user role
+- USER_CREDENTIALS_PASSWORD: The user's password with user role
+- COPILOT_CREDENTIALS_USERNAME: The user's username with copilot role
+- COPILOT_CREDENTIALS_PASSWORD: The user's password with copilot role
+- MANAGER_CREDENTIALS_USERNAME: The user's username with manager role
+- MANAGER_CREDENTIALS_PASSWORD: The user's password with manager role
+
+### Prepare
+
+- Start Postgres.
+- Create DynamoDB tables.
+- Start Local ElasticSearch.
+- Create ElasticSearch index.
+- Various config parameters should be properly set.
+
+### Running E2E tests with Postman
+
+#### `Start` the app server before running e2e tests. You may need to set the env variables by calling `source env.sh` before calling `NODE_ENV=test npm start`.
+
+- Make sure the db and es are properly started
+```bash
+  $ cd u-bahn-api
+
+    # NOTE:
+    # if tables and data already exist, please run first
+
+    # $ npm run delete-data
+
+    # to drop data and tables
+
+    # Then re-initialize the es server and the database. (Note, You need to drop the `SequelizeMeta` table manually.)
+
+  $ npm run migrations up            # to create table
+  $ npm run insert-postman-data      # to insert the testing data for postman
+  $ npm run migrate-db-to-es         # to index the db data to the ES
+```
+
+To run postman e2e tests.
+
+```bash
+npm run test:newman
+```
+
+To clear the testing data from postman e2e tests.
+
+```bash
+npm run test:newman:clear
+```
+
+## Running tests in CI
+- TBD
+
+## Verification
+
+Refer to the verification document `Verification.md`.

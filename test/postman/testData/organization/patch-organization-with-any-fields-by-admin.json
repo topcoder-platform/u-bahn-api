@@ -1,0 +1,12 @@
+[
+  {
+    "id": "{{ORGANIZATION_ID_1}}",
+    "input": {
+      "name": "POSTMANE2E-organization02-by-admin-updated"
+    },
+    "expected": {
+      "name": "POSTMANE2E-organization02-by-admin-updated"
+    },
+    "httpCode": 200
+  }
+]

@@ -1,0 +1,34 @@
+[
+  {
+    "id": "{{ATTRIBUTE_GROUP_ID_1}}",
+    "input": {
+      "organizationId": "{{ORGANIZATION_ID_BY_ADMIN}}",
+      "name": "POSTMANE2E-attributeGroup02-by-admin-updated"
+    },
+    "expected": {
+      "organizationId": "{{ORGANIZATION_ID_BY_ADMIN}}",
+      "name": "POSTMANE2E-attributeGroup02-by-admin-updated"
+    },
+    "httpCode": 200
+  },
+  {
+    "id": "{{ATTRIBUTE_GROUP_ID_BY_ADMIN}}",
+    "input": {
+      "organizationId": "{{ORGANIZATION_ID_1}}"
+    },
+    "expected": {
+      "organizationId": "{{ORGANIZATION_ID_1}}"
+    },
+    "httpCode": 200
+  },
+  {
+    "id": "{{ATTRIBUTE_GROUP_ID_BY_ADMIN}}",
+    "input": {
+      "name": "POSTMANE2E-attributeGroup02-by-admin-updated2"
+    },
+    "expected": {
+      "name": "POSTMANE2E-attributeGroup02-by-admin-updated2"
+    },
+    "httpCode": 200
+  }
+]

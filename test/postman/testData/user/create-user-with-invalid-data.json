@@ -1,0 +1,72 @@
+[
+  {
+    "input": {
+      "firstName": "POSTMANE2E-firstName",
+      "lastName": "POSTMANE2E-lastName"
+    },
+    "httpCode": 400,
+    "message": "\"entity.handle\" is required"
+  },
+  {
+    "input": {
+      "handle": "",
+      "firstName": "POSTMANE2E-firstName",
+      "lastName": "POSTMANE2E-lastName"
+    },
+    "httpCode": 400,
+    "message": "\"entity.handle\" is not allowed to be empty"
+  },
+  {
+    "input": {
+      "handle": "POSTMANE2E-valid-handle",
+      "lastName": "POSTMANE2E-lastName"
+    },
+    "httpCode": 400,
+    "message": "\"entity.firstName\" is required"
+  },
+  {
+    "input": {
+      "handle": "POSTMANE2E-valid-handle",
+      "firstName": "",
+      "lastName": "POSTMANE2E-lastName"
+    },
+    "httpCode": 400,
+    "message": "\"entity.firstName\" is not allowed to be empty"
+  },
+  {
+    "input": {
+      "handle": "POSTMANE2E-valid-handle",
+      "firstName": "POSTMANE2E-firstName"
+    },
+    "httpCode": 400,
+    "message": "\"entity.lastName\" is required"
+  },
+  {
+    "input": {
+      "handle": "POSTMANE2E-valid-handle",
+      "firstName": "POSTMANE2E-firstName",
+      "lastName": ""
+    },
+    "httpCode": 400,
+    "message": "\"entity.lastName\" is not allowed to be empty"
+  },
+  {
+    "input": {
+      "handle": "POSTMANE2E-handle01",
+      "firstName": "POSTMANE2E-firstName",
+      "lastName": "POSTMANE2E-lastName"
+    },
+    "httpCode": 409,
+    "message": "User already exists with handle:POSTMANE2E-handle01"
+  },
+  {
+    "input": {
+      "handle": "POSTMANE2E-valid-handle",
+      "firstName": "POSTMANE2E-firstName",
+      "lastName": "POSTMANE2E-lastName",
+      "aaa":"ccc"
+    },
+    "httpCode": 400,
+    "message": "\"entity.aaa\" is not allowed"
+  }
+]

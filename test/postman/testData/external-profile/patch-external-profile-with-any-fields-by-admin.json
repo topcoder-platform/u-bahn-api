@@ -1,0 +1,50 @@
+[
+  {
+    "user_id": "ce348067-e73f-49d7-af72-fcf11a6c88bf",
+    "organization_id": "{{ORGANIZATION_ID_BY_ADMIN}}",
+    "input": {
+      "externalId": "POSTMANE2E-Topcoder-by-ADMIN-updated001",
+      "uri": "http://some.uri.updated001",
+      "isInactive": false
+    },
+    "expected": {
+      "externalId": "POSTMANE2E-Topcoder-by-ADMIN-updated001",
+      "uri": "http://some.uri.updated001",
+      "isInactive": false
+    },
+    "httpCode": 200
+  },
+  {
+    "user_id": "ce348067-e73f-49d7-af72-fcf11a6c88bf",
+    "organization_id": "{{ORGANIZATION_ID_BY_ADMIN}}",
+    "input": {
+      "externalId": "POSTMANE2E-Topcoder-by-ADMIN-updated002"
+    },
+    "expected": {
+      "externalId": "POSTMANE2E-Topcoder-by-ADMIN-updated002"
+    },
+    "httpCode": 200
+  },
+  {
+    "user_id": "ce348067-e73f-49d7-af72-fcf11a6c88bf",
+    "organization_id": "{{ORGANIZATION_ID_BY_ADMIN}}",
+    "input": {
+      "uri": "http://some.uri-updated2"
+    },
+    "expected": {
+      "uri": "http://some.uri-updated2"
+    },
+    "httpCode": 200
+  },
+  {
+    "user_id": "ce348067-e73f-49d7-af72-fcf11a6c88bf",
+    "organization_id": "{{ORGANIZATION_ID_BY_ADMIN}}",
+    "input": {
+      "isInactive": true
+    },
+    "expected": {
+      "isInactive": true
+    },
+    "httpCode": 200
+  }
+]

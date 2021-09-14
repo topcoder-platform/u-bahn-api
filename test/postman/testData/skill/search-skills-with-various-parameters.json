@@ -1,0 +1,29 @@
+[
+  {
+    "input": "page=1&perPage=10&skillProviderId={{PROVIDER_ID_BY_TESTER}}&externalId=KS126XR63RKYVCKYDNBN&name=POSTMANE2E-.NET Framework 4&orderBy=name"
+  },
+  {
+    "input": "page=1&perPage=10"
+  },
+  {
+    "input": "skillProviderId={{PROVIDER_ID_BY_TESTER}}"
+  },
+  {
+    "input": "name=POSTMANE2E-.NET Framework 4"
+  },
+  {
+    "input": "orderBy=name"
+  },
+  {
+    "input": "externalId=KS126XR63RKYVCKYDNBN",
+    "idLabel": "SKILL_ID_1"
+  },
+  {
+    "input": "externalId=KS120H6772VQ0MQ5RLVD",
+    "idLabel": "SKILL_ID_2"
+  },
+  {
+    "input": "externalId=KS125LS6N7WP4S6SFTCK",
+    "idLabel": "SKILL_ID_3"
+  }
+]

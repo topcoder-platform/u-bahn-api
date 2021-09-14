@@ -1,0 +1,7 @@
+[
+  {
+    "input": "",
+    "httpCode": 500,
+    "message": "Cannot search for achievements without organization info"
+  }
+]

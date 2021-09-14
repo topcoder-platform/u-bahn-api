@@ -1,0 +1,7 @@
+[
+  {
+    "user_id": "{{USER_ID_BY_ADMIN}}",
+    "achievement_id": "{{ACHIEVEMENTS_PROVIDER_ID_BY_ADMIN}}",
+    "httpCode": 200
+  }
+]

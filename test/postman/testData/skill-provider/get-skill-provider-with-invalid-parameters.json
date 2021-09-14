@@ -1,0 +1,12 @@
+[
+  {
+    "provider_id": "123456",
+    "httpCode": 500,
+    "message": "invalid input syntax for type uuid: \"123456\""
+  },
+  {
+    "provider_id": "3cd81b8c-d45e-414e-be66-afb31aa0240c",
+    "httpCode": 404,
+    "message": "cannot find SkillsProvider where id = 3cd81b8c-d45e-414e-be66-afb31aa0240c"
+  }
+]

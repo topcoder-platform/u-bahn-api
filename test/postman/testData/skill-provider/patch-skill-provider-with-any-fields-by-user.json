@@ -1,0 +1,12 @@
+[
+  {
+    "provider_id": "{{PROVIDER_ID_BY_TESTER}}",
+    "input": {
+      "name": "POSTMANE2E-skill-provider-by-user-updated"
+    },
+    "expected": {
+      "name": "POSTMANE2E-skill-provider-by-user-updated"
+    },
+    "httpCode": 200
+  }
+]

@@ -1,0 +1,41 @@
+[
+  {
+    "user_id": "{{USER_ID_2}}",
+    "input": {
+    },
+    "httpCode": 400,
+    "message": "\"entity.roleId\" is required"
+  },
+  {
+    "user_id": "{{USER_ID_2}}",
+    "input": {
+      "roleId":""
+    },
+    "httpCode": 400,
+    "message": "\"entity.roleId\" is not allowed to be empty"
+  },
+  {
+    "user_id": "{{USER_ID_2}}",
+    "input": {
+      "roleId":"{{ROLE_ID_BY_ADMIN}}"
+    },
+    "httpCode": 409,
+    "message": "UsersRole already exists with userId:"
+  },
+  {
+    "user_id": "{{USER_ID_2}}",
+    "input": {
+      "roleId":"75b30af0-46df-4cf6-97ed-3a5608516f4a"
+    },
+    "httpCode": 404,
+    "message": "cannot find Role where id = 75b30af0-46df-4cf6-97ed-3a5608516f4a"
+  },
+  {
+    "user_id": "75b30af0-46df-4cf6-97ed-3a5608516f4a",
+    "input": {
+      "roleId":"{{ROLE_ID_2}}"
+    },
+    "httpCode": 404,
+    "message": "cannot find User where id = 75b30af0-46df-4cf6-97ed-3a5608516f4a"
+  }
+]

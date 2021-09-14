@@ -1,0 +1,63 @@
+[
+  {
+    "user_id": "{{USER_ID_BY_ADMIN}}",
+    "achievement_id":"{{ACHIEVEMENTS_PROVIDER_ID_BY_ADMIN}}",
+    "input": {
+      "name": "POSTMANE2E-Topcoder-by-ADMIN-001-updated",
+      "uri": "http://some.uri-updated",
+      "certifierId": "certifier id 001-updated",
+      "certifiedDate": "2021-05-04T07:36:28.036Z"
+    },
+    "expected": {
+      "name": "POSTMANE2E-Topcoder-by-ADMIN-001-updated",
+      "uri": "http://some.uri-updated",
+      "certifierId": "certifier id 001-updated",
+      "certifiedDate": "2021-05-04T07:36:28.036Z"
+    },
+    "httpCode": 200
+  },
+  {
+    "user_id": "{{USER_ID_BY_ADMIN}}",
+    "achievement_id":"{{ACHIEVEMENTS_PROVIDER_ID_BY_ADMIN}}",
+    "input": {
+      "name": "POSTMANE2E-Topcoder-by-ADMIN-001-updated1"
+    },
+    "expected": {
+      "name": "POSTMANE2E-Topcoder-by-ADMIN-001-updated1"
+    },
+    "httpCode": 200
+  },
+  {
+    "user_id": "{{USER_ID_BY_ADMIN}}",
+    "achievement_id":"{{ACHIEVEMENTS_PROVIDER_ID_BY_ADMIN}}",
+    "input": {
+      "uri": "http://some.uri-updated2"
+    },
+    "expected": {
+      "uri": "http://some.uri-updated2"
+    },
+    "httpCode": 200
+  },
+  {
+    "user_id": "{{USER_ID_BY_ADMIN}}",
+    "achievement_id":"{{ACHIEVEMENTS_PROVIDER_ID_BY_ADMIN}}",
+    "input": {
+      "certifierId": "certifier id 001-updated2"
+    },
+    "expected": {
+      "certifierId": "certifier id 001-updated2"
+    },
+    "httpCode": 200
+  },
+  {
+    "user_id": "{{USER_ID_BY_ADMIN}}",
+    "achievement_id":"{{ACHIEVEMENTS_PROVIDER_ID_BY_ADMIN}}",
+    "input": {
+      "certifiedDate": "2021-05-08T07:36:28.036Z"
+    },
+    "expected": {
+      "certifiedDate": "2021-05-08T07:36:28.036Z"
+    },
+    "httpCode": 200
+  }
+]

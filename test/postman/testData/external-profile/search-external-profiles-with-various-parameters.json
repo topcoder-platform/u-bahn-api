@@ -1,0 +1,22 @@
+[
+  {
+    "user_id": "{{USER_ID_BY_ADMIN}}",
+    "input": "page=1&perPage=10&organizationName=POSTMANE2E-&externalId=884783&isInactive=true"
+  },
+  {
+    "user_id": "{{USER_ID_BY_ADMIN}}",
+    "input": "page=1&perPage=10"
+  },
+  {
+    "user_id": "{{USER_ID_BY_ADMIN}}",
+    "input": "organizationName=POSTMANE2E-"
+  },
+  {
+    "user_id": "{{USER_ID_BY_ADMIN}}",
+    "input": "externalId=884783"
+  },
+  {
+    "user_id": "{{USER_ID_BY_ADMIN}}",
+    "input": "isInactive=true"
+  }
+]

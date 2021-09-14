@@ -1,0 +1,34 @@
+[
+  {
+    "id": "7637ae1a-3b7c-44eb-a5ed-10ea02f1885d",
+    "created": "2020-05-05T11:02:49.718Z",
+    "updated": null,
+    "createdBy": "POSTMANE2E-tc-Copilot",
+    "updatedBy": null,
+    "name": "POSTMANE2E-Skill-1"
+  },
+  {
+    "id": "1edf3f25-435d-4d19-ac09-9467a8e6858c",
+    "created": "2020-05-05T11:02:49.718Z",
+    "updated": null,
+    "createdBy": "tc_tester777",
+    "updatedBy": null,
+    "name": "POSTMANE2E-Skill-2"
+  },
+  {
+    "id": "4df1f70b-52e8-4e55-b79b-15ffc2c6a4f6",
+    "created": "2020-05-05T11:02:49.718Z",
+    "updated": null,
+    "createdBy": "tc_tester777",
+    "updatedBy": null,
+    "name": "POSTMANE2E-Skill-3"
+  },
+  {
+    "id": "1a9e404b-e9ad-4d88-a5d7-16b06c8ce749",
+    "created": "2020-05-05T11:02:49.718Z",
+    "updated": null,
+    "createdBy": "tc_tester777",
+    "updatedBy": null,
+    "name": "POSTMANE2E-Sk"
+  }
+]

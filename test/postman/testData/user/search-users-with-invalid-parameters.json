@@ -1,0 +1,42 @@
+[
+  {
+    "input": "page=-1&perPage=10",
+    "httpCode": 400,
+    "message": "\"query.page\" must be larger than or equal to 1"
+  },
+  {
+    "input": "page=1&perPage=-10",
+    "httpCode": 400,
+    "message": "\"query.perPage\" must be larger than or equal to 1"
+  },
+  {
+    "input": "handle=",
+    "httpCode": 400,
+    "message": "\"query.handle\" is not allowed to be empty"
+  },
+  {
+    "input": "roleId=",
+    "httpCode": 400,
+    "message": "\"query.roleId\" is not allowed to be empty"
+  },
+  {
+    "input": "enrich=aa",
+    "httpCode": 400,
+    "message": "\"query.enrich\" must be a boolean"
+  },
+  {
+    "input": "externalProfile.externalId=",
+    "httpCode": 400,
+    "message": "\"query.externalProfile.externalId\" is not allowed to be empty"
+  },
+  {
+    "input": "externalProfile.organizationId=",
+    "httpCode": 400,
+    "message": "\"query.externalProfile.organizationId\" is not allowed to be empty"
+  },
+  {
+    "input": "aa=",
+    "httpCode": 400,
+    "message": "\"query.aa\" is not allowed"
+  }
+]

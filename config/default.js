@@ -5,12 +5,14 @@
 module.exports = {
   LOG_LEVEL: process.env.LOG_LEVEL || 'debug',
   PORT: process.env.PORT || 3001,
+  API_BASE_URL: process.env.API_BASE_URL || 'http://127.0.0.1:3001/api/1.0',
+  AUTOMATED_TESTING_NAME_PREFIX: process.env.AUTOMATED_TESTING_NAME_PREFIX || 'POSTMANE2E-',
 
   CASCADE_PAUSE_MS: process.env.CASCADE_PAUSE_MS || 1000,
 
   AUTH_SECRET: process.env.AUTH_SECRET || 'CLIENT_SECRET',
   VALID_ISSUERS: process.env.VALID_ISSUERS ? process.env.VALID_ISSUERS.replace(/\\"/g, '')
-    : '["https://topcoder-dev.auth0.com/", "https://api.topcoder.com"]',
+    : '["https://api.topcoder-dev.com", "https://api.topcoder.com", "https://topcoder-dev.auth0.com/"]',
 
   PAGE_SIZE: process.env.PAGE_SIZE || 20,
   MAX_PAGE_SIZE: parseInt(process.env.MAX_PAGE_SIZE) || 100,

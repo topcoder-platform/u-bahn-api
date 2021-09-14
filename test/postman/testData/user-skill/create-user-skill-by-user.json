@@ -1,0 +1,14 @@
+[
+  {
+    "user_id": "{{USER_ID_BY_TESTER}}",
+    "input": {
+      "skillId":"{{SKILL_ID_2}}",
+      "metricValue":"3L"
+    },
+    "expected": {
+      "skillId":"{{SKILL_ID_2}}",
+      "metricValue":"3L"
+    },
+    "httpCode": 200
+  }
+]

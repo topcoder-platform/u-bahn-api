@@ -1,0 +1,12 @@
+[
+  {
+    "id": "{{ACHIEVEMENTS_PROVIDER_ID_BY_TESTER}}",
+    "input": {
+      "name": "POSTMANE2E-provider01-by-user-updated"
+    },
+    "expected": {
+      "name": "POSTMANE2E-provider01-by-user-updated"
+    },
+    "httpCode": 200
+  }
+]

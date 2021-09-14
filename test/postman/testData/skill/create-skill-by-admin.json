@@ -1,0 +1,23 @@
+[
+  {
+    "skillProviderId": "{{PROVIDER_ID_BY_TESTER}}",
+    "name": "POSTMANE2E-Skill01-by-admin",
+    "uri": "POSTMANE2E-skill-uri01-by-admin",
+    "externalId": "POSTMANE2E-externalId01-by-admin",
+    "httpCode": 200
+  },
+  {
+    "skillProviderId": "{{PROVIDER_ID_BY_TESTER}}",
+    "name": "POSTMANE2E-Skill02-by-admin",
+    "uri": "POSTMANE2E-skill-uri02-by-admin",
+    "externalId": "POSTMANE2E-externalId02-by-admin",
+    "httpCode": 200
+  },
+  {
+    "skillProviderId": "{{PROVIDER_ID_BY_TESTER}}",
+    "name": "POSTMANE2E-Skill03-by-admin",
+    "uri": "POSTMANE2E-skill-uri03-by-admin",
+    "externalId": "POSTMANE2E-externalId03-by-admin",
+    "httpCode": 200
+  }
+]

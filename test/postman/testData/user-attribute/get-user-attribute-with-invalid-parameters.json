@@ -1,0 +1,26 @@
+[
+  {
+    "user_id": "{{USER_ID_BY_ADMIN}}",
+    "attribute_id": "123456",
+    "httpCode": 500,
+    "message": "invalid input syntax for type uuid: \"123456\""
+  },
+  {
+    "user_id": "123456",
+    "attribute_id": "{{ATTRIBUTE_ID_BY_ADMIN}}",
+    "httpCode": 500,
+    "message": "invalid input syntax for type uuid: \"123456\""
+  },
+  {
+    "user_id": "3cd81b8c-d45e-414e-be66-afb31aa0240c",
+    "attribute_id": "{{ATTRIBUTE_ID_BY_ADMIN}}",
+    "httpCode": 404,
+    "message": "cannot find UserAttribute where userId:3cd81b8c-d45e-414e-be66-afb31aa0240c"
+  },
+  {
+    "user_id": "{{USER_ID_BY_ADMIN}}",
+    "attribute_id": "3cd81b8c-d45e-414e-be66-afb31aa0240c",
+    "httpCode": 404,
+    "message": "cannot find UserAttribute where userId"
+  }
+]

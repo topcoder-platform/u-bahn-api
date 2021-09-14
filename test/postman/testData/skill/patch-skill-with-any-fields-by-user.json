@@ -1,0 +1,48 @@
+[
+  {
+    "id": "{{SKILL_ID_BY_TESTER}}",
+    "input": {
+      "skillProviderId": "{{PROVIDER_ID_BY_TESTER}}",
+      "name": "POSTMANE2E-Skill01-by-user-updated",
+      "uri": "POSTMANE2E-skill-uri01-by-user-updated",
+      "externalId": "POSTMANE2E-externalId01-by-user-updated"
+    },
+    "expected": {
+      "skillProviderId": "{{PROVIDER_ID_BY_TESTER}}",
+      "name": "POSTMANE2E-Skill01-by-user-updated",
+      "uri": "POSTMANE2E-skill-uri01-by-user-updated",
+      "externalId": "POSTMANE2E-externalId01-by-user-updated"
+    },
+    "httpCode": 200
+  },
+  {
+    "id": "{{SKILL_ID_BY_TESTER}}",
+    "input": {
+      "name": "POSTMANE2E-Skill01-by-user-updated02"
+    },
+    "expected": {
+      "name": "POSTMANE2E-Skill01-by-user-updated02"
+    },
+    "httpCode": 200
+  },
+  {
+    "id": "{{SKILL_ID_BY_TESTER}}",
+    "input": {
+      "uri": "POSTMANE2E-skill-uri01-by-user-updated02"
+    },
+    "expected": {
+      "uri": "POSTMANE2E-skill-uri01-by-user-updated02"
+    },
+    "httpCode": 200
+  },
+  {
+    "id": "{{SKILL_ID_BY_TESTER}}",
+    "input": {
+      "externalId": "POSTMANE2E-externalId01-by-user-updated02"
+    },
+    "expected": {
+      "externalId": "POSTMANE2E-externalId01-by-user-updated02"
+    },
+    "httpCode": 200
+  }
+]

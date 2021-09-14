@@ -1,0 +1,81 @@
+[
+  {
+    "input": {
+      "skillProviderId": "{{PROVIDER_ID_BY_TESTER}}",
+      "uri": "POSTMANE2E-skill-uri01",
+      "externalId": "POSTMANE2E-externalId01"
+    },
+    "httpCode": 400,
+    "message": "\"entity.name\" is required"
+  },
+  {
+    "input": {
+      "skillProviderId": "{{PROVIDER_ID_BY_TESTER}}",
+      "name": "",
+      "uri": "POSTMANE2E-skill-uri01",
+      "externalId": "POSTMANE2E-externalId01"
+    },
+    "httpCode": 400,
+    "message": "\"entity.name\" is not allowed to be empty"
+  },
+  {
+    "input": {
+      "name": "POSTMANE2E-Skill01",
+      "uri": "POSTMANE2E-skill-uri01",
+      "externalId": "POSTMANE2E-externalId01"
+    },
+    "httpCode": 400,
+    "message": "\"entity.skillProviderId\" is required"
+  },
+  {
+    "input": {
+      "skillProviderId": "",
+      "name": "POSTMANE2E-Skill01",
+      "uri": "POSTMANE2E-skill-uri01",
+      "externalId": "POSTMANE2E-externalId01"
+    },
+    "httpCode": 400,
+    "message": "\"entity.skillProviderId\" is not allowed to be empty"
+  },
+  {
+    "input": {
+      "skillProviderId": "{{PROVIDER_ID_BY_TESTER}}",
+      "name": "POSTMANE2E-Skill01",
+      "uri": "",
+      "externalId": "POSTMANE2E-externalId01"
+    },
+    "httpCode": 400,
+    "message": "\"entity.uri\" is not allowed to be empty"
+  },
+  {
+    "input": {
+      "skillProviderId": "{{PROVIDER_ID_BY_TESTER}}",
+      "name": "POSTMANE2E-Skill01",
+      "uri": "POSTMANE2E-skill-uri01",
+      "externalId": ""
+    },
+    "httpCode": 400,
+    "message": "\"entity.externalId\" is not allowed to be empty"
+  },
+  {
+    "input": {
+      "skillProviderId": "{{PROVIDER_ID_BY_TESTER}}",
+      "name": "POSTMANE2E-Skill01-valid",
+      "uri": "POSTMANE2E-skill-uri01",
+      "externalId": "POSTMANE2E-externalId01",
+      "aaa":"ccc"
+    },
+    "httpCode": 400,
+    "message": "\"entity.aaa\" is not allowed"
+  },
+  {
+    "input": {
+      "skillProviderId": "{{PROVIDER_ID_BY_TESTER}}",
+      "name": "POSTMANE2E-Skill01",
+      "uri": "POSTMANE2E-skill-uri01",
+      "externalId": "POSTMANE2E-externalId01"
+    },
+    "httpCode": 409,
+    "message": "Skill already exists with skillProviderId:"
+  }
+]

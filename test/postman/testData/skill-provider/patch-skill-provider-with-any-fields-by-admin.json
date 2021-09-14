@@ -1,0 +1,12 @@
+[
+  {
+    "provider_id": "{{SKILL_PROVIDER_ID_2}}",
+    "input": {
+      "name": "POSTMANE2E-skill-provider02-by-admin-updated"
+    },
+    "expected": {
+      "name": "POSTMANE2E-skill-provider02-by-admin-updated"
+    },
+    "httpCode": 200
+  }
+]

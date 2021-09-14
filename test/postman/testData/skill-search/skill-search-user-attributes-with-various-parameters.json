@@ -1,0 +1,14 @@
+[
+  {
+    "input": "attributeId={{ATTRIBUTE_ID_BY_ADMIN}}&attributeValue=POSTMANE2E"
+  },
+  {
+    "input": "attributeId={{ATTRIBUTE_ID_BY_ADMIN}}"
+  },
+  {
+    "input": "attributeValue=POSTMANE2E"
+  },
+  {
+    "input": ""
+  }
+]

@@ -1,0 +1,54 @@
+[
+  {
+    "user_id": "e043286d-ab55-44e3-b2c2-7f7a4f375dcf",
+    "organization_id": "{{ORGANIZATION_ID_BY_ADMIN}}",
+    "input": {
+      "uri": ""
+    },
+    "httpCode": 400,
+    "message": "\"entity.uri\" is not allowed to be empty"
+  },
+  {
+    "user_id": "e043286d-ab55-44e3-b2c2-7f7a4f375dcf",
+    "organization_id": "{{ORGANIZATION_ID_BY_ADMIN}}",
+    "input": {
+      "externalId": ""
+    },
+    "httpCode": 400,
+    "message": "\"entity.externalId\" is not allowed to be empty"
+  },
+  {
+    "user_id": "e043286d-ab55-44e3-b2c2-7f7a4f375dcf",
+    "organization_id": "{{ORGANIZATION_ID_BY_ADMIN}}",
+    "input": {
+      "isInactive": "anc"
+    },
+    "httpCode": 400,
+    "message": "\"entity.isInactive\" must be a boolean"
+  },
+  {
+    "user_id": "e043286d-ab55-44e3-b2c2-7f7a4f375dcf",
+    "organization_id": "{{ORGANIZATION_ID_BY_ADMIN}}",
+    "input": {
+      "ccc": "abc"
+    },
+    "httpCode": 400,
+    "message": "\"entity.ccc\" is not allowed"
+  },
+  {
+    "user_id": "3cd81b8c-d45e-414e-be66-afb31aa0240c",
+    "organization_id": "{{ORGANIZATION_ID_BY_ADMIN}}",
+    "input": {
+    },
+    "httpCode": 404,
+    "message": "cannot find User where id = 3cd81b8c-d45e-414e-be66-afb31aa0240c"
+  },
+  {
+    "user_id": "{{USER_ID_BY_ADMIN}}",
+    "organization_id": "3cd81b8c-d45e-414e-be66-afb31aa0240c",
+    "input": {
+    },
+    "httpCode": 404,
+    "message": "cannot find Organization where id = 3cd81b8c-d45e-414e-be66-afb31aa0240c"
+  }
+]

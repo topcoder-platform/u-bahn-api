@@ -1,0 +1,13 @@
+[
+  {
+    "user_id": "ce348067-e73f-49d7-af72-fcf11a6c88bf",
+    "attribute_id": "{{ATTRIBUTE_ID_BY_ADMIN}}",
+    "input": {
+      "value": "POSTMANE2E-Attribute-ADMIN-updated001"
+    },
+    "expected": {
+      "value": "POSTMANE2E-Attribute-ADMIN-updated001"
+    },
+    "httpCode": 200
+  }
+]

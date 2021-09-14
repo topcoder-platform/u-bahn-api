@@ -1,0 +1,34 @@
+[
+  {
+    "provider_id": "{{SKILL_PROVIDER_ID_2}}",
+    "input": {
+      "name": ""
+    },
+    "httpCode": 400,
+    "message": "\"entity.name\" is not allowed to be empty"
+  },
+  {
+    "provider_id": "{{SKILL_PROVIDER_ID_2}}",
+    "input": {
+      "ccc": "abc"
+    },
+    "httpCode": 400,
+    "message": "\"entity.ccc\" is not allowed"
+  },
+  {
+    "provider_id": "123456",
+    "input": {
+      "name": "POSTMANE2E-skill-provider02-by-admin-updated123456"
+    },
+    "httpCode": 500,
+    "message": "invalid input syntax for type uuid: \"123456\""
+  },
+  {
+    "provider_id": "5ba376ee-1151-47df-b695-05a17a28f0ab",
+    "input": {
+      "name": "POSTMANE2E-skill-provider02-by-admin-updated123456"
+    },
+    "httpCode": 404,
+    "message": "cannot find SkillsProvider where id = 5ba376ee-1151-47df-b695-05a17a28f0ab"
+  }
+]

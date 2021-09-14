@@ -1,0 +1,83 @@
+[
+  {
+    "user_id": "{{USER_ID_BY_ADMIN}}",
+    "input": {
+      "externalId": "POSTMANE2E-Topcoder-by-ADMIN-001",
+      "uri": "http://some.uri",
+      "isInactive": false
+    },
+    "httpCode": 400,
+    "message": "\"entity.organizationId\" is required"
+  },
+  {
+    "user_id": "{{USER_ID_BY_ADMIN}}",
+    "input": {
+      "organizationId":"",
+      "externalId": "POSTMANE2E-Topcoder-by-ADMIN-001",
+      "uri": "http://some.uri",
+      "isInactive": false
+    },
+    "httpCode": 400,
+    "message": "\"entity.organizationId\" is not allowed to be empty"
+  },
+  {
+    "user_id": "{{USER_ID_BY_ADMIN}}",
+    "input": {
+      "organizationId": "{{ORGANIZATION_ID_BY_ADMIN}}",
+      "externalId": "",
+      "uri": "http://some.uri",
+      "isInactive": false
+    },
+    "httpCode": 400,
+    "message": "\"entity.externalId\" is not allowed to be empty"
+  },
+  {
+    "user_id": "{{USER_ID_BY_ADMIN}}",
+    "input": {
+      "organizationId": "{{ORGANIZATION_ID_BY_ADMIN}}",
+      "externalId": "POSTMANE2E-Topcoder-by-ADMIN-001",
+      "uri": "",
+      "isInactive": false
+    },
+    "httpCode": 400,
+    "message": "\"entity.uri\" is not allowed to be empty"
+  },
+  {
+    "user_id": "{{USER_ID_BY_ADMIN}}",
+    "input": {
+      "organizationId": "{{ORGANIZATION_ID_BY_ADMIN}}",
+      "externalId": "POSTMANE2E-Topcoder-by-ADMIN-001",
+      "uri": "http://some.uri",
+      "isInactive": "anc"
+    },
+    "httpCode": 400,
+    "message": "\"entity.isInactive\" must be a boolean"
+  },
+  {
+    "user_id": "ce348067-e73f-49d7-af72-fcf11a6c88bf",
+    "input": {
+      "organizationId": "{{ORGANIZATION_ID_BY_ADMIN}}",
+      "externalId": "123"
+    },
+    "httpCode": 409,
+    "message": "ExternalProfile already exists with userId:ce348067-e73f-49d7-af72-fcf11a6c88bf"
+  },
+  {
+    "user_id": "{{USER_ID_BY_ADMIN}}",
+    "input": {
+      "organizationId":"75b30af0-46df-4cf6-97ed-3a5608516f4a",
+      "externalId": "123"
+    },
+    "httpCode": 404,
+    "message": "cannot find Organization where id = 75b30af0-46df-4cf6-97ed-3a5608516f4a"
+  },
+  {
+    "user_id": "75b30af0-46df-4cf6-97ed-3a5608516f4a",
+    "input": {
+      "organizationId":"{{ORGANIZATION_ID_BY_ADMIN}}",
+      "externalId": "123"
+    },
+    "httpCode": 404,
+    "message": "cannot find User where id = 75b30af0-46df-4cf6-97ed-3a5608516f4a"
+  }
+]

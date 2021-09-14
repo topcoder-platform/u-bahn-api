@@ -1,0 +1,20 @@
+[
+  {
+    "input": "page=1&perPage=10&name=POSTMANE2E&attributeGroupId={{ATTRIBUTE_GROUP_ID_BY_ADMIN}}"
+  },
+  {
+    "input": "page=1&perPage=10&attributeGroupId={{ATTRIBUTE_GROUP_ID_BY_ADMIN}}"
+  },
+  {
+    "input": "page=1&perPage=1&name=POSTMANE2E",
+    "idLabel": "ATTRIBUTE_ID_1"
+  },
+  {
+    "input": "page=2&perPage=1",
+    "idLabel": "ATTRIBUTE_ID_2"
+  },
+  {
+    "input": "page=3&perPage=1",
+    "idLabel": "ATTRIBUTE_ID_3"
+  }
+]

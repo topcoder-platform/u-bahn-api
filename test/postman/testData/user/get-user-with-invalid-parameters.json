@@ -1,0 +1,8 @@
+[
+  {
+    "user_id": "not_exist_user",
+    "params": "enrich=true",
+    "httpCode": 500,
+    "message": "resource_not_found_exception"
+  }
+]

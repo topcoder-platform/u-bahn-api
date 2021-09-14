@@ -1,0 +1,10 @@
+[
+  {
+    "user_id": "{{USER_ID_BY_ADMIN}}",
+    "input": "page=1&perPage=10&achievementsProviderName=POSTMANE2E-"
+  },
+  {
+    "user_id": "{{USER_ID_BY_ADMIN}}",
+    "input": "page=1&perPage=10"
+  }
+]

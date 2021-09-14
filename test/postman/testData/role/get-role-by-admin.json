@@ -1,0 +1,10 @@
+[
+  {
+    "id": "{{ROLE_ID_1}}",
+    "httpCode": 200
+  },
+  {
+    "id": "{{ROLE_ID_2}}",
+    "httpCode": 200
+  }
+]

@@ -1,0 +1,42 @@
+[
+  {
+    "id": "{{ROLE_ID_2}}",
+    "input": {
+      "name": ""
+    },
+    "httpCode": 400,
+    "message": "\"entity.name\" is not allowed to be empty"
+  },
+  {
+    "id": "{{ROLE_ID_2}}",
+    "input": {
+      "ccc": "abc"
+    },
+    "httpCode": 400,
+    "message": "\"entity.ccc\" is not allowed"
+  },
+  {
+    "id": "123456",
+    "input": {
+      "name": "POSTMANE2E-role02-by-admin-updated123456"
+    },
+    "httpCode": 500,
+    "message": "invalid input syntax for type uuid: \"123456\""
+  },
+  {
+    "id": "5ba376ee-1151-47df-b695-05a17a28f0ab",
+    "input": {
+      "name": "POSTMANE2E-role02-by-admin-updated123456"
+    },
+    "httpCode": 404,
+    "message": "cannot find Role where id = 5ba376ee-1151-47df-b695-05a17a28f0ab"
+  },
+  {
+    "id": "{{ROLE_ID_1}}",
+    "input": {
+      "name": "POSTMANE2E-role02-by-admin-updated"
+    },
+    "httpCode": 409,
+    "message": "Role already exists with name:POSTMANE2E-role02-by-admin-updated"
+  }
+]

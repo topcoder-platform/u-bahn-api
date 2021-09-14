@@ -1,0 +1,54 @@
+[
+  {
+    "user_id": "{{USER_ID_BY_ADMIN}}",
+    "achievement_id":"{{ACHIEVEMENTS_PROVIDER_ID_BY_ADMIN}}",
+    "input": {
+      "name": ""
+    },
+    "httpCode": 400,
+    "message": "\"entity.name\" is not allowed to be empty"
+  },
+  {
+    "user_id": "{{USER_ID_BY_ADMIN}}",
+    "achievement_id":"{{ACHIEVEMENTS_PROVIDER_ID_BY_ADMIN}}",
+    "input": {
+      "uri": ""
+    },
+    "httpCode": 400,
+    "message": "\"entity.uri\" is not allowed to be empty"
+  },
+  {
+    "user_id": "{{USER_ID_BY_ADMIN}}",
+    "achievement_id":"{{ACHIEVEMENTS_PROVIDER_ID_BY_ADMIN}}",
+    "input": {
+      "certifiedDate": ""
+    },
+    "httpCode": 400,
+    "message": "\"entity.certifiedDate\" must be in ISO 8601 date format"
+  },
+  {
+    "user_id": "{{USER_ID_BY_ADMIN}}",
+    "achievement_id":"{{ACHIEVEMENTS_PROVIDER_ID_BY_ADMIN}}",
+    "input": {
+      "ccc": "abc"
+    },
+    "httpCode": 400,
+    "message": "\"entity.ccc\" is not allowed"
+  },
+  {
+    "user_id": "3cd81b8c-d45e-414e-be66-afb31aa0240c",
+    "achievement_id":"{{ACHIEVEMENTS_PROVIDER_ID_BY_ADMIN}}",
+    "input": {
+    },
+    "httpCode": 404,
+    "message": "cannot find User where id = 3cd81b8c-d45e-414e-be66-afb31aa0240c"
+  },
+  {
+    "user_id": "{{USER_ID_BY_TESTER}}",
+    "achievement_id": "3cd81b8c-d45e-414e-be66-afb31aa0240c",
+    "input": {
+    },
+    "httpCode": 404,
+    "message": "cannot find AchievementsProvider where id = 3cd81b8c-d45e-414e-be66-afb31aa0240c"
+  }
+]

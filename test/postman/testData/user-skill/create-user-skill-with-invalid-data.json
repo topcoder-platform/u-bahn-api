@@ -1,0 +1,78 @@
+[
+  {
+    "user_id": "{{USER_ID_2}}",
+    "input": {
+      "metricValue":"3L",
+      "certifierId": "POSTMANE2E-certifier_id",
+      "certifiedDate":"2020-05-04T07:36:28.036Z"
+    },
+    "httpCode": 400,
+    "message": "\"entity.skillId\" is required"
+  },
+  {
+    "user_id": "{{USER_ID_2}}",
+    "input": {
+      "skillId":"",
+      "metricValue":"3L",
+      "certifierId": "POSTMANE2E-certifier_id",
+      "certifiedDate":"2020-05-04T07:36:28.036Z"
+    },
+    "httpCode": 400,
+    "message": "\"entity.skillId\" is not allowed to be empty"
+  },
+  {
+    "user_id": "{{USER_ID_2}}",
+    "input": {
+      "skillId":"{{SKILL_ID_2}}",
+      "metricValue":"",
+      "certifierId": "POSTMANE2E-certifier_id",
+      "certifiedDate":"2020-05-04T07:36:28.036Z"
+    },
+    "httpCode": 400,
+    "message": "\"entity.metricValue\" is not allowed to be empty"
+  },
+  {
+    "user_id": "{{USER_ID_2}}",
+    "input": {
+      "skillId":"{{SKILL_ID_2}}",
+      "metricValue":"3L",
+      "certifierId":"",
+      "certifiedDate":"2020-05-04T07:36:28.036Z"
+    },
+    "httpCode": 400,
+    "message": "\"entity.certifierId\" is not allowed to be empty"
+  },
+  {
+    "user_id": "{{USER_ID_2}}",
+    "input": {
+      "skillId":"{{SKILL_ID_2}}",
+      "metricValue":"3L",
+      "certifierId": "POSTMANE2E-certifier_id",
+      "certifiedDate":""
+    },
+    "httpCode": 400,
+    "message": "\"entity.certifiedDate\" must be in ISO 8601 date format"
+  },
+  {
+    "user_id": "{{USER_ID_2}}",
+    "input": {
+      "skillId":"{{SKILL_ID_2}}",
+      "metricValue":"3L",
+      "certifierId": "POSTMANE2E-certifier_id",
+      "certifiedDate":"invalid_date"
+    },
+    "httpCode": 400,
+    "message": "\"entity.certifiedDate\" must be in ISO 8601 date format"
+  },
+  {
+    "user_id": "{{USER_ID_2}}",
+    "input": {
+      "skillId":"{{SKILL_ID_BY_ADMIN}}",
+      "metricValue":"3L",
+      "certifierId": "POSTMANE2E-certifier_id",
+      "certifiedDate":"2020-05-04T07:36:28.036Z"
+    },
+    "httpCode": 409,
+    "message": "UsersSkill already exists with userId:"
+  }
+]

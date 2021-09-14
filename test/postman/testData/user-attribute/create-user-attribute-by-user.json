@@ -1,0 +1,14 @@
+[
+  {
+    "user_id": "df2f0027-f74f-45fa-85cd-84c9fdc2faf4",
+    "input": {
+      "attributeId": "{{ATTRIBUTE_ID_BY_ADMIN}}",
+      "value": "POSTMANE2E-Attribute-by-TESTER-001"
+    },
+    "expected": {
+      "attributeId": "{{ATTRIBUTE_ID_BY_ADMIN}}",
+      "value": "POSTMANE2E-Attribute-by-TESTER-001"
+    },
+    "httpCode": 200
+  }
+]

@@ -1,0 +1,58 @@
+[
+  {
+    "user_id": "df2f0027-f74f-45fa-85cd-84c9fdc2faf4",
+    "input": {
+      "organizationId": "{{ORGANIZATION_ID_BY_ADMIN}}",
+      "externalId": "POSTMANE2E-Topcoder-by-ADMIN-002",
+      "uri": "http://some.uri",
+      "isInactive": false
+    },
+    "expected": {
+      "organizationId": "{{ORGANIZATION_ID_BY_ADMIN}}",
+      "externalId": "POSTMANE2E-Topcoder-by-ADMIN-002",
+      "uri": "http://some.uri",
+      "isInactive": false
+    },
+    "httpCode": 200
+  },
+  {
+    "user_id": "e043286d-ab55-44e3-b2c2-7f7a4f375dcf",
+    "input": {
+      "organizationId": "{{ORGANIZATION_ID_BY_ADMIN}}",
+      "externalId": "POSTMANE2E-Topcoder-by-ADMIN-003"
+    },
+    "expected": {
+      "organizationId": "{{ORGANIZATION_ID_BY_ADMIN}}",
+      "externalId": "POSTMANE2E-Topcoder-by-ADMIN-003"
+    },
+    "httpCode": 200
+  },
+  {
+    "user_id": "0f8e52c1-33fd-48f2-b160-415c2bb371f2",
+    "input": {
+      "organizationId": "{{ORGANIZATION_ID_BY_ADMIN}}",
+      "externalId": "POSTMANE2E-Topcoder-by-ADMIN-003",
+      "uri": "http://some.uri3"
+    },
+    "expected": {
+      "organizationId": "{{ORGANIZATION_ID_BY_ADMIN}}",
+      "externalId": "POSTMANE2E-Topcoder-by-ADMIN-003",
+      "uri": "http://some.uri3"
+    },
+    "httpCode": 200
+  },
+  {
+    "user_id": "06f130d0-0764-4894-bcd8-67e2758b15d9",
+    "input": {
+      "organizationId": "{{ORGANIZATION_ID_BY_ADMIN}}",
+      "externalId": "POSTMANE2E-Topcoder-TESTER-004",
+      "isInactive": true
+    },
+    "expected": {
+      "organizationId": "{{ORGANIZATION_ID_BY_ADMIN}}",
+      "externalId": "POSTMANE2E-Topcoder-TESTER-004",
+      "isInactive": true
+    },
+    "httpCode": 200
+  }
+]

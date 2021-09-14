@@ -1,0 +1,74 @@
+[
+  {
+    "user_id": "df2f0027-f74f-45fa-85cd-84c9fdc2faf4",
+    "input": {
+      "achievementsProviderId": "{{ACHIEVEMENTS_PROVIDER_ID_BY_ADMIN}}",
+      "name": "POSTMANE2E-Topcoder-by-TESTER-001",
+      "uri": "http://some.uri",
+      "certifierId": "certifier id 001",
+      "certifiedDate": "2020-05-04T07:36:28.036Z"
+    },
+    "expected": {
+      "achievementsProviderId": "{{ACHIEVEMENTS_PROVIDER_ID_BY_ADMIN}}",
+      "name": "POSTMANE2E-Topcoder-by-TESTER-001",
+      "uri": "http://some.uri",
+      "certifierId": "certifier id 001",
+      "certifiedDate": "2020-05-04T07:36:28.036Z"
+    },
+    "httpCode": 200
+  },
+  {
+    "user_id": "e043286d-ab55-44e3-b2c2-7f7a4f375dcf",
+    "input": {
+      "achievementsProviderId": "{{ACHIEVEMENTS_PROVIDER_ID_BY_ADMIN}}",
+      "name": "POSTMANE2E-Topcoder-by-TESTER-002"
+    },
+    "expected": {
+      "achievementsProviderId": "{{ACHIEVEMENTS_PROVIDER_ID_BY_ADMIN}}",
+      "name": "POSTMANE2E-Topcoder-by-TESTER-002"
+    },
+    "httpCode": 200
+  },
+  {
+    "user_id": "0f8e52c1-33fd-48f2-b160-415c2bb371f2",
+    "input": {
+      "achievementsProviderId": "{{ACHIEVEMENTS_PROVIDER_ID_BY_ADMIN}}",
+      "name": "POSTMANE2E-Topcoder-TESTER-003",
+      "uri": "http://some.uri3"
+    },
+    "expected": {
+      "achievementsProviderId": "{{ACHIEVEMENTS_PROVIDER_ID_BY_ADMIN}}",
+      "name": "POSTMANE2E-Topcoder-TESTER-003",
+      "uri": "http://some.uri3"
+    },
+    "httpCode": 200
+  },
+  {
+    "user_id": "06f130d0-0764-4894-bcd8-67e2758b15d9",
+    "input": {
+      "achievementsProviderId": "{{ACHIEVEMENTS_PROVIDER_ID_BY_ADMIN}}",
+      "name": "POSTMANE2E-Topcoder-TESTER-004",
+      "certifierId": "certifier id 004"
+    },
+    "expected": {
+      "achievementsProviderId": "{{ACHIEVEMENTS_PROVIDER_ID_BY_ADMIN}}",
+      "name": "POSTMANE2E-Topcoder-TESTER-004",
+      "certifierId": "certifier id 004"
+    },
+    "httpCode": 200
+  },
+  {
+    "user_id": "e02d66c9-01d6-4cd8-9f8c-30e40315adcc",
+    "input": {
+      "achievementsProviderId": "{{ACHIEVEMENTS_PROVIDER_ID_BY_ADMIN}}",
+      "name": "POSTMANE2E-Topcoder-TESTER-005",
+      "certifiedDate": "2020-05-04T07:36:28.036Z"
+    },
+    "expected": {
+      "achievementsProviderId": "{{ACHIEVEMENTS_PROVIDER_ID_BY_ADMIN}}",
+      "name": "POSTMANE2E-Topcoder-TESTER-005",
+      "certifiedDate": "2020-05-04T07:36:28.036Z"
+    },
+    "httpCode": 200
+  }
+]

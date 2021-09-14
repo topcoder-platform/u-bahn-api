@@ -1,0 +1,58 @@
+[
+  {
+    "id": "{{SKILL_ID_2}}",
+    "input": {
+      "skillProviderId": ""
+    },
+    "httpCode": 400,
+    "message": "\"entity.skillProviderId\" is not allowed to be empty"
+  },
+  {
+    "id": "{{SKILL_ID_2}}",
+    "input": {
+      "name": ""
+    },
+    "httpCode": 400,
+    "message": "\"entity.name\" is not allowed to be empty"
+  },
+  {
+    "id": "{{SKILL_ID_2}}",
+    "input": {
+      "uri": ""
+    },
+    "httpCode": 400,
+    "message": "\"entity.uri\" is not allowed to be empty"
+  },
+  {
+    "id": "{{SKILL_ID_2}}",
+    "input": {
+      "externalId": ""
+    },
+    "httpCode": 400,
+    "message": "\"entity.externalId\" is not allowed to be empty"
+  },
+  {
+    "id": "{{SKILL_ID_2}}",
+    "input": {
+      "ccc": "abc"
+    },
+    "httpCode": 400,
+    "message": "\"entity.ccc\" is not allowed"
+  },
+  {
+    "id": "{{SKILL_ID_2}}",
+    "input": {
+      "skillProviderId": "3cd81b8c-d45e-414e-be66-afb31aa0240c"
+    },
+    "httpCode": 404,
+    "message": "cannot find SkillsProvider where id = 3cd81b8c-d45e-414e-be66-afb31aa0240c"
+  },
+  {
+    "id": "3cd81b8c-d45e-414e-be66-afb31aa0240c",
+    "input": {
+      "name": "POSTMANE2E-Skill01-by-user-updated2"
+    },
+    "httpCode": 404,
+    "message": "cannot find Skill where id = 3cd81b8c-d45e-414e-be66-afb31aa0240c"
+  }
+]

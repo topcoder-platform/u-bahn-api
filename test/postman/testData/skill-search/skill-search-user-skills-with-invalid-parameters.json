@@ -1,0 +1,12 @@
+[
+  {
+    "input": "keyword=POSTMANE2E",
+    "httpCode": 400,
+    "message": "\"query.organizationId\" is required"
+  },
+  {
+    "input": "organizationId={{ORGANIZATION_ID_BY_ADMIN}}",
+    "httpCode": 400,
+    "message": "\"query.keyword\" is required"
+  }
+]

@@ -1,0 +1,41 @@
+[
+  {
+    "organization_id": "{{ORGANIZATION_ID_BY_ADMIN}}",
+    "input": {
+    },
+    "httpCode": 400,
+    "message": "\"entity.skillProviderId\" is required"
+  },
+  {
+    "organization_id": "{{ORGANIZATION_ID_BY_ADMIN}}",
+    "input": {
+      "skillProviderId":""
+    },
+    "httpCode": 400,
+    "message": "\"entity.skillProviderId\" is not allowed to be empty"
+  },
+  {
+    "organization_id": "a866fd95-c2d5-4fa8-b341-a367138c9911",
+    "input": {
+      "skillProviderId":"7637ae1a-3b7c-44eb-a5ed-10ea02f1885d"
+    },
+    "httpCode": 409,
+    "message": "OrganizationSkillsProvider already exists with organizationId:"
+  },
+  {
+    "organization_id": "{{ORGANIZATION_ID_BY_ADMIN}}",
+    "input": {
+      "skillProviderId":"75b30af0-46df-4cf6-97ed-3a5608516f4a"
+    },
+    "httpCode": 404,
+    "message": "cannot find SkillsProvider where id = 75b30af0-46df-4cf6-97ed-3a5608516f4a"
+  },
+  {
+    "organization_id": "75b30af0-46df-4cf6-97ed-3a5608516f4a",
+    "input": {
+      "skillProviderId":"{{PROVIDER_ID_BY_ADMIN}}"
+    },
+    "httpCode": 404,
+    "message": "cannot find Organization where id = 75b30af0-46df-4cf6-97ed-3a5608516f4a"
+  }
+]

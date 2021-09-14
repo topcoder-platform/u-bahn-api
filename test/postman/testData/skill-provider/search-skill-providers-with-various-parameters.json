@@ -1,0 +1,17 @@
+[
+  {
+    "input": "page=1&perPage=10&name=POSTMANE2E"
+  },
+  {
+    "input": "page=1&perPage=1",
+    "idLabel": "SKILL_PROVIDER_ID_1"
+  },
+  {
+    "input": "page=2&perPage=1",
+    "idLabel": "SKILL_PROVIDER_ID_2"
+  },
+  {
+    "input": "page=3&perPage=1",
+    "idLabel": "SKILL_PROVIDER_ID_3"
+  }
+]

@@ -1,0 +1,8 @@
+[
+  {
+    "input": "organizationId={{ORGANIZATION_ID_BY_ADMIN}}&keyword=POSTMANE2E"
+  },
+  {
+    "input": "organizationId={{ORGANIZATION_ID_BY_ADMIN}}"
+  }
+]

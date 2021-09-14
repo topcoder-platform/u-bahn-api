@@ -1,0 +1,114 @@
+[
+  {
+    "user_id": "{{USER_ID_BY_ADMIN}}",
+    "input": {
+      "name": "POSTMANE2E-Topcoder-by-ADMIN-001",
+      "uri": "http://some.uri",
+      "certifierId": "certifier id 001",
+      "certifiedDate": "2020-05-04T07:36:28.036Z"
+    },
+    "httpCode": 400,
+    "message": "\"entity.achievementsProviderId\" is required"
+  },
+  {
+    "user_id": "{{USER_ID_BY_ADMIN}}",
+    "input": {
+      "achievementsProviderId":"",
+      "name": "POSTMANE2E-Topcoder-by-ADMIN-001",
+      "uri": "http://some.uri",
+      "certifierId": "certifier id 001",
+      "certifiedDate": "2020-05-04T07:36:28.036Z"
+    },
+    "httpCode": 400,
+    "message": "\"entity.achievementsProviderId\" is not allowed to be empty"
+  },
+  {
+    "user_id": "{{USER_ID_BY_ADMIN}}",
+    "input": {
+      "achievementsProviderId": "{{ACHIEVEMENTS_PROVIDER_ID_BY_ADMIN}}",
+      "uri": "http://some.uri",
+      "certifierId": "certifier id 001",
+      "certifiedDate": "2020-05-04T07:36:28.036Z"
+    },
+    "httpCode": 400,
+    "message": "\"entity.name\" is required"
+  },
+  {
+    "user_id": "{{USER_ID_BY_ADMIN}}",
+    "input": {
+      "achievementsProviderId": "{{ACHIEVEMENTS_PROVIDER_ID_BY_ADMIN}}",
+      "name": "",
+      "uri": "http://some.uri",
+      "certifierId": "certifier id 001",
+      "certifiedDate": "2020-05-04T07:36:28.036Z"
+    },
+    "httpCode": 400,
+    "message": "\"entity.name\" is not allowed to be empty"
+  },
+  {
+    "user_id": "{{USER_ID_BY_ADMIN}}",
+    "input": {
+      "achievementsProviderId": "{{ACHIEVEMENTS_PROVIDER_ID_BY_ADMIN}}",
+      "name": "POSTMANE2E-Topcoder-by-ADMIN-007",
+      "uri": "",
+      "certifierId": "certifier id 001",
+      "certifiedDate": "2020-05-04T07:36:28.036Z"
+    },
+    "httpCode": 400,
+    "message": "\"entity.uri\" is not allowed to be empty"
+  },
+  {
+    "user_id": "{{USER_ID_BY_ADMIN}}",
+    "input": {
+      "achievementsProviderId": "{{ACHIEVEMENTS_PROVIDER_ID_BY_ADMIN}}",
+      "name": "POSTMANE2E-Topcoder-by-ADMIN-007",
+      "uri": "http://some.uri",
+      "certifierId": "certifier id 001",
+      "certifiedDate": ""
+    },
+    "httpCode": 400,
+    "message": "\"entity.certifiedDate\" must be in ISO 8601 date format"
+  },
+  {
+    "user_id": "{{USER_ID_BY_ADMIN}}",
+    "input": {
+      "achievementsProviderId": "{{ACHIEVEMENTS_PROVIDER_ID_BY_ADMIN}}",
+      "name": "POSTMANE2E-Topcoder-by-ADMIN-007",
+      "uri": "http://some.uri",
+      "certifierId": "certifier id 001",
+      "certifiedDate": "abcd"
+    },
+    "httpCode": 400,
+    "message": "\"entity.certifiedDate\" must be in ISO 8601 date format"
+  },
+  {
+    "user_id": "7d93ee11-b4e9-415e-9a6f-aff458d6f975",
+    "input": {
+      "achievementsProviderId": "{{ACHIEVEMENTS_PROVIDER_ID_BY_ADMIN}}",
+      "name": "POSTMANE2E-Topcoder-by-ADMIN-001",
+      "uri": "http://some.uri",
+      "certifierId": "certifier id 001",
+      "certifiedDate": "2020-05-04T07:36:28.036Z"
+    },
+    "httpCode": 409,
+    "message": "Achievement already exists with userId:7d93ee11-b4e9-415e-9a6f-aff458d6f975"
+  },
+  {
+    "user_id": "{{USER_ID_BY_ADMIN}}",
+    "input": {
+      "achievementsProviderId":"75b30af0-46df-4cf6-97ed-3a5608516f4a",
+      "name": "POSTMANE2E-Topcoder-by-ADMIN-001"
+    },
+    "httpCode": 404,
+    "message": "cannot find AchievementsProvider where id = 75b30af0-46df-4cf6-97ed-3a5608516f4a"
+  },
+  {
+    "user_id": "75b30af0-46df-4cf6-97ed-3a5608516f4a",
+    "input": {
+      "achievementsProviderId":"{{ACHIEVEMENTS_PROVIDER_ID_2}}",
+      "name": "POSTMANE2E-Topcoder-by-ADMIN-001"
+    },
+    "httpCode": 404,
+    "message": "cannot find User where id = 75b30af0-46df-4cf6-97ed-3a5608516f4a"
+  }
+]

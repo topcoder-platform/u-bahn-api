@@ -1,0 +1,24 @@
+[
+  {
+    "id": "{{ATTRIBUTE_ID_BY_TESTER}}",
+    "input": {
+      "attributeGroupId": "{{ATTRIBUTE_GROUP_ID_BY_ADMIN}}",
+      "name": "POSTMANE2E-attributeGroup01-by-user-updated111"
+    },
+    "expected": {
+      "attributeGroupId": "{{ATTRIBUTE_GROUP_ID_BY_ADMIN}}",
+      "name": "POSTMANE2E-attributeGroup01-by-user-updated111"
+    },
+    "httpCode": 200
+  },
+  {
+    "id": "{{ATTRIBUTE_ID_BY_TESTER}}",
+    "input": {
+      "name": "POSTMANE2E-attributeGroup01-by-user-updated222"
+    },
+    "expected": {
+      "name": "POSTMANE2E-attributeGroup01-by-user-updated222"
+    },
+    "httpCode": 200
+  }
+]

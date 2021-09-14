@@ -1,0 +1,82 @@
+[
+  {
+    "user_id": "{{USER_ID_2}}",
+    "input": {
+      "handle": "POSTMANE2E-handle02-updated"
+    },
+    "expected": {
+      "handle": "POSTMANE2E-handle02-updated"
+    },
+    "httpCode": 200
+  },
+  {
+    "user_id": "{{USER_ID_2}}",
+    "input": {
+      "firstName": "POSTMANE2E-firstName02-updated"
+    },
+    "expected": {
+      "firstName": "POSTMANE2E-firstName02-updated"
+    },
+    "httpCode": 200
+  },
+  {
+    "user_id": "{{USER_ID_2}}",
+    "input": {
+      "lastName": "POSTMANE2E-lastName02-updated"
+    },
+    "expected": {
+      "lastName": "POSTMANE2E-lastName02-updated"
+    },
+    "httpCode": 200
+  },
+  {
+    "user_id": "{{USER_ID_2}}",
+    "input": {
+      "handle": "POSTMANE2E-handle02-updated1",
+      "firstName": "POSTMANE2E-firstName02-updated1"
+    },
+    "expected": {
+      "handle": "POSTMANE2E-handle02-updated1",
+      "firstName": "POSTMANE2E-firstName02-updated1"
+    },
+    "httpCode": 200
+  },
+  {
+    "user_id": "{{USER_ID_2}}",
+    "input": {
+      "handle": "POSTMANE2E-handle02-updated2",
+      "lastName": "POSTMANE2E-lastName02-updated2"
+    },
+    "expected": {
+      "handle": "POSTMANE2E-handle02-updated2",
+      "lastName": "POSTMANE2E-lastName02-updated2"
+    },
+    "httpCode": 200
+  },
+  {
+    "user_id": "{{USER_ID_2}}",
+    "input": {
+      "firstName": "POSTMANE2E-firstName02-updated3",
+      "lastName": "POSTMANE2E-lastName02-updated3"
+    },
+    "expected": {
+      "firstName": "POSTMANE2E-firstName02-updated3",
+      "lastName": "POSTMANE2E-lastName02-updated3"
+    },
+    "httpCode": 200
+  },
+  {
+    "user_id": "{{USER_ID_2}}",
+    "input": {
+      "handle": "POSTMANE2E-handle02-updated4",
+      "firstName": "POSTMANE2E-firstName02-updated4",
+      "lastName": "POSTMANE2E-lastName02-updated4"
+    },
+    "expected": {
+      "handle": "POSTMANE2E-handle02-updated4",
+      "firstName": "POSTMANE2E-firstName02-updated4",
+      "lastName": "POSTMANE2E-lastName02-updated4"
+    },
+    "httpCode": 200
+  }
+]

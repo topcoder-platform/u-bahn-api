@@ -1,7 +1,6 @@
 const sequelize = require('../../src/models/index')
 const path = require('path')
 const Umzug = require('umzug')
-const { createDb } = require('../../src/common/db-helper')
 
 function getUmzug () {
   return new Umzug({

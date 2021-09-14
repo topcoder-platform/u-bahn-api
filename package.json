@@ -11,7 +11,10 @@
     "migrations": "node scripts/db/migrations.js",
     "insert-data": "node scripts/db/insert-data.js",
     "migrate-qldb-to-pg": "node scripts/db/migrateQldbToPg.js",
-    "import-s3-data": "node scripts/db/importS3ToQldb.js"
+    "import-s3-data": "node scripts/db/importS3ToQldb.js",
+    "insert-postman-data": "node test/postman/insert-postman-data.js",
+    "test:newman": "NODE_ENV=test node test/postman/newman.js",
+    "test:newman:clear": "NODE_ENV=test node test/postman/clearTestData.js"
   },
   "repository": {
     "type": "git",
@@ -47,7 +50,8 @@
     "winston": "^3.2.1"
   },
   "devDependencies": {
-    "standard": "^14.3.0"
+    "standard": "^14.3.0",
+    "tc-api-testing-lib": "git+https://github.com/mfrank37/api-automated-testing.git"
   },
   "engines": {
     "node": "12.x"

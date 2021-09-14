@@ -1,0 +1,17 @@
+[
+  {
+    "name": "POSTMANE2E-Role01-by-user",
+    "attribute_group_id": "{{ATTRIBUTE_GROUP_ID_BY_ADMIN}}",
+    "httpCode": 200
+  },
+  {
+    "name": "POSTMANE2E-Role02-by-user",
+    "attribute_group_id": "{{ATTRIBUTE_GROUP_ID_BY_ADMIN}}",
+    "httpCode": 200
+  },
+  {
+    "name": "POSTMANE2E-Role03-by-user",
+    "attribute_group_id": "{{ATTRIBUTE_GROUP_ID_BY_ADMIN}}",
+    "httpCode": 200
+  }
+]

@@ -1,0 +1,42 @@
+[
+  {
+    "user_id": "{{USER_ID_2}}",
+    "input": {
+      "handle": ""
+    },
+    "httpCode": 400,
+    "message": "\"entity.handle\" is not allowed to be empty"
+  },
+  {
+    "user_id": "{{USER_ID_2}}",
+    "input": {
+      "firstName": ""
+    },
+    "httpCode": 400,
+    "message": "\"entity.firstName\" is not allowed to be empty"
+  },
+  {
+    "user_id": "{{USER_ID_2}}",
+    "input": {
+      "lastName": ""
+    },
+    "httpCode": 400,
+    "message": "\"entity.lastName\" is not allowed to be empty"
+  },
+  {
+    "user_id": "{{USER_ID_2}}",
+    "input": {
+      "handle": "POSTMANE2E-handle03"
+    },
+    "httpCode": 409,
+    "message": "User already exists with handle:POSTMANE2E-handle03"
+  },
+  {
+    "terms_id": "{{TERMS_OF_USE_ID_2}}",
+    "input": {
+      "ccc": "abc"
+    },
+    "httpCode": 400,
+    "message": "\"entity.ccc\" is not allowed"
+  }
+]
