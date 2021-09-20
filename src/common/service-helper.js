@@ -38,13 +38,10 @@ const MODEL_TO_RESOURCE = {
  * Create record in es
  * @param resource the resource to create
  * @param result the resource fields
- * @param toEs is to es directly
  */
-async function createRecordInEs (resource, entity, toEs) {
+async function createRecordInEs (resource, entity) {
   try {
-    if (toEs) {
-      await esHelper.processCreate(resource, entity)
-    }
+    await esHelper.processCreate(resource, entity)
   } catch (err) {
     logger.logFullError(err)
     throw err
@@ -52,24 +49,20 @@ async function createRecordInEs (resource, entity, toEs) {
 
   // publish create event.
   try {
-    await publishMessage("create", resource, entity);
+    await publishMessage('create', resource, entity)
   } catch (err) {
-    logger.logFullError(err);
+    logger.logFullError(err)
   }
-
 }
 
 /**
  * Patch record in es
  * @param resource the resource to create
  * @param result the resource fields
- * @param toEs is to es directly
  */
-async function patchRecordInEs (resource, entity, toEs) {
+async function patchRecordInEs (resource, entity) {
   try {
-    if (toEs) {
-      await esHelper.processUpdate(resource, entity)
-    }
+    await esHelper.processUpdate(resource, entity)
   } catch (err) {
     logger.logFullError(err)
     throw err
@@ -77,9 +70,9 @@ async function patchRecordInEs (resource, entity, toEs) {
 
   // publish patch event.
   try {
-    await publishMessage("patch", resource, entity);
+    await publishMessage('patch', resource, entity)
   } catch (err) {
-    logger.logFullError(err);
+    logger.logFullError(err)
   }
 }
 
@@ -88,9 +81,8 @@ async function patchRecordInEs (resource, entity, toEs) {
  * @param id the id of record
  * @param params the params of record (like nested ids)
  * @param resource the resource to delete
- * @param toEs is to es directly
  */
-async function deleteRecordFromEs (id, params, resource, toEs) {
+async function deleteRecordFromEs (id, params, resource) {
   let payload
   if (SUB_USER_DOCUMENTS[resource] || SUB_ORG_DOCUMENTS[resource]) {
     payload = _.assign({}, params)
@@ -100,19 +92,16 @@ async function deleteRecordFromEs (id, params, resource, toEs) {
     }
   }
   try {
-    if (toEs) {
-      await esHelper.processDelete(resource, payload)
-    }
+    await esHelper.processDelete(resource, payload)
   } catch (err) {
     logger.logFullError(err)
     throw err
   }
-  if (!toEs) {
-    try {
-      await publishMessage("remove", resource, payload);
-    } catch (err) {
-      logger.logFullError(err);
-    }
+
+  try {
+    await publishMessage('remove', resource, payload)
+  } catch (err) {
+    logger.logFullError(err)
   }
 }
 
@@ -229,8 +218,8 @@ async function deleteChild (model, id, params, resourceName, transaction) {
       params.forEach(attr => { esParams[attr] = record[attr] })
 
       // remove from db
-      await dbHelper.remove(model, record.id, transaction)
-      await deleteRecordFromEs(record.id, esParams, resourceName, !!transaction)
+      await dbHelper.remove(model, record.id, null, transaction)
+      await deleteRecordFromEs(record.id, esParams, resourceName)
 
       // sleep for configured time
       await sleep(config.CASCADE_PAUSE_MS)

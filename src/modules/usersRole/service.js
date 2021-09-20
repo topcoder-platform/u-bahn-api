@@ -3,6 +3,7 @@
  */
 
 const joi = require('@hapi/joi')
+const config = require('config')
 const _ = require('lodash')
 
 const errors = require('../../common/errors')
@@ -28,10 +29,20 @@ async function create (entity, auth) {
   await dbHelper.get(User, entity.userId)
   await dbHelper.makeSureUnique(UsersRole, entity, uniqueFields)
 
-  const result = await dbHelper.create(UsersRole, entity, auth)
-  await serviceHelper.createRecordInEs(resource, result.dataValues)
-
-  return result
+  let newEntity
+  try {
+    await sequelize.transaction(async (t) => {
+      const result = await dbHelper.create(UsersRole, entity, auth, t)
+      newEntity = result.toJSON()
+      await serviceHelper.createRecordInEs(resource, newEntity)
+    })
+    return newEntity
+  } catch (e) {
+    if (newEntity) {
+      helper.publishError(config.UBAHN_ERROR_TOPIC, newEntity, 'userrole.create')
+    }
+    throw e
+  }
 }
 
 create.schema = {
@@ -109,8 +120,16 @@ search.schema = {
  * @return {Promise<void>} no data returned
  */
 async function remove (id, auth, params) {
-  await dbHelper.remove(UsersRole, id, params)
-  await serviceHelper.deleteRecordFromEs(id, params, resource)
+  const entity = { id }
+  try {
+    await sequelize.transaction(async (t) => {
+      await dbHelper.remove(UsersRole, id, params, t)
+      await serviceHelper.deleteRecordFromEs(id, params, resource)
+    })
+  } catch (e) {
+    helper.publishError(config.UBAHN_ERROR_TOPIC, entity, 'userrole.delete')
+    throw e
+  }
 }
 
 module.exports = {

@@ -31,6 +31,8 @@ module.exports = {
 
   BUSAPI_URL: process.env.BUSAPI_URL || 'https://api.topcoder-dev.com/v5',
 
+  TOPCODER_GROUP_API: process.env.TOPCODER_GROUP_API || 'https://api.topcoder-dev.com/v5/groups',
+
   KAFKA_ERROR_TOPIC: process.env.KAFKA_ERROR_TOPIC || 'common.error.reporting',
   KAFKA_MESSAGE_ORIGINATOR: process.env.KAFKA_MESSAGE_ORIGINATOR || 'u-bahn-api',
 
@@ -63,6 +65,14 @@ module.exports = {
       password: process.env.ELASTICCLOUD_PASSWORD
     },
 
+    USER_ACHIEVEMENT_PROPERTY_NAME: process.env.USER_ACHIEVEMENT_PROPERTY_NAME || 'achievements',
+    USER_EXTERNALPROFILE_PROPERTY_NAME: process.env.USER_EXTERNALPROFILE_PROPERTY_NAME || 'externalProfiles',
+    USER_ATTRIBUTE_PROPERTY_NAME: process.env.USER_ATTRIBUTE_PROPERTY_NAME || 'attributes',
+    USER_ROLE_PROPERTY_NAME: process.env.USER_ROLE_PROPERTY_NAME || 'roles',
+    USER_SKILL_PROPERTY_NAME: process.env.USER_SKILL_PROPERTY_NAME || 'skills',
+    USER_GROUP_PROPERTY_NAME: process.env.USER_GROUP_PROPERTY_NAME || 'groups',
+
+    ORGANIZATION_SKILLPROVIDER_PROPERTY_NAME: process.env.ORGANIZATION_SKILLPROVIDER_PROPERTY_NAME || 'skillProviders',
     // es mapping: _index, _type, _id
     DOCUMENTS: {
       achievementprovider: {

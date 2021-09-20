@@ -2,6 +2,7 @@
  * the users skill services
  */
 const joi = require('@hapi/joi')
+const config = require('config')
 const _ = require('lodash')
 
 const errors = require('../../common/errors')
@@ -27,10 +28,20 @@ async function create (entity, auth) {
   await dbHelper.get(User, entity.userId)
   await dbHelper.makeSureUnique(UsersSkill, entity, uniqueFields)
 
-  const result = await dbHelper.create(UsersSkill, entity, auth)
-  await serviceHelper.createRecordInEs(resource, result.dataValues)
-
-  return result
+  let newEntity
+  try {
+    await sequelize.transaction(async (t) => {
+      const result = await dbHelper.create(UsersSkill, entity, auth, t)
+      newEntity = result.toJSON()
+      await serviceHelper.createRecordInEs(resource, newEntity)
+    })
+    return newEntity
+  } catch (e) {
+    if (newEntity) {
+      helper.publishError(config.UBAHN_ERROR_TOPIC, newEntity, 'userskill.create')
+    }
+    throw e
+  }
 }
 
 create.schema = {
@@ -62,10 +73,20 @@ async function patch (id, entity, auth, params) {
 
   await dbHelper.makeSureUnique(UsersSkill, entity, uniqueFields, params)
 
-  const newEntity = await dbHelper.update(UsersSkill, id, entity, auth, params)
-  await serviceHelper.patchRecordInEs(resource, newEntity.dataValues)
-
-  return newEntity
+  let newEntity
+  try {
+    await sequelize.transaction(async (t) => {
+      const result = await dbHelper.update(UsersSkill, id, entity, auth, params, t)
+      newEntity = result.toJSON()
+      await serviceHelper.patchRecordInEs(resource, newEntity)
+    })
+    return newEntity
+  } catch (e) {
+    if (newEntity) {
+      helper.publishError(config.UBAHN_ERROR_TOPIC, newEntity, 'userskill.update')
+    }
+    throw e
+  }
 }
 
 patch.schema = {
@@ -157,8 +178,16 @@ search.schema = {
  * @return {Promise<void>} no data returned
  */
 async function remove (id, auth, params) {
-  await dbHelper.remove(UsersSkill, id, params)
-  await serviceHelper.deleteRecordFromEs(id, params, resource)
+  const entity = { id }
+  try {
+    await sequelize.transaction(async (t) => {
+      await dbHelper.remove(UsersSkill, id, params, t)
+      await serviceHelper.deleteRecordFromEs(id, params, resource)
+    })
+  } catch (e) {
+    helper.publishError(config.UBAHN_ERROR_TOPIC, entity, 'userskill.delete')
+    throw e
+  }
 }
 
 module.exports = {
