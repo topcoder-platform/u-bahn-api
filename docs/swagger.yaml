@@ -520,11 +520,6 @@ paths:
         required: true
         type: "string"
         format: "UUID"
-      - name: "skillName"
-        in: "query"
-        description: "Filter by skill name (through skill id)"
-        required: false
-        type: "string"
       responses:
         "200":
           description: "OK - the request was successful"
@@ -579,11 +574,6 @@ paths:
         required: true
         type: "string"
         format: "UUID"
-      - name: "skillName"
-        in: "query"
-        description: "Filter by skill name (through skill id)"
-        required: false
-        type: "string"
       responses:
         "200":
           description: "Success response"
@@ -4565,11 +4555,6 @@ definitions:
         description: "The organization id"
         type: "string"
         format: "UUID"
-      skills:
-        type: "array"
-        items:
-          type: "string"
-        description: "The skill name to filter users with. Specify multiple times to provide multiple values"
   Unauthorized:
     type: "object"
     properties:

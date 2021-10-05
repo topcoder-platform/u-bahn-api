@@ -12,7 +12,6 @@ const dbHelper = require('../../common/db-helper')
 const serviceHelper = require('../../common/service-helper')
 const sequelize = require('../../models/index')
 
-const SkillsProvider = sequelize.models.SkillsProvider
 const Organization = sequelize.models.Organization
 const OrganizationSkillsProvider = sequelize.models.OrganizationSkillsProvider
 const resource = serviceHelper.getResource('OrganizationSkillsProvider')
@@ -26,7 +25,6 @@ const uniqueFields = [['organizationId', 'skillProviderId']]
  */
 async function create (entity, auth) {
   await dbHelper.get(Organization, entity.organizationId)
-  await dbHelper.get(SkillsProvider, entity.skillProviderId)
   await dbHelper.makeSureUnique(OrganizationSkillsProvider, entity, uniqueFields)
 
   let newEntity

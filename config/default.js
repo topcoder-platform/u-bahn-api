@@ -32,6 +32,7 @@ module.exports = {
   BUSAPI_URL: process.env.BUSAPI_URL || 'https://api.topcoder-dev.com/v5',
 
   TOPCODER_GROUP_API: process.env.TOPCODER_GROUP_API || 'https://api.topcoder-dev.com/v5/groups',
+  TOPCODER_SKILL_API: process.env.TOPCODER_SKILL_API || 'https://api.topcoder-dev.com/v5/skills',
 
   KAFKA_ERROR_TOPIC: process.env.KAFKA_ERROR_TOPIC || 'common.error.reporting',
   KAFKA_MESSAGE_ORIGINATOR: process.env.KAFKA_MESSAGE_ORIGINATOR || 'u-bahn-api',
@@ -100,17 +101,6 @@ module.exports = {
         index: process.env.ROLE_INDEX || 'role',
         type: '_doc',
         enrichPolicyName: process.env.ROLE_ENRICH_POLICYNAME || 'role-policy'
-      },
-      skill: {
-        index: process.env.SKILL_INDEX || 'skill',
-        type: '_doc',
-        enrichPolicyName: process.env.SKILL_ENRICH_POLICYNAME || 'skill-policy'
-      },
-      skillprovider: {
-        index: process.env.SKILL_PROVIDER_INDEX || 'skill_provider',
-        type: '_doc',
-        pipelineId: process.env.SKILL_PROVIDER_PIPELINE_ID || 'skillprovider-pipeline',
-        enrichPolicyName: process.env.SKILL_PROVIDER_ENRICH_POLICYNAME || 'skillprovider-policy'
       },
       user: {
         index: process.env.USER_INDEX || 'user',

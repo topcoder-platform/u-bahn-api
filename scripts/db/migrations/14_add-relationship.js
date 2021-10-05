@@ -2,22 +2,6 @@ const { DataTypes } = require('sequelize')
 
 module.exports = {
   up: async (query) => {
-    await query.addColumn('Skills', 'skillProviderId', {
-      type: DataTypes.UUID,
-      references: {
-        model: 'SkillsProviders',
-        key: 'id'
-      },
-      onUpdate: 'CASCADE'
-    })
-    await query.addColumn('OrganizationSkillsProviders', 'skillProviderId', {
-      type: DataTypes.UUID,
-      references: {
-        model: 'SkillsProviders',
-        key: 'id'
-      },
-      onUpdate: 'CASCADE'
-    })
     await query.addColumn('UsersSkills', 'userId', {
       type: DataTypes.UUID,
       references: {
@@ -88,14 +72,6 @@ module.exports = {
       onUpdate: 'CASCADE',
       onDelete: 'CASCADE'
     })
-    await query.addColumn('UsersSkills', 'skillId', {
-      type: DataTypes.UUID,
-      references: {
-        model: 'Skills',
-        key: 'id'
-      },
-      onUpdate: 'CASCADE'
-    })
     await query.addColumn('UsersRoles', 'roleId', {
       type: DataTypes.UUID,
       references: {
@@ -130,8 +106,6 @@ module.exports = {
     })
   },
   down: async (query) => {
-    await query.removeColumn('Skills', 'skillProviderId')
-    await query.removeColumn('OrganizationSkillsProviders', 'skillProviderId')
     await query.removeColumn('UsersSkills', 'userId')
     await query.removeColumn('Achievements', 'userId')
     await query.removeColumn('UserAttributes', 'userId')
@@ -140,7 +114,6 @@ module.exports = {
     await query.removeColumn('ExternalProfiles', 'organizationId')
     await query.removeColumn('AttributeGroups', 'organizationId')
     await query.removeColumn('OrganizationSkillsProviders', 'organizationId')
-    await query.removeColumn('UsersSkills', 'skillId')
     await query.removeColumn('UsersRoles', 'roleId')
     await query.removeColumn('Achievements', 'achievementsProviderId')
     await query.removeColumn('UserAttributes', 'attributeId')

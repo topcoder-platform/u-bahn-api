@@ -27,7 +27,6 @@ _.forOwn(config.ES.DOCUMENTS, (value, key) => {
 // map model name to bus message resource if different
 const MODEL_TO_RESOURCE = {
   UsersSkill: 'userskill',
-  SkillsProvider: 'skillprovider',
   AchievementsProvider: 'achievementprovider',
   UserAttribute: 'userattribute',
   UsersRole: 'userrole',

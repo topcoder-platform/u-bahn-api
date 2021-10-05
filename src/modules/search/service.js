@@ -1,10 +1,11 @@
 const axios = require('axios')
 const config = require('config')
+const _ = require('lodash')
 const querystring = require('querystring')
 const NodeCache = require('node-cache')
 const joi = require('@hapi/joi')
 const orgSkillsProviderService = require('../organizationSkillsProvider/service')
-const esHelper = require('../../common/es-helper')
+const helper = require('../../common/helper')
 
 // cache the emsi token
 const tokenCache = new NodeCache()
@@ -60,17 +61,25 @@ async function getEmsiObject (path, params) {
  * @returns {Object} the Object with skills
  */
 async function getSkills (query, auth) {
-  let result
   const skillProviderIds = await orgSkillsProviderService.search({ organizationId: query.organizationId }, auth)
 
   if (skillProviderIds.result.length === 1 && skillProviderIds.result[0].skillProviderId === config.EMSI_SKILLPROVIDER_ID) {
-    result = await getEmsiObject('/skills', { q: query.keyword })
+    const result = await getEmsiObject('/skills', { q: query.keyword })
     return { result: formatEmsiSkills(result) }
   }
 
-  result = await esHelper.searchSkillsInOrganization(query)
+  const skills = await helper.getSkillsByName(query.keyword)
+  // filter by skill providerIds
+  const providerIds = _.map(skillProviderIds.result, 'skillProviderId')
+  const filteredSkills = _.filter(skills, skill => _.includes(providerIds, skill.taxonomyId))
 
-  return result
+  return {
+    result: _.map(filteredSkills, skill => ({
+      name: skill.name,
+      skillId: skill.id,
+      skillProviderId: skill.taxonomyId
+    }))
+  }
 }
 
 getSkills.schema = {

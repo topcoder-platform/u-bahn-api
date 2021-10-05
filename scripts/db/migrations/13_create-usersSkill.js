@@ -8,6 +8,9 @@ module.exports = {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4
       },
+      skillId: {
+        type: DataTypes.UUID
+      },
       createdBy: {
         type: DataTypes.STRING
       },

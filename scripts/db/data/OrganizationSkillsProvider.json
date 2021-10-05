@@ -7,5 +7,14 @@
     "updatedBy": "tc-Copilot",
     "organizationId": "36ed815b-3da1-49f1-a043-aaed0a4e81ad",
     "skillProviderId": "7637ae1a-3b7c-44eb-a5ed-10ea02f1885d"
+  },
+  {
+    "id": "6a21394e-1278-4835-9e4d-cb4ff151fcd3",
+    "created": "2020-05-05T11:01:31.334Z",
+    "updated": "2020-05-05T11:02:10.574Z",
+    "createdBy": "tc-Copilot",
+    "updatedBy": "tc-Copilot",
+    "organizationId": "6a21394e-1278-4835-9e4d-cb4ff151fcd3",
+    "skillProviderId": "26fb37b1-5f9f-4727-baa9-f3c87de84ab1"
   }
 ]

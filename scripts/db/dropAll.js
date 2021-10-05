@@ -21,9 +21,6 @@ async function main () {
       id: topResources.user.pipeline.id
     })
     await client.ingest.deletePipeline({
-      id: topResources.skillprovider.pipeline.id
-    })
-    await client.ingest.deletePipeline({
       id: topResources.attributegroup.pipeline.id
     })
     logger.info('Successfully deleted')

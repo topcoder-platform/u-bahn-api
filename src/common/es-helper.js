@@ -42,15 +42,6 @@ const USER_ORGANIZATION = {
 }
 
 const USER_FILTER_TO_MODEL = {
-  skill: {
-    name: 'skill',
-    isAttribute: false,
-    model: require('../models/Skill'),
-    queryField: 'name',
-    esDocumentQuery: 'skills.skillId.keyword',
-    values: []
-  },
-  get skills () { return this.skill },
   achievement: {
     name: 'achievement',
     isAttribute: false,
@@ -114,26 +105,6 @@ const RESOURCE_FILTER = {
       queryField: 'name'
     }
   },
-  skill: {
-    externalId: {
-      resource: 'skill',
-      queryField: 'externalId'
-    },
-    skillProviderId: {
-      resource: 'skill',
-      queryField: 'skillProviderId'
-    },
-    name: {
-      resource: 'skill',
-      queryField: 'name'
-    }
-  },
-  skillprovider: {
-    name: {
-      resource: 'skillprovider',
-      queryField: 'name'
-    }
-  },
   achievementprovider: {
     name: {
       resource: 'achievementprovider',
@@ -167,12 +138,6 @@ const RESOURCE_FILTER = {
     }
   },
   // sub-resources
-  userskill: {
-    skillName: {
-      resource: 'skill',
-      queryField: 'name'
-    }
-  },
   externalprofile: {
     organizationName: {
       resource: 'organization',
@@ -213,16 +178,6 @@ const RESOURCE_FILTER = {
 const FILTER_CHAIN = {
   user: {
     idField: 'id'
-  },
-  skillprovider: {
-    filterNext: 'skill',
-    queryField: 'skillProviderId',
-    idField: 'id'
-  },
-  skill: {
-    filterNext: 'userskill',
-    queryField: 'skillId',
-    idField: 'skillProviderId'
   },
   attribute: {
     filterNext: 'userattribute',
@@ -365,7 +320,7 @@ async function updateOrg (organizationId, body, seqNo, primaryTerm) {
  */
 async function processCreate (resource, entity) {
   if (_.includes(_.keys(TopResources), resource)) {
-    // process the top resources such as user, skill...
+    // process the top resources such as user, attribute...
     helper.validProperties(entity, ['id'])
     await esClient.index({
       index: TopResources[resource].index,
@@ -505,7 +460,7 @@ async function processUpdate (resource, entity) {
  */
 async function processDelete (resource, entity) {
   if (_.includes(_.keys(TopResources), resource)) {
-    // process the top resources such as user, skill...
+    // process the top resources such as user, attribute...
     helper.validProperties(entity, ['id'])
     await esClient.delete({
       index: TopResources[resource].index,
@@ -585,13 +540,16 @@ async function getAttributeId (organizationId, attributeName) {
   const attributeIdLookupResults = await dBHelper.find(
     sequelize.models.Attribute,
     {
-      '$AttributeGroup.organizationId$': organizationId,
       name: attributeName
     },
     [{
       model: sequelize.models.AttributeGroup,
       as: 'AttributeGroup',
-      attributes: []
+      attributes: [],
+      where: {
+        organizationId
+      },
+      required: true
     }]
   )
 
@@ -877,59 +835,7 @@ function hasNonAlphaNumeric (text) {
   return !regex.test(text)
 }
 
-/**
- * Get skillIds matching the search keyword
- *
- * @param keyword the search keyword
- * @returns array of skillIds
- */
-async function searchSkills (keyword, skillProviderIds) {
-  const queryDoc = DOCUMENTS.skill
-  keyword = escapeRegex(keyword)
-  const query = hasNonAlphaNumeric(keyword) ? `\\*${keyword}\\*` : `*${keyword}*`
-
-  const keywordSearchClause = {
-    query_string: {
-      default_field: 'name',
-      minimum_should_match: '100%',
-      query
-    }
-  }
-
-  const searchClause = {
-    query: {}
-  }
-
-  if (skillProviderIds == null) {
-    searchClause.query = keywordSearchClause
-    searchClause._source = 'id'
-  } else {
-    searchClause.query = {
-      bool: {
-        filter: [{
-          terms: {
-            [`${RESOURCE_FILTER.skill.skillProviderId.queryField}.keyword`]: skillProviderIds
-          }
-        }],
-        must: [keywordSearchClause]
-      }
-    }
-  }
-
-  const esQuery = {
-    index: queryDoc.index,
-    type: queryDoc.type,
-    body: searchClause
-  }
-
-  logger.debug(`ES query for searching skills: ${JSON.stringify(esQuery, null, 2)}`)
-  const { body: results } = await esClient.search(esQuery)
-
-  return results.hits.hits.map(hit => hit._source)
-}
-
 async function setUserSearchClausesToEsQuery (boolClause, keyword) {
-  const skillIds = (await searchSkills(keyword)).map(skill => skill.id)
   boolClause.should.push({
     query_string: {
       fields: ['firstName', 'lastName', 'handle'],
@@ -954,14 +860,6 @@ async function setUserSearchClausesToEsQuery (boolClause, keyword) {
       fields: [USER_FILTER_TO_MODEL.achievement.esDocumentValueQuery]
     }
   })
-
-  if (skillIds.length > 0) {
-    boolClause.should.push({
-      terms: {
-        [USER_FILTER_TO_MODEL.skill.esDocumentQuery]: skillIds
-      }
-    })
-  }
 
   boolClause.minimum_should_match = 1
 }
@@ -1093,30 +991,8 @@ function buildEsQueryToGetAttributeValues (attributeId, attributeValue, size) {
   return esQuery
 }
 
-function buildEsQueryToGetSkillProviderIds (organizationId) {
-  const queryDoc = DOCUMENTS.organization
-
-  const esQuery = {
-    index: queryDoc.index,
-    type: queryDoc.type,
-    body: {
-      size: 1000,
-      query: {
-        term: {
-          'id.keyword': {
-            value: organizationId
-          }
-        }
-      }
-    }
-  }
-
-  return esQuery
-}
-
 async function resolveUserFilterFromDb (filter, { handle }, organizationId) {
-  const DBHelper = require('../models/index').DBHelper
-
+  const DBHelper = require('../common/db-helper')
   if (filter.isAttribute) {
     const esQueryClause = {
       bool: {
@@ -1303,7 +1179,7 @@ async function resolveResFilter (filter, initialRes) {
  */
 function applySubResFilters (results, preResFilterResults, ownResFilters, perPage) {
   let count = 0
-  const filtered = results.filter(item => {
+  const filtered = _.filter(results, item => {
     for (const filter of preResFilterResults) {
       if (item[filter.queryField] !== filter.value) {
         return false
@@ -1636,35 +1512,6 @@ async function searchUsers (authUser, filter, params) {
 }
 
 /**
- * Search for skills matching the given keyword and are part of the given organization
- * @param {Object} param0 the organizationId and keyword
- */
-async function searchSkillsInOrganization ({ organizationId, keyword }) {
-  if (!organizationId) {
-    throw Error('Cannot search for skills without organization info')
-  }
-  const esQueryToGetSkillProviders = buildEsQueryToGetSkillProviderIds(organizationId)
-  logger.debug(`ES query to get skill provider ids: ${JSON.stringify(esQueryToGetSkillProviders, null, 2)}`)
-
-  const { body: esResultOfQueryToGetSkillProviders } = await esClient.search(esQueryToGetSkillProviders)
-  logger.debug(`ES result: ${JSON.stringify(esResultOfQueryToGetSkillProviders, null, 2)}`)
-
-  const skillProviderIds = _.flatten(esResultOfQueryToGetSkillProviders.hits.hits.map(hit => hit._source.skillProviders == null ? [] : hit._source.skillProviders.map(sp => sp.skillProviderId)))
-  logger.debug(`Organization ${organizationId} yielded skillProviderIds: ${JSON.stringify(skillProviderIds, null, 2)}`)
-
-  const skills = await searchSkills(keyword, skillProviderIds)
-
-  return {
-    result: skills.map(skill => ({
-      name: skill.name,
-      skillId: skill.id,
-      skillProviderId: skill.skillProviderId
-      // skillProviderName: 'TODO'
-    }))
-  }
-}
-
-/**
  * Searches for matching values for the given attribute value, under the given attribute id
  * @param {Object} param0 The attribute id and the attribute value properties
  */
@@ -1730,7 +1577,6 @@ module.exports = {
   searchElasticSearch,
   getFromElasticSearch,
   searchUsers,
-  searchSkillsInOrganization,
   searchAttributeValues,
   searchAchievementValues
 }

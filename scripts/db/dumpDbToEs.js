@@ -15,11 +15,9 @@ const models = sequelize.models
 
 // Declares the ordering of the resource data insertion, to ensure that enrichment happens correctly
 const RESOURCES_IN_ORDER = [
-  'skillprovider',
   'role',
   'achievementprovider',
   'attributegroup',
-  'skill',
   'attribute',
   'organization',
   'organizationskillprovider',
@@ -45,18 +43,6 @@ async function cleanupES (keys) {
   try {
     await client.ingest.deletePipeline({
       id: topResources.user.pipeline.id
-    })
-  } catch (e) {
-    if (e.meta && e.meta.body.error.type === RESOURCE_NOT_FOUND) {
-      // Ignore
-    } else {
-      throw e
-    }
-  }
-
-  try {
-    await client.ingest.deletePipeline({
-      id: topResources.skillprovider.pipeline.id
     })
   } catch (e) {
     if (e.meta && e.meta.body.error.type === RESOURCE_NOT_FOUND) {
