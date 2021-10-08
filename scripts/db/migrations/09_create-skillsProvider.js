@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize')
 
 module.exports = {
   up: async (query) => {
-    await query.createTable('UsersSkills', {
+    await query.createTable('SkillsProviders', {
       id: {
         primaryKey: true,
         type: DataTypes.UUID,
@@ -14,14 +14,8 @@ module.exports = {
       updatedBy: {
         type: DataTypes.STRING
       },
-      metricValue: {
+      name: {
         type: DataTypes.STRING
-      },
-      certifierId: {
-        type: DataTypes.STRING
-      },
-      certifiedDate: {
-        type: DataTypes.DATE
       },
       created: {
         type: DataTypes.DATE,
@@ -33,6 +27,6 @@ module.exports = {
     })
   },
   down: async (query) => {
-    await query.dropTable('UsersSkills')
+    await query.dropTable('SkillsProviders')
   }
 }

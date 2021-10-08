@@ -11,9 +11,6 @@ module.exports = {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4
       },
-      skillProviderId: {
-        type: DataTypes.UUID
-      },
       createdBy: {
         type: DataTypes.STRING
       },
