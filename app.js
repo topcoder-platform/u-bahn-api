@@ -112,3 +112,7 @@ app.use('*', (req, res) => {
     logger.info(`Express server listening on port ${app.get('port')}`)
   })
 })()
+
+if (process.env.NODE_ENV === 'test') {
+  module.exports = app
+}

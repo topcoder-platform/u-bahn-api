@@ -102,3 +102,8 @@ Make sure all config values are right, and you can run on local successfully, th
 5. When you are running the application for the first time, It will take some time initially to download the image and install the dependencies
 
 You can also head into `docker-pgsql-es` folder and run `docker-compose up -d` to have docker instances of pgsql and elasticsearch to use with the api
+
+## Testing
+
+- Run `npm run test` to execute unit tests
+- Run `npm run test:cov` to execute unit tests and generate coverage report.
