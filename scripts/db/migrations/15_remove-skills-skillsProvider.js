@@ -2,16 +2,10 @@ const { DataTypes } = require('sequelize')
 
 module.exports = {
   up: async (query) => {
-    await query.removeColumn('UsersSkills', 'skillId')
-    await query.removeColumn('OrganizationSkillsProviders', 'skillProviderId')
-    await query.addColumn('OrganizationSkillsProviders', 'skillProviderId', {
-      type: DataTypes.UUID
-    })
-    await query.addColumn('UsersSkills', 'skillId', {
-      type: DataTypes.UUID
-    })
-    await query.dropTable('SkillsProviders')
+    await query.removeConstraint('UsersSkills', 'UsersSkills_skillId_fkey')
+    await query.removeConstraint('OrganizationSkillsProviders', 'OrganizationSkillsProviders_skillProviderId_fkey')
     await query.dropTable('Skills')
+    await query.dropTable('SkillsProviders')
   },
   down: async (query) => {
     await query.createTable('Skills', {
@@ -66,8 +60,6 @@ module.exports = {
         type: DataTypes.DATE
       }
     })
-    await query.removeColumn('UsersSkills', 'skillId')
-    await query.removeColumn('OrganizationSkillsProviders', 'skillProviderId')
     await query.addColumn('Skills', 'skillProviderId', {
       type: DataTypes.UUID,
       references: {
@@ -76,19 +68,23 @@ module.exports = {
       },
       onUpdate: 'CASCADE'
     })
-    await query.addColumn('OrganizationSkillsProviders', 'skillProviderId', {
-      type: DataTypes.UUID,
+    await query.addConstraint('OrganizationSkillsProviders', {
+      fields: ['skillProviderId'],
+      type: 'foreign key',
+      name: 'OrganizationSkillsProviders_skillProviderId_fkey',
       references: {
-        model: 'SkillsProviders',
-        key: 'id'
+        table: 'SkillsProviders',
+        field: 'id'
       },
       onUpdate: 'CASCADE'
     })
-    await query.addColumn('UsersSkills', 'skillId', {
-      type: DataTypes.UUID,
+    await query.addConstraint('UsersSkills', {
+      fields: ['skillId'],
+      type: 'foreign key',
+      name: 'UsersSkills_skillId_fkey',
       references: {
-        model: 'Skills',
-        key: 'id'
+        table: 'Skills',
+        field: 'id'
       },
       onUpdate: 'CASCADE'
     })
