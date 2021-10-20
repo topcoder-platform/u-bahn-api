@@ -42,6 +42,9 @@ const USER_ORGANIZATION = {
 }
 
 const USER_FILTER_TO_MODEL = {
+  skill: {
+    esDocumentQuery: 'skills.skillId.keyword'
+  },
   achievement: {
     name: 'achievement',
     isAttribute: false,
@@ -836,6 +839,7 @@ function hasNonAlphaNumeric (text) {
 }
 
 async function setUserSearchClausesToEsQuery (boolClause, keyword) {
+  const skillIds = (await helper.getSkillsByName(keyword)).map(skill => skill.id)
   boolClause.should.push({
     query_string: {
       fields: ['firstName', 'lastName', 'handle'],
@@ -860,6 +864,14 @@ async function setUserSearchClausesToEsQuery (boolClause, keyword) {
       fields: [USER_FILTER_TO_MODEL.achievement.esDocumentValueQuery]
     }
   })
+
+  if (skillIds.length > 0) {
+    boolClause.should.push({
+      terms: {
+        [USER_FILTER_TO_MODEL.skill.esDocumentQuery]: skillIds
+      }
+    })
+  }
 
   boolClause.minimum_should_match = 1
 }
