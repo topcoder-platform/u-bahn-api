@@ -17,8 +17,6 @@ function validProperties (payload, keys) {
   }
 }
 
-
-
 /**
  * roles that used in service, all roles must match topcoder roles
  * Admin and Administrator are both admin user
@@ -41,7 +39,6 @@ const AllAuthenticatedUsers = [
   UserRoles.copilot,
   UserRoles.ubahn
 ]
-
 
 /**
  * all admin user
@@ -106,35 +103,6 @@ const TopResources = {
       enrichFields: ['id', 'name', 'created', 'updated', 'createdBy', 'updatedBy']
     }
   },
-  skill: {
-    index: config.get('ES.DOCUMENTS.skill.index'),
-    type: config.get('ES.DOCUMENTS.skill.type'),
-    enrich: {
-      policyName: config.get('ES.DOCUMENTS.skill.enrichPolicyName'),
-      matchField: 'id',
-      enrichFields: ['id', 'skillProviderId', 'name', 'externalId', 'uri', 'created', 'updated', 'createdBy', 'updatedBy', 'skillprovider']
-    },
-    ingest: {
-      pipeline: {
-        id: config.get('ES.DOCUMENTS.skillprovider.pipelineId')
-      }
-    }
-  },
-  skillprovider: {
-    index: config.get('ES.DOCUMENTS.skillprovider.index'),
-    type: config.get('ES.DOCUMENTS.skillprovider.type'),
-    enrich: {
-      policyName: config.get('ES.DOCUMENTS.skillprovider.enrichPolicyName'),
-      matchField: 'id',
-      enrichFields: ['id', 'name', 'created', 'updated', 'createdBy', 'updatedBy']
-    },
-    pipeline: {
-      id: config.get('ES.DOCUMENTS.skillprovider.pipelineId'),
-      field: 'skillProviderId',
-      targetField: 'skillprovider',
-      maxMatches: '1'
-    }
-  },
   user: {
     index: config.get('ES.DOCUMENTS.user.index'),
     type: config.get('ES.DOCUMENTS.user.type'),
@@ -165,13 +133,6 @@ const TopResources = {
           enrichPolicyName: config.get('ES.DOCUMENTS.role.enrichPolicyName'),
           field: '_ingest._value.roleId',
           targetField: '_ingest._value.role',
-          maxMatches: '1'
-        },
-        {
-          referenceField: config.get('ES.DOCUMENTS.userskill.userField'),
-          enrichPolicyName: config.get('ES.DOCUMENTS.skill.enrichPolicyName'),
-          field: '_ingest._value.skillId',
-          targetField: '_ingest._value.skill',
           maxMatches: '1'
         }
       ]

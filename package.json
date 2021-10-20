@@ -11,7 +11,9 @@
     "migrations": "node scripts/db/migrations.js",
     "insert-data": "node scripts/db/insert-data.js",
     "migrate-qldb-to-pg": "node scripts/db/migrateQldbToPg.js",
-    "import-s3-data": "node scripts/db/importS3ToQldb.js"
+    "import-s3-data": "node scripts/db/importS3ToQldb.js",
+    "test": "mocha test/unit/*.test.js --timeout 30000 --require test/prepare.js --exit",
+    "test:cov": "nyc --reporter=html --reporter=text npm run test"
   },
   "repository": {
     "type": "git",
@@ -47,7 +49,24 @@
     "winston": "^3.2.1"
   },
   "devDependencies": {
+    "chai": "^4.3.4",
+    "chai-as-promised": "^7.1.1",
+    "chai-http": "^4.3.0",
+    "mocha": "^9.1.2",
+    "nyc": "^15.1.0",
+    "sinon": "^11.1.2",
     "standard": "^14.3.0"
+  },
+  "standard": {
+    "env": [
+      "mocha"
+    ]
+  },
+  "nyc": {
+    "exclude": [
+      "src/common/logger.js",
+      "test/unit/**"
+    ]
   },
   "engines": {
     "node": "12.x"

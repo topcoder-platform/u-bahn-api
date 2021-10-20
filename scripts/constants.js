@@ -6,22 +6,6 @@
 const config = require('config')
 
 const topResources = {
-  skillprovider: {
-    index: config.get('ES.DOCUMENTS.skillprovider.index'),
-    type: config.get('ES.DOCUMENTS.skillprovider.type'),
-    enrich: {
-      policyName: config.get('ES.DOCUMENTS.skillprovider.enrichPolicyName'),
-      matchField: 'id',
-      enrichFields: ['id', 'name', 'created', 'updated', 'createdBy', 'updatedBy']
-    },
-    pipeline: {
-      id: config.get('ES.DOCUMENTS.skillprovider.pipelineId'),
-      field: 'skillProviderId',
-      targetField: 'skillprovider',
-      maxMatches: '1'
-    }
-  },
-
   role: {
     index: config.get('ES.DOCUMENTS.role.index'),
     type: config.get('ES.DOCUMENTS.role.type'),
@@ -55,21 +39,6 @@ const topResources = {
       field: 'attributeGroupId',
       targetField: 'attributegroup',
       maxMatches: '1'
-    }
-  },
-
-  skill: {
-    index: config.get('ES.DOCUMENTS.skill.index'),
-    type: config.get('ES.DOCUMENTS.skill.type'),
-    enrich: {
-      policyName: config.get('ES.DOCUMENTS.skill.enrichPolicyName'),
-      matchField: 'id',
-      enrichFields: ['id', 'skillProviderId', 'name', 'externalId', 'uri', 'created', 'updated', 'createdBy', 'updatedBy', 'skillprovider']
-    },
-    ingest: {
-      pipeline: {
-        id: config.get('ES.DOCUMENTS.skillprovider.pipelineId')
-      }
     }
   },
 
@@ -126,13 +95,6 @@ const topResources = {
           field: '_ingest._value.roleId',
           targetField: '_ingest._value.role',
           maxMatches: '1'
-        },
-        {
-          referenceField: config.get('ES.DOCUMENTS.userskill.userField'),
-          enrichPolicyName: 'skill-policy',
-          field: '_ingest._value.skillId',
-          targetField: '_ingest._value.skill',
-          maxMatches: '1'
         }
       ]
     }
@@ -178,9 +140,7 @@ const organizationResources = {
 const modelToESIndexMapping = {
   User: 'user',
   Role: 'role',
-  SkillsProvider: 'skillprovider',
   Organization: 'organization',
-  Skill: 'skill',
   UsersRole: 'userrole',
   UsersSkill: 'userskill',
   Achievement: 'achievement',

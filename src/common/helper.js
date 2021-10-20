@@ -64,6 +64,26 @@ async function getUserGroup (memberId) {
 }
 
 /**
+ * Returns the skills in topcoder skills
+ * @param {String} name The skill name
+ */
+async function getSkillsByName (name) {
+  const url = config.TOPCODER_SKILL_API
+  const token = await getTopcoderM2Mtoken()
+  const params = { name, page: 1 }
+
+  logger.debug(`request GET ${url} with params: ${JSON.stringify(params)}`)
+  let skills = []
+  let skillsRes = await axios.get(url, { headers: { Authorization: `Bearer ${token}` }, params })
+  while (skillsRes.data.length > 0) {
+    skills = _.concat(skills, _.map(skillsRes.data, g => _.pick(g, 'id', 'name', 'taxonomyId')))
+    params.page = params.page + 1
+    skillsRes = await axios.get(url, { headers: { Authorization: `Bearer ${token}` }, params })
+  }
+  return skills
+}
+
+/**
  * Checks if the source matches the term.
  *
  * @param {Array} source the array in which to search for the term
@@ -226,6 +246,7 @@ module.exports = {
   validProperties,
   getAuthUser,
   getUserGroup,
+  getSkillsByName,
   permissionCheck,
   checkIfExists,
   injectSearchMeta,

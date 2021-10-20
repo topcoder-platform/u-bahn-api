@@ -11,7 +11,6 @@ const dbHelper = require('../../common/db-helper')
 const serviceHelper = require('../../common/service-helper')
 const sequelize = require('../../models/index')
 
-const Skill = sequelize.models.Skill
 const User = sequelize.models.User
 const UsersSkill = sequelize.models.UsersSkill
 const resource = serviceHelper.getResource('UsersSkill')
@@ -24,7 +23,6 @@ const uniqueFields = [['userId', 'skillId']]
  * @return {Promise} the created device
  */
 async function create (entity, auth) {
-  await dbHelper.get(Skill, entity.skillId)
   await dbHelper.get(User, entity.userId)
   await dbHelper.makeSureUnique(UsersSkill, entity, uniqueFields)
 
@@ -64,9 +62,6 @@ create.schema = {
  * @return {Promise} the updated device
  */
 async function patch (id, entity, auth, params) {
-  if (entity.skillId) {
-    await dbHelper.get(Skill, entity.skillId)
-  }
   if (entity.userId) {
     await dbHelper.get(User, entity.userId)
   }
@@ -146,16 +141,7 @@ async function search (query, auth) {
     return esResult
   }
 
-  // add query for associations
-  if (query.skillName) {
-    query['$Skill.name$'] = query.skillName
-    delete query.skillName
-  }
-  const items = await dbHelper.find(UsersSkill, query, auth, [{
-    model: Skill,
-    as: 'Skill',
-    attributes: []
-  }])
+  const items = await dbHelper.find(UsersSkill, query, auth)
 
   return { fromDb: true, result: items, total: items.length }
 }
@@ -164,8 +150,7 @@ search.schema = {
   query: {
     page: joi.id(),
     perPage: joi.pageSize(),
-    userId: joi.string().required(),
-    skillName: joi.string()
+    userId: joi.string().required()
   },
   auth: joi.object()
 }

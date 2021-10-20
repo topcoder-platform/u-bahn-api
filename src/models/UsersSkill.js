@@ -7,6 +7,9 @@ module.exports = (sequelize) => {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4
     },
+    skillId: {
+      type: DataTypes.UUID
+    },
     createdBy: {
       type: DataTypes.STRING
     },
@@ -30,7 +33,6 @@ module.exports = (sequelize) => {
   })
   UsersSkill.associate = (models) => {
     UsersSkill.belongsTo(models.User, { foreignKey: 'userId', type: DataTypes.UUID })
-    UsersSkill.belongsTo(models.Skill, { foreignKey: 'skillId', type: DataTypes.UUID })
   }
   return UsersSkill
 }

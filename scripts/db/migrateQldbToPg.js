@@ -9,8 +9,8 @@ const logger = require('../../src/common/logger')
 const models = sequelize.models
 
 const dataKeys = ['User', 'Organization', 'AchievementsProvider', 'Achievement',
-  'AttributeGroup', 'Attribute', 'ExternalProfile', 'SkillsProvider',
-  'OrganizationSkillsProvider', 'Role', 'Skill', 'UserAttribute', 'UsersRole', 'UsersSkill']
+  'AttributeGroup', 'Attribute', 'ExternalProfile',
+  'OrganizationSkillsProvider', 'Role', 'UserAttribute', 'UsersRole', 'UsersSkill']
 
 /**
  * Query all records from db.
