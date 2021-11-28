@@ -18,7 +18,7 @@
     "url": ""
   },
   "dependencies": {
-    "@elastic/elasticsearch": "^7.9.1",
+    "@elastic/elasticsearch": "^7.15.0",
     "@hapi/joi": "^16.1.8",
     "@hapi/joi-date": "^2.0.1",
     "amazon-qldb-driver-nodejs": "^0.1.1-preview.2",
