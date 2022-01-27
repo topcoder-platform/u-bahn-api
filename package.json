@@ -39,7 +39,7 @@
     "pgtools": "^0.3.0",
     "querystring": "^0.2.0",
     "sequelize": "^6.3.5",
-    "swagger-ui-express": "^4.1.4",
+    "swagger-ui-express": "^4.2.0",
     "tc-bus-api-wrapper": "github:topcoder-platform/tc-bus-api-wrapper",
     "tc-core-library-js": "github:appirio-tech/tc-core-library-js#v2.6.4",
     "umzug": "^2.3.0",
