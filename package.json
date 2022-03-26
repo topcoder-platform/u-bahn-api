@@ -11,7 +11,9 @@
     "migrations": "node scripts/db/migrations.js",
     "insert-data": "node scripts/db/insert-data.js",
     "migrate-qldb-to-pg": "node scripts/db/migrateQldbToPg.js",
-    "import-s3-data": "node scripts/db/importS3ToQldb.js"
+    "import-s3-data": "node scripts/db/importS3ToQldb.js",
+    "prepare": "npm run snyk-protect",
+    "snyk-protect": "snyk-protect"
   },
   "repository": {
     "type": "git",
@@ -32,7 +34,7 @@
     "ion-js": "^3.1.2",
     "js-yaml": "^3.13.1",
     "jsbi": "^3.1.4",
-    "lodash": "^4.17.19",
+    "lodash": "^4.17.20",
     "node-cache": "^5.1.2",
     "pg": "^8.5.1",
     "pg-hstore": "^2.3.3",
@@ -44,12 +46,14 @@
     "tc-core-library-js": "github:appirio-tech/tc-core-library-js#v2.6.4",
     "umzug": "^2.3.0",
     "uuid": "^7.0.1",
-    "winston": "^3.2.1"
+    "winston": "^3.2.1",
+    "@snyk/protect": "latest"
   },
   "devDependencies": {
     "standard": "^14.3.0"
   },
   "engines": {
     "node": "12.x"
-  }
+  },
+  "snyk": true
 }
