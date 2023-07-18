@@ -1,0 +1,26 @@
+[
+  {
+    "organization_id": "a866fd95-c2d5-4fa8-b341-a367138c9911",
+    "skillProvider_id": "123456",
+    "httpCode": 500,
+    "message": "invalid input syntax for type uuid: \"123456\""
+  },
+  {
+    "organization_id": "123456",
+    "skillProvider_id":"7637ae1a-3b7c-44eb-a5ed-10ea02f1885d",
+    "httpCode": 500,
+    "message": "invalid input syntax for type uuid: \"123456\""
+  },
+  {
+    "organization_id": "3cd81b8c-d45e-414e-be66-afb31aa0240c",
+    "skillProvider_id":"7637ae1a-3b7c-44eb-a5ed-10ea02f1885d",
+    "httpCode": 404,
+    "message": "cannot find OrganizationSkillsProvider where organizationId:3cd81b8c-d45e-414e-be66-afb31aa0240c, skillProviderId:7637ae1a-3b7c-44eb-a5ed-10ea02f1885d"
+  },
+  {
+    "organization_id": "a866fd95-c2d5-4fa8-b341-a367138c9911",
+    "skillProvider_id": "3cd81b8c-d45e-414e-be66-afb31aa0240c",
+    "httpCode": 404,
+    "message": "cannot find OrganizationSkillsProvider where organizationId:a866fd95-c2d5-4fa8-b341-a367138c9911, skillProviderId:3cd81b8c-d45e-414e-be66-afb31aa0240c"
+  }
+]

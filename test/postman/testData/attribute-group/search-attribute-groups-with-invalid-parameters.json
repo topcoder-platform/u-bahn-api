@@ -1,0 +1,27 @@
+[
+  {
+    "input": "page=-1&perPage=10",
+    "httpCode": 400,
+    "message": "\"query.page\" must be larger than or equal to 1"
+  },
+  {
+    "input": "page=1&perPage=-10",
+    "httpCode": 400,
+    "message": "\"query.perPage\" must be larger than or equal to 1"
+  },
+  {
+    "input": "name=",
+    "httpCode": 400,
+    "message": "\"query.name\" is not allowed to be empty"
+  },
+  {
+    "input": "organizationId=",
+    "httpCode": 400,
+    "message": "\"query.organizationId\" is not allowed to be empty"
+  },
+  {
+    "input": "aa=",
+    "httpCode": 400,
+    "message": "\"query.aa\" is not allowed"
+  }
+]

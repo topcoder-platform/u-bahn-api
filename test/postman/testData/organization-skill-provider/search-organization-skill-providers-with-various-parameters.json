@@ -1,0 +1,10 @@
+[
+  {
+    "organization_id": "{{ORGANIZATION_ID_BY_ADMIN}}",
+    "input": "page=1&perPage=10"
+  },
+  {
+    "organization_id": "{{ORGANIZATION_ID_BY_ADMIN}}",
+    "input": ""
+  }
+]

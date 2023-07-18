@@ -1,0 +1,10 @@
+[
+  {
+    "id": "{{ACHIEVEMENTS_PROVIDER_ID_1}}",
+    "httpCode": 200
+  },
+  {
+    "id": "{{ACHIEVEMENTS_PROVIDER_ID_2}}",
+    "httpCode": 200
+  }
+]

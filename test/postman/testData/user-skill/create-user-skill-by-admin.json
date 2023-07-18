@@ -1,0 +1,30 @@
+[
+  {
+    "user_id": "{{USER_ID_2}}",
+    "input": {
+      "skillId":"{{SKILL_ID_BY_ADMIN}}",
+      "metricValue":"3L",
+      "certifierId": "POSTMANE2E-certifier_id",
+      "certifiedDate":"2020-05-04T07:36:28.036Z"
+    },
+    "expected": {
+      "skillId":"{{SKILL_ID_BY_ADMIN}}",
+      "metricValue":"3L",
+      "certifierId": "POSTMANE2E-certifier_id",
+      "certifiedDate":"2020-05-04T07:36:28.036Z"
+    },
+    "httpCode": 200
+  },
+  {
+    "user_id": "{{USER_ID_BY_TESTER}}",
+    "input": {
+      "skillId":"{{SKILL_ID_BY_TESTER}}",
+      "metricValue":"3L"
+    },
+    "expected": {
+      "skillId":"{{SKILL_ID_BY_TESTER}}",
+      "metricValue":"3L"
+    },
+    "httpCode": 200
+  }
+]

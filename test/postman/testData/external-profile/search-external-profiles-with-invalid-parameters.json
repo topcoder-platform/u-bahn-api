@@ -1,0 +1,40 @@
+[
+  {
+    "user_id": "{{USER_ID_BY_ADMIN}}",
+    "input": "page=-1&perPage=10",
+    "httpCode": 400,
+    "message": "\"query.page\" must be larger than or equal to 1"
+  },
+  {
+    "user_id": "{{USER_ID_BY_ADMIN}}",
+    "input": "page=1&perPage=-10",
+    "httpCode": 400,
+    "message": "\"query.perPage\" must be larger than or equal to 1"
+  },
+  {
+    "input": "organizationName=",
+    "httpCode": 400,
+    "message": "\"query.organizationName\" is not allowed to be empty"
+  },
+  {
+    "input": "externalId=",
+    "httpCode": 400,
+    "message": "\"query.externalId\" is not allowed to be empty"
+  },
+  {
+    "input": "isInactive=",
+    "httpCode": 400,
+    "message": "\"query.isInactive\" must be a boolean"
+  },
+  {
+    "input": "isInactive=aaa",
+    "httpCode": 400,
+    "message": "\"query.isInactive\" must be a boolean"
+  },
+  {
+    "user_id": "{{USER_ID_BY_ADMIN}}",
+    "input": "aa=cc",
+    "httpCode": 400,
+    "message": "\"query.aa\" is not allowed"
+  }
+]

@@ -1,0 +1,10 @@
+[
+  {
+    "id": "{{ORGANIZATION_ID_1}}",
+    "httpCode": 200
+  },
+  {
+    "id": "{{ORGANIZATION_ID_2}}",
+    "httpCode": 200
+  }
+]

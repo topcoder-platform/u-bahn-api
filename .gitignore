@@ -7,3 +7,6 @@ scripts/generate
 .env
 coverage
 .vscode
+
+# Newman tests
+newman

@@ -1,0 +1,20 @@
+[
+  {
+    "handle": "POSTMANE2E-handle01-by-admin",
+    "firstName": "POSTMANE2E-first01",
+    "lastName": "POSTMANE2E-last01",
+    "httpCode": 200
+  },
+  {
+    "handle": "POSTMANE2E-handle02-by-admin",
+    "firstName": "POSTMANE2E-first02",
+    "lastName": "POSTMANE2E-last02",
+    "httpCode": 200
+  },
+  {
+    "handle": "POSTMANE2E-handle03-by-admin",
+    "firstName": "POSTMANE2E-first03",
+    "lastName": "POSTMANE2E-last03",
+    "httpCode": 200
+  }
+]

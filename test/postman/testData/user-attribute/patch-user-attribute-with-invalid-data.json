@@ -1,0 +1,36 @@
+[
+  {
+    "user_id": "e043286d-ab55-44e3-b2c2-7f7a4f375dcf",
+    "attribute_id": "{{ATTRIBUTE_ID_BY_ADMIN}}",
+    "input": {
+      "value": ""
+    },
+    "httpCode": 400,
+    "message": "\"entity.value\" is not allowed to be empty"
+  },
+  {
+    "user_id": "e043286d-ab55-44e3-b2c2-7f7a4f375dcf",
+    "attribute_id": "{{ATTRIBUTE_ID_BY_ADMIN}}",
+    "input": {
+      "ccc": "abc"
+    },
+    "httpCode": 400,
+    "message": "\"entity.ccc\" is not allowed"
+  },
+  {
+    "user_id": "3cd81b8c-d45e-414e-be66-afb31aa0240c",
+    "attribute_id": "{{ATTRIBUTE_ID_BY_ADMIN}}",
+    "input": {
+    },
+    "httpCode": 404,
+    "message": "cannot find User where id = 3cd81b8c-d45e-414e-be66-afb31aa0240c"
+  },
+  {
+    "user_id": "{{USER_ID_BY_ADMIN}}",
+    "attribute_id": "3cd81b8c-d45e-414e-be66-afb31aa0240c",
+    "input": {
+    },
+    "httpCode": 404,
+    "message": "cannot find Attribute where id = 3cd81b8c-d45e-414e-be66-afb31aa0240c"
+  }
+]

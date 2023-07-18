@@ -1,0 +1,33 @@
+[
+  {
+    "params": "page=-1&perPage=10",
+    "input": {
+      "organizationId":"{{ORGANIZATION_ID_BY_ADMIN}}"
+    },
+    "httpCode": 500,
+    "message": "illegal_argument_exception"
+  },
+  {
+    "params": "page=1&perPage=-10",
+    "input": {
+      "organizationId":"{{ORGANIZATION_ID_BY_ADMIN}}"
+    },
+    "httpCode": 500,
+    "message": "illegal_argument_exception"
+  },
+  {
+    "params": "",
+    "input": {
+    },
+    "httpCode": 500,
+    "message": "Cannot search for users without organization info"
+  },
+  {
+    "params": "",
+    "input": {
+      "organizationId":""
+    },
+    "httpCode": 500,
+    "message": "Cannot search for users without organization info"
+  }
+]

@@ -1,0 +1,14 @@
+[
+  {
+    "params": "page=1&perPage=10",
+    "input": {
+      "organizationId":"ORGANIZATION_ID_BY_ADMIN"
+    }
+  },
+  {
+    "params": "",
+    "input": {
+      "organizationId":"ORGANIZATION_ID_BY_ADMIN"
+    }
+  }
+]

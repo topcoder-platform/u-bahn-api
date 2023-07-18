@@ -1,0 +1,26 @@
+[
+  {
+    "user_id": "{{USER_ID_BY_TESTER}}",
+    "achievement_id": "123456",
+    "httpCode": 500,
+    "message": "invalid input syntax for type uuid: \"123456\""
+  },
+  {
+    "user_id": "123456",
+    "achievement_id": "{{ACHIEVEMENTS_PROVIDER_ID_2}}",
+    "httpCode": 500,
+    "message": "invalid input syntax for type uuid: \"123456\""
+  },
+  {
+    "user_id": "3cd81b8c-d45e-414e-be66-afb31aa0240c",
+    "achievement_id": "{{ACHIEVEMENTS_PROVIDER_ID_2}}",
+    "httpCode": 404,
+    "message": "cannot find Achievement where userId:3cd81b8c-d45e-414e-be66-afb31aa0240c"
+  },
+  {
+    "user_id": "{{USER_ID_BY_TESTER}}",
+    "achievement_id": "3cd81b8c-d45e-414e-be66-afb31aa0240c",
+    "httpCode": 404,
+    "message": "cannot find Achievement where userId:bdcb113f-6715-40fd-8dab-14aa01327ae9, achievementsProviderId:3cd81b8c-d45e-414e-be66-afb31aa0240c"
+  }
+]

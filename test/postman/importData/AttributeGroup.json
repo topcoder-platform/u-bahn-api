@@ -1,0 +1,38 @@
+[
+  {
+    "id": "7ce54e9c-5a2a-4c63-9f53-b854234f6bb2",
+    "created": "2020-05-13T08:45:33.291Z",
+    "updated": null,
+    "createdBy": "POSTMANE2E-tc-user",
+    "updatedBy": null,
+    "organizationId": "6a21394e-1278-4835-9e4d-cb4ff151fcd3",
+    "name": "POSTMANE2E-attributeGroup_03"
+  },
+  {
+    "id": "84634bbd-8191-40cf-a03e-9962d7e39fda",
+    "created": "2020-05-13T07:15:01.215Z",
+    "updated": "2020-05-13T07:16:20.636Z",
+    "createdBy": "POSTMANE2E-tc-Admin",
+    "updatedBy": "tc-Admin",
+    "organizationId": "36ed815b-3da1-49f1-a043-aaed0a4e81ad",
+    "name": "POSTMANE2E-group 03"
+  },
+  {
+    "id": "8599dbcb-7301-46a1-ab23-7b3dfd610f26",
+    "created": "2020-05-13T07:15:01.215Z",
+    "updated": "2020-05-13T07:16:20.636Z",
+    "createdBy": "tc_tester777",
+    "updatedBy": "tc-Admin",
+    "organizationId": "a866fd95-c2d5-4fa8-b341-a367138c9911",
+    "name": "POSTMANE2E-group tester"
+  },
+  {
+    "id": "03df695f-0b97-4fe3-ae29-17f1aa0addc4",
+    "created": "2020-05-13T07:15:01.215Z",
+    "updated": "2020-05-13T07:16:20.636Z",
+    "createdBy": "POSTMANE2E-tc-Admin",
+    "updatedBy": "tc-Admin",
+    "organizationId": "a866fd95-c2d5-4fa8-b341-a367138c9911",
+    "name": "POSTMANE2E-group admin"
+  }
+]

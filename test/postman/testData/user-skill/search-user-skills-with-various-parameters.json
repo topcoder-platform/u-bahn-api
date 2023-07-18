@@ -1,0 +1,14 @@
+[
+  {
+    "user_id": "{{USER_ID_1}}",
+    "input": "page=1&perPage=10&skillName=POSTMANE2E-Skill-1"
+  },
+  {
+    "user_id": "{{USER_ID_1}}",
+    "input": "page=1&perPage=10"
+  },
+  {
+    "user_id": "{{USER_ID_1}}",
+    "input": "skillName=POSTMANE2E-Skill-1"
+  }
+]

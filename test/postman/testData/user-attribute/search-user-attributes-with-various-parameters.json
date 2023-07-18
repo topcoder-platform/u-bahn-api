@@ -1,0 +1,22 @@
+[
+  {
+    "user_id": "{{USER_ID_BY_ADMIN}}",
+    "input": "page=1&perPage=10&attributeName=POSTMANE2E-attribute&attributeGroupName=POSTMANE2E-attributeGroup&attributeGroupId=84634bbd-8191-40cf-a03e-9962d7e39fda"
+  },
+  {
+    "user_id": "{{USER_ID_BY_ADMIN}}",
+    "input": "page=1&perPage=10"
+  },
+  {
+    "user_id": "{{USER_ID_BY_ADMIN}}",
+    "input": "attributeName=POSTMANE2E-attribute"
+  },
+  {
+    "user_id": "{{USER_ID_BY_ADMIN}}",
+    "input": "attributeGroupName=POSTMANE2E-attributeGroup"
+  },
+  {
+    "user_id": "{{USER_ID_BY_ADMIN}}",
+    "input": "attributeGroupId=84634bbd-8191-40cf-a03e-9962d7e39fda"
+  }
+]

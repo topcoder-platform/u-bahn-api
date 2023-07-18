@@ -1,0 +1,63 @@
+[
+  {
+    "user_id": "{{USER_ID_BY_ADMIN}}",
+    "input": {
+      "value": "POSTMANE2E-Attribute-by-TESTER-002"
+    },
+    "httpCode": 400,
+    "message": "\"entity.attributeId\" is required"
+  },
+  {
+    "user_id": "{{USER_ID_BY_ADMIN}}",
+    "input": {
+      "attributeId":"",
+      "value": "POSTMANE2E-Attribute-by-TESTER-002"
+    },
+    "httpCode": 400,
+    "message": "\"entity.attributeId\" is not allowed to be empty"
+  },
+  {
+    "user_id": "{{USER_ID_BY_ADMIN}}",
+    "input": {
+      "attributeId": "{{ATTRIBUTE_ID_BY_ADMIN}}"
+    },
+    "httpCode": 400,
+    "message": "\"entity.value\" is required"
+  },
+  {
+    "user_id": "{{USER_ID_BY_ADMIN}}",
+    "input": {
+      "attributeId": "{{ATTRIBUTE_ID_BY_ADMIN}}",
+      "value": ""
+    },
+    "httpCode": 400,
+    "message": "\"entity.value\" is not allowed to be empty"
+  },
+  {
+    "user_id": "ce348067-e73f-49d7-af72-fcf11a6c88bf",
+    "input": {
+      "attributeId": "{{ATTRIBUTE_ID_BY_ADMIN}}",
+      "value": "POSTMANE2E-Attribute-by-TESTER-002"
+    },
+    "httpCode": 409,
+    "message": "UserAttribute already exists with userId:ce348067-e73f-49d7-af72-fcf11a6c88bf"
+  },
+  {
+    "user_id": "{{USER_ID_BY_ADMIN}}",
+    "input": {
+      "attributeId":"75b30af0-46df-4cf6-97ed-3a5608516f4a",
+      "value": "POSTMANE2E-Attribute-by-TESTER-002"
+    },
+    "httpCode": 404,
+    "message": "cannot find Attribute where id = 75b30af0-46df-4cf6-97ed-3a5608516f4a"
+  },
+  {
+    "user_id": "75b30af0-46df-4cf6-97ed-3a5608516f4a",
+    "input": {
+      "attributeId":"{{ATTRIBUTE_ID_BY_ADMIN}}",
+      "value": "POSTMANE2E-Attribute-by-TESTER-002"
+    },
+    "httpCode": 404,
+    "message": "cannot find User where id = 75b30af0-46df-4cf6-97ed-3a5608516f4a"
+  }
+]

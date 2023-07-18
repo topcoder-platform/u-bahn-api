@@ -1,0 +1,10 @@
+[
+  {
+    "id": "{{SKILL_ID_1}}",
+    "httpCode": 200
+  },
+  {
+    "id": "{{SKILL_ID_2}}",
+    "httpCode": 200
+  }
+]

@@ -1,0 +1,49 @@
+[
+  {
+    "input": {
+      "organizationId": "{{ORGANIZATION_ID_BY_ADMIN}}"
+    },
+    "httpCode": 400,
+    "message": "\"entity.name\" is required"
+  },
+  {
+    "input": {
+      "name": "",
+      "organizationId": "{{ORGANIZATION_ID_BY_ADMIN}}"
+    },
+    "httpCode": 400,
+    "message": "\"entity.name\" is not allowed to be empty"
+  },
+  {
+    "input": {
+      "name": "POSTMANE2E-skill-validname"
+    },
+    "httpCode": 400,
+    "message": "\"entity.organizationId\" is required"
+  },
+  {
+    "input": {
+      "name": "POSTMANE2E-skill-validname",
+      "organizationId": ""
+    },
+    "httpCode": 400,
+    "message": "\"entity.organizationId\" is not allowed to be empty"
+  },
+  {
+    "input": {
+      "name": "POSTMANE2E-skill-validname",
+      "organizationId": "{{ORGANIZATION_ID_BY_ADMIN}}",
+      "aaa":"ccc"
+    },
+    "httpCode": 400,
+    "message": "\"entity.aaa\" is not allowed"
+  },
+  {
+    "input": {
+      "name": "POSTMANE2E-Role02-by-admin",
+      "organizationId": "{{ORGANIZATION_ID_BY_ADMIN}}"
+    },
+    "httpCode": 409,
+    "message": "AttributeGroup already exists with name:POSTMANE2E-Role02-by-admin"
+  }
+]

@@ -1,0 +1,42 @@
+[
+  {
+    "input": "page=-1&perPage=10",
+    "httpCode": 400,
+    "message": "\"query.page\" must be larger than or equal to 1"
+  },
+  {
+    "input": "page=1&perPage=-10",
+    "httpCode": 400,
+    "message": "\"query.perPage\" must be larger than or equal to 1"
+  },
+  {
+    "input": "name=",
+    "httpCode": 400,
+    "message": "\"query.name\" is not allowed to be empty"
+  },
+  {
+    "input": "skillProviderId=",
+    "httpCode": 400,
+    "message": "\"query.skillProviderId\" is not allowed to be empty"
+  },
+  {
+    "input": "externalId=",
+    "httpCode": 400,
+    "message": "\"query.externalId\" is not allowed to be empty"
+  },
+  {
+    "input": "name=",
+    "httpCode": 400,
+    "message": "\"query.name\" is not allowed to be empty"
+  },
+  {
+    "input": "orderBy=",
+    "httpCode": 400,
+    "message": "\"query.orderBy\" is not allowed to be empty"
+  },
+  {
+    "input": "aa=",
+    "httpCode": 400,
+    "message": "\"query.aa\" is not allowed"
+  }
+]

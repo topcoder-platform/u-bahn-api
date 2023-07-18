@@ -1,0 +1,32 @@
+[
+  {
+    "input": "page=1&perPage=10&enrich=true"
+  },
+  {
+    "input": "page=1&perPage=1"
+  },
+  {
+    "input": "page=1&perPage=1&handle=POSTMANE2E-lazybaer",
+    "idLabel": "USER_ID_1"
+  },
+  {
+    "input": "roleId=977d66bb-112f-49b1-8b20-2ef7a17f4943"
+  },
+  {
+    "input": "enrich=true&externalProfile.externalId=8547899"
+  },
+  {
+    "input": "enrich=true&externalProfile.organizationId=36ed815b-3da1-49f1-a043-aaed0a4e81ad"
+  },
+  {
+    "input": "page=1&perPage=10&enrich=true&handle=POSTMANE2E-tc-Admin&roleId=977d66bb-112f-49b1-8b20-2ef7a17f4943&externalProfile.externalId=8547899&externalProfile.organizationId=36ed815b-3da1-49f1-a043-aaed0a4e81ad"
+  },
+  {
+    "input": "handle=POSTMANE2E-Sylvan_Gorczany",
+    "idLabel": "USER_ID_2"
+  },
+  {
+    "input": "handle=POSTMANE2E-Dana_Paucek6",
+    "idLabel": "USER_ID_3"
+  }
+]

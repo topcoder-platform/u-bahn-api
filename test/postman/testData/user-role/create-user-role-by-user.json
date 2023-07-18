@@ -1,0 +1,12 @@
+[
+  {
+    "user_id": "{{USER_ID_BY_TESTER}}",
+    "input": {
+      "roleId":"{{ROLE_ID_1}}"
+    },
+    "expected": {
+      "roleId":"{{ROLE_ID_1}}"
+    },
+    "httpCode": 200
+  }
+]

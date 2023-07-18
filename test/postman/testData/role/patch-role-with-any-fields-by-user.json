@@ -1,0 +1,12 @@
+[
+  {
+    "id": "{{ROLE_ID_BY_TESTER}}",
+    "input": {
+      "name": "POSTMANE2E-role01-by-user-updated"
+    },
+    "expected": {
+      "name": "POSTMANE2E-role01-by-user-updated"
+    },
+    "httpCode": 200
+  }
+]

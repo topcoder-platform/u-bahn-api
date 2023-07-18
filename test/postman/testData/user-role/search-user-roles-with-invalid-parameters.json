@@ -1,0 +1,26 @@
+[
+  {
+    "user_id": "{{USER_ID_1}}",
+    "input": "page=-1&perPage=10",
+    "httpCode": 400,
+    "message": "\"query.page\" must be larger than or equal to 1"
+  },
+  {
+    "user_id": "{{USER_ID_1}}",
+    "input": "page=1&perPage=-10",
+    "httpCode": 400,
+    "message": "\"query.perPage\" must be larger than or equal to 1"
+  },
+  {
+    "user_id": "{{USER_ID_1}}",
+    "input": "aa=cc",
+    "httpCode": 400,
+    "message": "\"query.aa\" is not allowed"
+  },
+  {
+    "user_id": "3cd81b8c-d45e-414e-be66-afb31aa0240c",
+    "input": "",
+    "httpCode": 404,
+    "message": "cannot find User where id = 3cd81b8c-d45e-414e-be66-afb31aa0240c"
+  }
+]

@@ -1,0 +1,30 @@
+[
+  {
+    "input": {
+    },
+    "httpCode": 400,
+    "message": "\"entity.name\" is required"
+  },
+  {
+    "input": {
+      "name": ""
+    },
+    "httpCode": 400,
+    "message": "\"entity.name\" is not allowed to be empty"
+  },
+  {
+    "input": {
+      "name": "POSTMANE2E-skill-validname",
+      "aaa":"ccc"
+    },
+    "httpCode": 400,
+    "message": "\"entity.aaa\" is not allowed"
+  },
+  {
+    "input": {
+      "name": "POSTMANE2E-Role02-by-admin"
+    },
+    "httpCode": 409,
+    "message": "AchievementsProvider already exists with name:POSTMANE2E-Role02-by-admin"
+  }
+]

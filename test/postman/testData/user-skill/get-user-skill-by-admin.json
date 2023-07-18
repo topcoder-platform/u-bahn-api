@@ -1,0 +1,12 @@
+[
+  {
+    "user_id": "{{USER_ID_2}}",
+    "skill_id":"{{SKILL_ID_BY_ADMIN}}",
+    "httpCode": 200
+  },
+  {
+    "user_id": "{{USER_ID_BY_TESTER}}",
+    "skill_id": "{{SKILL_ID_BY_TESTER}}",
+    "httpCode": 200
+  }
+]
